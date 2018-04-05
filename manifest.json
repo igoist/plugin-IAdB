@@ -18,6 +18,10 @@
     {
       "matches": ["*://*.baidu.com/*"],
       "js": ["src/baidu.js"]
+    },
+    {
+      "matches": ["*://lodash.com/*"],
+      "js": ["src/lodash.js"]
     }
   ],
   "manifest_version": 2,
