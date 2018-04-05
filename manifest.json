@@ -22,6 +22,10 @@
     {
       "matches": ["*://lodash.com/*"],
       "js": ["src/lodash.js"]
+    },
+    {
+      "matches": ["*://*.csdn.net/*"],
+      "js": ["src/csdn.js"]
     }
   ],
   "manifest_version": 2,
