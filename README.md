@@ -12,3 +12,4 @@ It's a ADB like plugin, and also a demo of recalling how to develop chrome plugi
 * lodash.js
 * csdn.js
 * google.js
+* zhihu.js

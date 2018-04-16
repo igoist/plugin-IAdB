@@ -30,6 +30,10 @@
     {
       "matches": ["*://www.google.com.hk/*"],
       "js": ["src/google.js"]
+    },
+    {
+      "matches": ["*://www.zhihu.com/*"],
+      "js": ["src/zhihu.js"]
     }
   ],
   "manifest_version": 2,
