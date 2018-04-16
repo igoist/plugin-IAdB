@@ -26,6 +26,10 @@
     {
       "matches": ["*://*.csdn.net/*"],
       "js": ["src/csdn.js"]
+    },
+    {
+      "matches": ["*://www.google.com.hk/*"],
+      "js": ["src/google.js"]
     }
   ],
   "manifest_version": 2,
