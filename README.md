@@ -7,9 +7,10 @@ It's a ADB like plugin, and also a demo of recalling how to develop chrome plugi
 
 **Items**
 
-* zhangxinxu.js
-* baidu.js
-* lodash.js
-* csdn.js
-* google.js
-* zhihu.js
+* 2018.05.09 -- oneForAll.js
+* 2018.00.00 -- zhangxinxu.js
+* 2018.00.00 -- baidu.js
+* 2018.00.00 -- lodash.js
+* 2018.00.00 -- csdn.js
+* 2018.00.00 -- google.js
+* 2018.00.00 -- zhihu.js

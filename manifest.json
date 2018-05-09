@@ -12,6 +12,10 @@
   },
   "content_scripts": [
     {
+      "matches": ["*://*/*"],
+      "js": ["src/oneForAll.js"]
+    },
+    {
       "matches": ["*://*.zhangxinxu.com/*"],
       "js": ["src/zhangxinxu.js"]
     },
