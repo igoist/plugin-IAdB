@@ -14,3 +14,8 @@ It's a ADB like plugin, and also a demo of recalling how to develop chrome plugi
 * 2018.00.00 -- csdn.js
 * 2018.00.00 -- google.js
 * 2018.00.00 -- zhihu.js
+
+
+**Golbal**
+
+* 2018.05.10 -- popup
