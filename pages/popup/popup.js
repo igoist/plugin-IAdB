@@ -40,7 +40,14 @@ x2.addEventListener('click', e => {
   chrome.storage.sync.set({
     color: '#86c797'
   }, function() {
-    console.log("And the color is green.");
+    console.log("And the color is blue.");
+    // window.open('/pages/popup/index.html');
+    chrome.tabs.create({
+      url: '/pages/popup/index.html',
+      active: true
+    }, (tab) => {
+      console.log('new tab', tab);
+    });
   });
 });
 

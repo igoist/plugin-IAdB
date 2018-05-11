@@ -1,18 +1,58 @@
+$anime-duration-l: 0.36s;
+$anime-duration-m: 0.24s;
+$anime-duration-s: 0.12s;
+
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+header {
+  position: relative;
+}
+
+#ext_name {
+  height: 24px;
+  line-height: 24px;
+  padding-left: 22px;
+  font-size: 16px;
+  // background: url(/images/logo_16.png) no-repeat left center;
+}
+
+#preferences {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 4px;
+  width: 16px;
+  height: 16px;
+  background-image: url(/img/gear_large.svg);
+  background-size: 16px 16px;
+  cursor: pointer;
+  outline: none;
+  transition: transform $anime-duration-l ease-in-out;
+
+  &:hover {
+    transform: rotate(180deg);
+  }
+}
+
 .wrap {
   border: 1px dashed #77a7ff;
 
   .item {
-    margin: 2px;
+    margin: 12px 16px 0;
     border: 1px solid #333;
     width: 160px;
     height: 32px;
     box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.16);
+    transition: transform $anime-duration-s ease-in-out;
+
+    &:hover {
+      transform: translateY(-4px);
+    }
   }
 }
 
