@@ -1,11 +1,21 @@
 (function() {
-  let styleStr = `
-     * {
-       background-color: #2a2a2a!important;
-       border-color: #2a2a2a!important;
-       color: #86c797!important;
+  let backgroundColor = '#2a2a2a';
+  let fontFolor = '#86c797';
 
-     }
+  let styleStr = `
+    *,
+    *:before,
+    *:after {
+      background-color: ${backgroundColor}!important;
+      border-color: ${backgroundColor}!important;
+      color: ${fontFolor}!important;
+      box-shadow: none!important;
+      text-shadow: none!important;
+    }
+
+    hr {
+      border: none!important;
+    }
   `;
   //rgb(134, 199, 151)
 
@@ -44,4 +54,9 @@
   };
 
   document.addEventListener('keydown', handleIClickEvent, false);
+
+  let mockKeyboardEvent = new KeyboardEvent('keydown', { ctrlKey: true });
+  document.dispatchEvent(mockKeyboardEvent);
+  document.dispatchEvent(mockKeyboardEvent);
+  document.dispatchEvent(mockKeyboardEvent);
 })();
