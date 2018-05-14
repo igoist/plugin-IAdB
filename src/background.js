@@ -1,7 +1,8 @@
 const IAdBState = {
-  // color: '#3aa757'
-  // color: '#86c797'
-  color: '#86c7c7'
+  // color: '#3aa757',
+  color: '#86c797',
+  // color: '#86c7c7',
+  darkMode: true
 };
 
 chrome.runtime.onInstalled.addListener(function() {
@@ -16,16 +17,16 @@ chrome.runtime.onInstalled.addListener(function() {
     console.log("And the color is green.");
   });
 
-  chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
-    chrome.declarativeContent.onPageChanged.addRules([{
-      conditions: [new chrome.declarativeContent.PageStateMatcher({
-        pageUrl: {
-          hostEquals: 'www.baidu.com'
-        },
-      })],
-      actions: [new chrome.declarativeContent.ShowPageAction()]
-    }]);
-  });
+  // chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
+  //   chrome.declarativeContent.onPageChanged.addRules([{
+  //     conditions: [new chrome.declarativeContent.PageStateMatcher({
+  //       pageUrl: {
+  //         hostEquals: 'www.baidu.com'
+  //       },
+  //     })],
+  //     actions: [new chrome.declarativeContent.ShowPageAction()]
+  //   }]);
+  // });
 });
 
 
@@ -40,10 +41,12 @@ chrome.runtime.onInstalled.addListener(function() {
 //   chrome.runtime.onMessage.removeListener(event);
 // });
 
-chrome.webNavigation.onCompleted.addListener(function() {
-  // alert("This is my test website!");
-  console.log('.........');
-}, {url: [{urlMatches : 'https://www.baidu.com/'}]});
+// chrome.webNavigation.onCompleted.addListener(function() {
+//   // alert("This is my test website!");
+//   console.log('.........');
+// }, {
+//   url: [{urlMatches : 'https://www.baidu.com/'}]
+// });
 
 
 
