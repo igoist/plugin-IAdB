@@ -1,31 +1,70 @@
-$anime-duration-l: 0.36s;
-$anime-duration-m: 0.24s;
-$anime-duration-s: 0.12s;
-
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-header {
-  position: relative;
+/**
+  * abstracts/
+  * vendors/
+  * base/
+  * layout/
+  * components/
+  * pages/
+  * themes/
+  */
+@import '_variables';
+
+.clearfix {
+  &:before,
+  &:after {
+    content: "";
+    display: table;
+  }
+
+  &:after {
+    clear: both;
+  }
 }
 
-#ext_name {
+
+.box {
+  margin: 2px;
+  border: 1px solid #171717;
+}
+
+.wrap {
+  margin: 2px;
+}
+
+header {
+  position: relative;
+  background-color: #171717;
+}
+
+// #ext_name {
+//   height: 24px;
+//   line-height: 24px;
+//   padding-left: 22px;
+//   font-size: 16px;
+//   // background: url(/images/logo_16.png) no-repeat left center;
+// }
+
+.description {
+  color: #fff;
+  margin: 18px 0;
   height: 24px;
   line-height: 24px;
-  padding-left: 22px;
-  font-size: 16px;
-  // background: url(/images/logo_16.png) no-repeat left center;
+  font-size: 18px;
+  font-family: menlo;
+  text-align: center;
+  text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #FFDD1B, 0 0 35px #FFDD1B, 0 0 40px #FFDD1B, 0 0 50px #FFDD1B, 0 0 75px #FFDD1B;
 }
 
 #preferences {
   position: absolute;
-  top: 0;
-  right: 0;
-  margin: 4px;
+  top: 22px;
+  right: 8px;
   width: 16px;
   height: 16px;
   background-image: url(/img/gear_large.svg);
@@ -39,20 +78,91 @@ header {
   }
 }
 
-.wrap {
-  border: 1px dashed #77a7ff;
 
-  .item {
-    margin: 12px 16px 0;
-    border: 1px solid #333;
-    width: 160px;
-    height: 32px;
-    box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.16);
-    transition: transform $anime-duration-s ease-in-out;
+// .wrap {
+//   border: 1px dashed #77a7ff;
 
-    &:hover {
-      transform: translateY(-4px);
+//   .item {
+//     margin: 12px 16px 0;
+//     border: 1px solid #333;
+//     width: 160px;
+//     height: 32px;
+//     box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.16);
+//     transition: transform $anime-duration-s ease-in-out;
+
+//     &:hover {
+//       transform: translateY(-4px);
+//     }
+//   }
+// }
+
+.nav-tags {
+  display: block;
+  background-color: #171717;
+  list-style: none;
+  overflow: scroll;
+  overflow-x: hidden;
+  transition: height .3s ease-in-out;
+
+  li {
+    padding-right: 0;
+
+    a {
+      display: block;
+      border-left: 0 solid transparent;
+      padding: 9px;
+      padding-left: 60px;
+      color: #87ceeb;
+      font-size: 12px;
+      text-decoration: none;
+      transition: border-width 0.5s, border-color 3s, background-image 3s;
+    }
+
+    &.active a,
+    &:hover a {
+      border-color: var(--color);
+      background-image: linear-gradient(105deg, transparent 40%, var(--start) 100%);
+      border-left-width: 12px;
+      color: #fff;
+    }
+
+    // &:nth-child(7n+1):hover a {
+    //   border-color: $red;
+    //   background-image: linear-gradient(105deg, transparent 40%, $redX 100%);
+    // }
+
+    // &:nth-child(7n+2):hover a {
+    //   border-color: $orange;
+    //   background-image: linear-gradient(105deg, transparent 40%, $orangeX 100%);
+    // }
+    // &:nth-child(7n+3):hover a {
+    //   border-color: $yellow;
+    //   background-image: linear-gradient(105deg, transparent 40%, $yellowX 100%);
+    // }
+    // &:nth-child(7n+4):hover a {
+    //   border-color: $green;
+    //   background-image: linear-gradient(105deg, transparent 40%, $greenX 100%);
+    // }
+    // &:nth-child(7n+5):hover a {
+    //   border-color: $turquoise;
+    //   background-image: linear-gradient(105deg, transparent 40%, $turquoiseX 100%);
+    // }
+    // &:nth-child(7n+6):hover a {
+    //   border-color: $blue;
+    //   background-image: linear-gradient(105deg, transparent 40%, $blueX 100%);
+    // }
+    // &:nth-child(7n+0):hover a {
+    //   border-color: $purple;
+    //   background-image: linear-gradient(105deg, transparent 40%, $purpleX 100%);
+    // }
+
+    i {
+      font-size: 16px;
+      margin-right: 8px;
+
+      &:before {
+        content: "ß∂∫˚"
+      }
     }
   }
 }
-
