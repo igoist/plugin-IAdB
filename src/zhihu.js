@@ -33,6 +33,7 @@
    * 问题答案页
    * .AdblockBanner 友情提示
    * .Question-sideColumn 侧栏
+   * .Question-main 主要内容，对其排版样式重新自定义
    */
   let AdblockBanner = document.querySelector('.AdblockBanner');
 
@@ -44,5 +45,20 @@
 
   if (QuestionSideColumn) {
     QuestionSideColumn.remove();
+  }
+
+  let QuestionMain = document.querySelector('.Question-main');
+
+  if (QuestionMain) {
+    QuestionMain.style = `
+      margin: 0 auto;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      width: 1170px;
+    `;
+
+    let QuestionMainColumn = document.querySelector('.Question-mainColumn');
+
+    QuestionMainColumn.style.width = '100%';
   }
 })();
