@@ -137,3 +137,15 @@ if (afterContent) {
   afterContent.remove();
   log('百科页底部猜你喜欢 .after-content 已移除');
 }
+
+
+/**
+ * 百度知道页
+ * aside 右侧
+ */
+
+let aside = document.querySelector('aside');
+
+if (aside) {
+  aside.remove();
+}
