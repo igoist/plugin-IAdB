@@ -28,6 +28,16 @@
   if (document.querySelector('.TopstoryMain > div')) {
     mo.observe(document.querySelector('.TopstoryMain > div'), { childList: true })
   }
+  /**
+   * 首页去 Sidebar
+   * 排版调整
+   */
+  let GlobalSideBar = document.querySelector('.GlobalSideBar');
+  if (GlobalSideBar) {
+    GlobalSideBar.remove();
+    let TopstoryMain = document.querySelector('.TopstoryMain');
+    TopstoryMain.style.width = '100%';
+  }
 
   /**
    * 问题答案页
