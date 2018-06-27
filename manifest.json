@@ -38,12 +38,15 @@
       "js": ["src/google.js"]
     },
     {
-      "matches": ["*://www.zhihu.com/*"],
+      "matches": ["*://*.zhihu.com/*"],
       "js": ["src/zhihu.js"]
     }
   ],
   "manifest_version": 2,
   "options_page": "pages/option/index.html",
+  "chrome_url_overrides": {
+    "newtab": "pages/newtab/index.html"
+  },
   "browser_action": {
     "default_icon": "img/128.png",
     "default_title": "自定义广告屏蔽扩展",

@@ -40,6 +40,12 @@ let styleStr = `
     box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.16);
     box-sizing: border-box;
     overflow: hidden;
+    transition: transform 0.2s ease-in-out;
+    will-change: transform;
+  }
+
+  .g:hover {
+    transform: translateY(-10px);
   }
 
   .mw #rhs {
