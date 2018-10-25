@@ -8,7 +8,7 @@ let styleStr = `
 
 // 简单粗暴
 let trickStyle = document.createElement('style');
-trickStyle.id = 'sssss';
+trickStyle.id = 'igoist_iadb';
 trickStyle.type = 'text/css';
 trickStyle.innerHTML = styleStr;
 
