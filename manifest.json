@@ -15,7 +15,7 @@
     {
       "matches": ["*://*/*"],
       "run_at": "document_end",
-      "js": ["src/oneForAll.js"]
+      "js": ["dist/oneForAll.bundle.min.js"]
     },
     {
       "matches": ["*://*.zhangxinxu.com/*"],
