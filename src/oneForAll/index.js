@@ -1,5 +1,6 @@
-import { decode, md5 } from '../util/';
+import { log, decode, md5 } from '../util/';
 
+const { dev } = log;
 const { decodeUnicode } = decode;
 
 (function() {
@@ -132,13 +133,24 @@ const { decodeUnicode } = decode;
             // };
             xhr.onloadend = () => {
               if (xhr.readyState === 4 && xhr.status === 200) {
-                // const { id, name, url } = JSON.parse(xhr.response);
                 let obj = JSON.parse(xhr.response);
                 let resultArr = obj.trans_result;
                 let result = decodeUnicode(resultArr[0].dst);
-                console.log(obj);
-                console.log(resultArr);
-                console.log(result);
+                // dev({
+                //   title: 'oneForAll - translate',
+                //   text: obj,
+                //   textColor: 'green',
+                // });
+                dev({
+                  title: 'oneForAll - translate',
+                  text: resultArr,
+                  textColor: 'green',
+                });
+                dev({
+                  title: 'oneForAll - translate',
+                  text: result,
+                  textColor: 'green',
+                });
               }
               if (xhr.readyState === 4 && xhr.status === 413) {
               }
