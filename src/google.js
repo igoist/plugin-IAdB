@@ -9,7 +9,7 @@ const log = console.log.bind(this);
  * 底部相关搜索不管
  */
 let styleStr = `
-  .big .mw,
+  .mw,
   #center_col,
   #res {
     margin: 0 auto!important;
@@ -56,11 +56,11 @@ let styleStr = `
     margin-bottom: 8px;
   }
 
-  h3.r a {
+  h3.LC20lb {
     color: #149cec;
   }
 
-  .s span.st em {
+  span.st em {
     color: #ec414d;
   }
 `;
