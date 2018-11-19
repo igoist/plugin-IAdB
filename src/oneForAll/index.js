@@ -3,6 +3,15 @@ import { log, decode, md5 } from '../util/';
 const { dev } = log;
 const { decodeUnicode } = decode;
 
+// import { IAdBState } from '../background';
+const IAdBState = {
+  color: '#86c797',
+  darkMode: false,
+  bgImage: true,
+  noImage: false,
+  programSwitch: true,
+};
+
 (function() {
   /**
    * backgroundColor
@@ -18,6 +27,7 @@ const { decodeUnicode } = decode;
   let darkMode;
   let switchFlag;
   let ifBgImage;
+  let ifNoImage;
 
   let cC = 0;
   let idName = 'iadb_reset_site_style';
@@ -26,25 +36,20 @@ const { decodeUnicode } = decode;
   trickStyle.id = idName;
   trickStyle.type = 'text/css';
 
-  const KeyCodeArr = [
-    'color',
-    'darkMode',
-    'bgImage',
-    'programSwitch',
-  ];
+  // const KeyCodeArr = [
+  //   'color',
+  //   'darkMode',
+  //   'bgImage',
+  //   'noImage',
+  //   'programSwitch',
+  // ];
 
-  chrome.storage.sync.get(KeyCodeArr, result => {
-    fontColor = result.color;
-    ifBgImage = result.bgImage;
-    darkMode = result.darkMode;
-    switchFlag = result.darkMode;
-    // console.log(
-    //   result.color,
-    //   result.darkMode,
-    //   result.bgImage,
-    //   result.programSwitch,
-    // );
-    let styleStr = `
+  const KeyCodeArr = Object.keys(IAdBState);
+
+  const returnStyleStr = (config) => {
+    const { backgroundColor, fontColor, ifBgImage, ifNoImage } = config;
+
+    return `
       *,
       *:before,
       *:after {
@@ -56,10 +61,33 @@ const { decodeUnicode } = decode;
         ${ ifBgImage ? 'background-image: none!important;' : '' }
       }
 
+      ${ ifNoImage ? 'img { visibility: hidden!important; }' : '' }
+
       hr {
         border: none!important;
       }
     `;
+  };
+
+  chrome.storage.sync.get(KeyCodeArr, result => {
+    fontColor = result.color;
+    ifBgImage = result.bgImage;
+    ifNoImage = result.noImage;
+
+    darkMode = result.darkMode;
+    switchFlag = result.darkMode;
+    // console.log(
+    //   result.color,
+    //   result.darkMode,
+    //   result.bgImage,
+    //   result.programSwitch,
+    // );
+    let styleStr = returnStyleStr({
+      backgroundColor,
+      fontColor,
+      ifBgImage,
+      ifNoImage
+    });
     //rgb(134, 199, 151)
     trickStyle.innerHTML = styleStr;
 
@@ -73,23 +101,14 @@ const { decodeUnicode } = decode;
       chrome.storage.sync.get(KeyCodeArr, result => {
         fontColor = result.color;
         ifBgImage = result.bgImage;
+        ifNoImage = result.noImage;
 
-        styleStr = `
-          *,
-          *:before,
-          *:after {
-            background-color: ${ backgroundColor }!important;
-            border-color: ${ backgroundColor }!important;
-            color: ${ fontColor }!important;
-            box-shadow: none!important;
-            text-shadow: none!important;
-            ${ ifBgImage ? 'background-image: none!important;' : '' }
-          }
-
-          hr {
-            border: none!important;
-          }
-        `;
+        styleStr = returnStyleStr({
+          backgroundColor,
+          fontColor,
+          ifBgImage,
+          ifNoImage
+        });
         // 若 result.color 改变， 则 styleStr、trickStyle.innerHTML 相应改变
         trickStyle.innerHTML = styleStr;
 

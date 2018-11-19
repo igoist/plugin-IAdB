@@ -4,6 +4,7 @@ const IAdBState = {
   // color: '#86c7c7',
   darkMode: false,
   bgImage: true,
+  noImage: false,
   programSwitch: true,
 };
 
