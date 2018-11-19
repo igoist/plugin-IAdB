@@ -3,6 +3,8 @@ import { log, decode, md5 } from '../util/';
 const { dev } = log;
 const { decodeUnicode } = decode;
 
+// import { Message } from '../components/Message/';
+
 // import { IAdBState } from '../background';
 const IAdBState = {
   color: '#86c797',
@@ -120,6 +122,8 @@ const IAdBState = {
               document.body.insertBefore(trickStyle, document.body.children[0]);
               switchFlag = !switchFlag;
               cC = 0;
+
+              // Message.success('Switch Off');
             }
 
             if (cC === 2 && switchFlag) {
@@ -127,6 +131,8 @@ const IAdBState = {
               t.parentNode.removeChild(t);
               switchFlag = !switchFlag;
               cC = 0;
+
+              // Message.success('Switch On');
             }
           } else if (e.key === 'e' || e.key === 'E' && cC === 1 && !switchFlag) {
             let formData = new FormData();
