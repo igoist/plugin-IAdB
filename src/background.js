@@ -2,7 +2,9 @@ const IAdBState = {
   // color: '#3aa757',
   color: '#86c797',
   // color: '#86c7c7',
-  darkMode: true
+  darkMode: false,
+  bgImage: true,
+  programSwitch: true,
 };
 
 chrome.runtime.onInstalled.addListener(function() {

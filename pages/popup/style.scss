@@ -29,12 +29,19 @@
 
 
 .box {
-  // margin: 2px;
-  border: 1px solid #171717;
+  border-top: 2px solid #171717;
+  border-bottom: 2px solid #171717;
+
+  &.index-2 {
+    border-color: #fff;
+  }
+
+  &.index-3 {
+    border: none;
+  }
 }
 
 .wrap {
-  margin: 2px;
 }
 
 header {
@@ -161,7 +168,7 @@ header {
       margin-right: 8px;
 
       &:before {
-        content: "ß∂∫˚"
+        content: "†˚"
       }
     }
   }

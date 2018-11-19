@@ -38,8 +38,6 @@ chrome.storage.sync.get(KeyCodeArr, result => {
   programSwitch = result.programSwitch;
 
 
-  console.log(lis);
-
   if (ifDarkMode) {
     lis[0].classList.add('active');
   }
@@ -60,10 +58,8 @@ chrome.storage.sync.get(KeyCodeArr, result => {
 lis[0].addEventListener('click', e => {
   e.preventDefault();
 
-  ifDarkMode = !ifDarkMode;
-
   chrome.storage.sync.set({
-    darkMode: ifDarkMode
+    darkMode: !ifDarkMode
   }, () => {
     lis[0].classList.toggle('active');
   });
@@ -85,10 +81,8 @@ lis[1].addEventListener('click', e => {
 lis[2].addEventListener('click', e => {
   e.preventDefault();
 
-  ifBgImage = !ifBgImage;
-
   chrome.storage.sync.set({
-    bgImage: ifBgImage
+    bgImage: !ifBgImage
   }, () => {
     lis[2].classList.toggle('active');
   });

@@ -19,3 +19,9 @@ It's a ADB like plugin, and also a demo of recalling how to develop chrome plugi
 **Golbal**
 
 * 2018.05.10 -- popup
+
+
+
+#...
+
+* Remember to init the global state in background.js
