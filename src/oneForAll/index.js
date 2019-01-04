@@ -68,6 +68,10 @@ const IAdBState = {
       hr {
         border: none!important;
       }
+
+      iframe {
+        display: none!important;
+      }
     `;
   };
 
