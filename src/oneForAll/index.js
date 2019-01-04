@@ -11,6 +11,7 @@ const IAdBState = {
   darkMode: false,
   bgImage: true,
   noImage: false,
+  readCode: false,
   programSwitch: true,
 };
 
@@ -30,6 +31,7 @@ const IAdBState = {
   let switchFlag;
   let ifBgImage;
   let ifNoImage;
+  let ifReadCode;
 
   let cC = 0;
   let idName = 'iadb_reset_site_style';
@@ -49,10 +51,10 @@ const IAdBState = {
   const KeyCodeArr = Object.keys(IAdBState);
 
   const returnStyleStr = (config) => {
-    const { backgroundColor, fontColor, ifBgImage, ifNoImage } = config;
+    const { backgroundColor, fontColor, ifBgImage, ifNoImage, ifReadCode } = config;
 
     return `
-      *,
+      ${ ifReadCode ? '*:not(pre):not(code):not(span)' : '*' },
       *:before,
       *:after {
         background-color: ${ backgroundColor }!important;
@@ -79,6 +81,7 @@ const IAdBState = {
     fontColor = result.color;
     ifBgImage = result.bgImage;
     ifNoImage = result.noImage;
+    ifReadCode = result.readCode;
 
     darkMode = result.darkMode;
     switchFlag = result.darkMode;
@@ -92,7 +95,8 @@ const IAdBState = {
       backgroundColor,
       fontColor,
       ifBgImage,
-      ifNoImage
+      ifNoImage,
+      ifReadCode
     });
     //rgb(134, 199, 151)
     trickStyle.innerHTML = styleStr;
@@ -108,12 +112,14 @@ const IAdBState = {
         fontColor = result.color;
         ifBgImage = result.bgImage;
         ifNoImage = result.noImage;
+        ifReadCode = result.readCode;
 
         styleStr = returnStyleStr({
           backgroundColor,
           fontColor,
           ifBgImage,
-          ifNoImage
+          ifNoImage,
+          ifReadCode
         });
         // 若 result.color 改变， 则 styleStr、trickStyle.innerHTML 相应改变
         trickStyle.innerHTML = styleStr;

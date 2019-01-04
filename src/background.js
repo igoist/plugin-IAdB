@@ -5,6 +5,7 @@ const IAdBState = {
   darkMode: false,
   bgImage: true,
   noImage: false,
+  readCode: false,
   programSwitch: true,
 };
 

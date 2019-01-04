@@ -16,6 +16,7 @@ const KeyCodeArr = [
   'darkMode',
   'bgImage',
   'noImage',
+  'readCode',
   'programSwitch',
 ];
 
@@ -25,6 +26,7 @@ let ifFontColorSwitch;
 let ifDarkMode;
 let ifBgImage;
 let ifNoImage;
+let ifReadCode;
 let programSwitch;
 
 let lis = document.querySelectorAll('.nav-tags li');
@@ -38,6 +40,8 @@ chrome.storage.sync.get(KeyCodeArr, result => {
   ifBgImage = result.bgImage;
 
   ifNoImage = result.noImage;
+
+  ifReadCode = result.readCode;
 
   programSwitch = result.programSwitch;
 
@@ -53,6 +57,9 @@ chrome.storage.sync.get(KeyCodeArr, result => {
   }
   if (ifNoImage) {
     lis[3].classList.add('active');
+  }
+  if (ifReadCode) {
+    lis[4].classList.add('active');
   }
   if (programSwitch) {
     lis[6].classList.add('active');
@@ -106,6 +113,18 @@ lis[3].addEventListener('click', e => {
     noImage: ifNoImage
   }, () => {
     lis[3].classList.toggle('active');
+  });
+});
+
+lis[4].addEventListener('click', e => {
+  e.preventDefault();
+
+  ifReadCode = !ifReadCode;
+
+  chrome.storage.sync.set({
+    readCode: ifReadCode
+  }, () => {
+    lis[4].classList.toggle('active');
   });
 });
 
