@@ -1,6 +1,8 @@
 import { log, decode, md5 } from 'Util';
 import './oneForAll.css';
 
+import { showKeyMenu } from 'Components/KeyMenu';
+
 const { dev } = log;
 const { decodeUnicode } = decode;
 
@@ -132,6 +134,7 @@ const IAdBState = {
           if (e.altKey) {
             if (cC === 2 && !switchFlag) {
               console.log('Key menu!');
+              showKeyMenu({});
             }
           }
           if (e.ctrlKey) {
