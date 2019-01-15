@@ -15,8 +15,31 @@ export default class KeyMenu {
     // const { content, type } = this.props;
 
     let tmpNode = htmlToElement(`
-      <div id='${ prefix }-keyMenu-wrapper'>
-        <div id='${ prefix }-keyMenu-content'>
+      <div id='${ prefix }-keyMenu-wrapper' class='${ prefix }'>
+        <div id='${ prefix }-keyMenu-content' class='${ prefix }'>
+          <div class='${ prefix }-keyMenu-row ${ prefix }'>
+            <div class='${ prefix }-keyMenu-item ${ prefix }'>
+              <button class='${ prefix }-btn-neon ${ prefix }' style='--color: #f05050;'>A</button>
+            </div>
+            <div class='${ prefix }-keyMenu-item ${ prefix }'>
+              <button class='${ prefix }-btn-neon ${ prefix }' style='--color: #ff9900;'>S</button>
+            </div>
+            <div class='${ prefix }-keyMenu-item ${ prefix }'>
+              <button class='${ prefix }-btn-neon ${ prefix }' style='--color: #ffd52e;'>D</button>
+            </div>
+            <div class='${ prefix }-keyMenu-item ${ prefix }'>
+              <button class='${ prefix }-btn-neon ${ prefix }' style='--color: #49dd8e;'>F</button>
+            </div>
+            <div class='${ prefix }-keyMenu-item ${ prefix }'>
+              <button class='${ prefix }-btn-neon ${ prefix }' style='--color: #a8f0aa;'>G</button>
+            </div>
+            <div class='${ prefix }-keyMenu-item ${ prefix }'>
+              <button class='${ prefix }-btn-neon ${ prefix }' style='--color: #58b3ff;'>H</button>
+            </div>
+            <div class='${ prefix }-keyMenu-item ${ prefix }'>
+              <button class='${ prefix }-btn-neon ${ prefix }' style='--color: #ae99ff;'>J</button>
+            </div>
+          </div>
         </div>
       </div>
     `);

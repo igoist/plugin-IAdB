@@ -1,4 +1,4 @@
-import { log, decode, md5 } from 'Util';
+import { log, decode, md5, prefix } from 'Util';
 import './oneForAll.css';
 
 import { showKeyMenu } from 'Components/KeyMenu';
@@ -57,7 +57,7 @@ const IAdBState = {
     const { backgroundColor, fontColor, ifBgImage, ifNoImage, ifReadCode } = config;
 
     return `
-      ${ ifReadCode ? '*:not(pre):not(code):not(span)' : '*' },
+      ${ ifReadCode ? '*:not(pre):not(code):not(span):not(.' + prefix + ')' : '*:not(.' + prefix + ')' },
       *:before,
       *:after {
         background-color: ${ backgroundColor }!important;
@@ -133,6 +133,7 @@ const IAdBState = {
         if (result.programSwitch) {
           if (e.altKey) {
             if (cC === 2 && !switchFlag) {
+              document.body.insertBefore(trickStyle, document.body.children[0]);
               console.log('Key menu!');
               showKeyMenu({});
             }
