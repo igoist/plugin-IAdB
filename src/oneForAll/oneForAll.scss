@@ -1,0 +1,13 @@
+$IAdB-prefix: 'IAdB';
+
+##{$IAdB-prefix}-keyMenu-wrapper {
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  width: 600px;
+  height: 200px;
+  // background: #33f;
+  background-color: #33c5ff!important;
+  transform: translateX(-50%);
+  z-index: 9999;
+}

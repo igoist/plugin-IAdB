@@ -11,6 +11,10 @@ const webpackConfig = {
   },
 
   resolve: {
+    alias: {
+      Components: path.resolve(path.resolve(__dirname, '..'), 'src/components/'),
+      Util: path.resolve(path.resolve(__dirname, '..'), 'src/util/'),
+    },
     extensions: ['.js', '.jsx']
   },
 
@@ -28,6 +32,10 @@ const webpackConfig = {
         loaders: ['babel-loader'],
         // loaders: ['babel-loader', 'eslint-loader'],
         include: path.join(path.resolve(__dirname, '..'), srcPath)
+      },
+      {
+        test: /\.css$/,
+        loaders: ['style-loader', 'css-loader'],
       },
     ]
   },

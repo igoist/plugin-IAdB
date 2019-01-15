@@ -1,4 +1,5 @@
-import { log, decode, md5 } from '../util/';
+import { log, decode, md5 } from 'Util';
+import './oneForAll.css';
 
 const { dev } = log;
 const { decodeUnicode } = decode;
@@ -108,6 +109,9 @@ const IAdBState = {
     // 以上为初始与执行 & 以下为持久存在事件
 
     let handleIClickEvent = e => {
+      console.log('e.key: ', e.key);
+      console.log('e.keyCode: ', e.keyCode);
+
       chrome.storage.sync.get(KeyCodeArr, result => {
         fontColor = result.color;
         ifBgImage = result.bgImage;
@@ -125,6 +129,11 @@ const IAdBState = {
         trickStyle.innerHTML = styleStr;
 
         if (result.programSwitch) {
+          if (e.altKey) {
+            if (cC === 2 && !switchFlag) {
+              console.log('Key menu!');
+            }
+          }
           if (e.ctrlKey) {
             cC += 1;
 

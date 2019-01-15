@@ -1,4 +1,4 @@
-import { dom } from '../../util/';
+import { dom } from 'Util';
 
 const { htmlToElement } = dom;
 
