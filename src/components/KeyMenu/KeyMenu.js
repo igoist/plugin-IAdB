@@ -6,9 +6,24 @@ const { htmlToElement } = dom;
 export default class KeyMenu {
   constructor(props) {
     this.props = props;
+
+    this.show = this.show.bind(this);
+    this.hide = this.hide.bind(this);
   }
 
   componentDidMount() {
+  }
+
+  show() {
+    this.render();
+    this.componentDidMount();
+  }
+
+  hide() {
+    if (this.tmpNode) {
+      this.tmpNode.parentNode.removeChild(this.tmpNode);
+      this.tmpNode = null;
+    }
   }
 
   render() {

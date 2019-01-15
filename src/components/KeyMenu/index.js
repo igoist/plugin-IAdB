@@ -1,17 +1,15 @@
 import KeyMenu from './KeyMenu';
 
-const showKeyMenu = (config) => {
-  let { content, duration, type } = config;
-  let keyMenu = new KeyMenu({
+
+const returnKeyMenu = (config) => {
+  // let { content, duration, type } = config;
+  return new KeyMenu({
     // content,
     // duration,
     // type
   });
-
-  keyMenu.render();
-  keyMenu.componentDidMount();
 }
 
 export {
-  showKeyMenu
+  returnKeyMenu
 };

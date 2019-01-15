@@ -1,10 +1,11 @@
 import { log, decode, md5, prefix } from 'Util';
 import './oneForAll.css';
 
-import { showKeyMenu } from 'Components/KeyMenu';
+import { returnKeyMenu } from 'Components/KeyMenu';
 
 const { dev } = log;
 const { decodeUnicode } = decode;
+
 
 // import { Message } from '../components/Message/';
 
@@ -27,6 +28,7 @@ const IAdBState = {
    * darkMode 当前模式
    * ifBgImage 是否保留背景图
    * programSwitch 插件开关
+   * keyMenu 就是 keyMenu
    */
   let backgroundColor = '#2a2a2a';
   let fontColor = '#86c797';
@@ -38,6 +40,9 @@ const IAdBState = {
 
   let cC = 0;
   let idName = 'iadb_reset_site_style';
+
+  const keyMenu = returnKeyMenu({});
+
 
   let trickStyle = document.createElement('style');
   trickStyle.id = idName;
@@ -113,6 +118,7 @@ const IAdBState = {
     let handleIClickEvent = e => {
       console.log('e.key: ', e.key);
       console.log('e.keyCode: ', e.keyCode);
+      console.log('cC: ', cC, ' switchFlag:', switchFlag);
 
       chrome.storage.sync.get(KeyCodeArr, result => {
         fontColor = result.color;
@@ -134,8 +140,9 @@ const IAdBState = {
           if (e.altKey) {
             if (cC === 2 && !switchFlag) {
               document.body.insertBefore(trickStyle, document.body.children[0]);
+              keyMenu.show();
               console.log('Key menu!');
-              showKeyMenu({});
+              switchFlag = true;
             }
           }
           if (e.ctrlKey) {
@@ -152,6 +159,9 @@ const IAdBState = {
             if (cC === 2 && switchFlag) {
               let t = document.getElementById(idName);
               t.parentNode.removeChild(t);
+
+              keyMenu.hide();
+
               switchFlag = !switchFlag;
               cC = 0;
 
