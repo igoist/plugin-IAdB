@@ -113,6 +113,8 @@ const IAdBState = {
       document.body.insertBefore(trickStyle, document.body.children[0]);
     }
 
+    keyMenu.init();
+
     // 以上为初始与执行 & 以下为持久存在事件
 
     let handleIClickEvent = e => {
@@ -137,12 +139,18 @@ const IAdBState = {
         trickStyle.innerHTML = styleStr;
 
         if (result.programSwitch) {
-          if (e.altKey) {
-            if (cC === 2 && !switchFlag) {
-              document.body.insertBefore(trickStyle, document.body.children[0]);
+          if (e.altKey & !keyMenu.state.doing) {
+            // if (cC === 2 && !switchFlag) {
+            //   document.body.insertBefore(trickStyle, document.body.children[0]);
+            //   keyMenu.show();
+            //   console.log('Key menu!');
+            //   switchFlag = true;
+            // }
+            console.log('keyMenu state', keyMenu.state);
+            if (keyMenu.state.show) {
+              keyMenu.hide();
+            } else {
               keyMenu.show();
-              console.log('Key menu!');
-              switchFlag = true;
             }
           }
           if (e.ctrlKey) {
