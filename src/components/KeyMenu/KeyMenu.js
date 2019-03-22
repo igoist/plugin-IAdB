@@ -8,7 +8,8 @@ export default class KeyMenu {
     this.props = props;
     this.state = {
       show: false,
-      doing: false
+      doing: false,
+      withMask: !!this.props.withMask
     };
 
     this.init = this.init.bind(this);
@@ -47,27 +48,44 @@ export default class KeyMenu {
     if (this.tmpNode && this.state.show) {
       this.switchDoing(true);
       this.state.show = false;
-      this.keyMenuMask.classList.add('fadeOut');
-      this.keyMenu.classList.add('leaving');
+      if (this.state.withMask) {
+        this.keyMenuMask.classList.add('fadeOut');
+        this.keyMenu.classList.add('leaving');
 
-      let handleTransitionEnd = () => {
-        console.log('fadeOut transitionEnd');
-        this.tmpNode.classList.add('hidden');
-        this.keyMenuMask.classList.remove('fadeOut');
-        this.keyMenu.className = 'IAdB';
-        this.keyMenuMask.removeEventListener('transitionend', handleTransitionEnd);
-        this.switchDoing(false);
-      };
-      this.keyMenuMask.addEventListener('transitionend', handleTransitionEnd, false);
+        let handleTransitionEnd = () => {
+          console.log('fadeOut transitionEnd');
+          this.tmpNode.classList.add('hidden');
+          this.keyMenuMask.classList.remove('fadeOut');
+          this.keyMenu.className = 'IAdB';
+          this.keyMenuMask.removeEventListener('transitionend', handleTransitionEnd);
+          this.switchDoing(false);
+        };
+        this.keyMenuMask.addEventListener('transitionend', handleTransitionEnd, false);
+      } else {
+        this.keyMenu.classList.add('leaving');
+        let handleTransitionEnd = () => {
+          console.log('fadeOut without mask transitionEnd');
+          this.tmpNode.classList.add('hidden');
+          this.keyMenu.className = 'IAdB';
+          this.keyMenuLastItem.removeEventListener('transitionend', handleTransitionEnd);
+          this.switchDoing(false);
+        };
+        this.keyMenuLastItem.addEventListener('transitionend', handleTransitionEnd, false);
+      }
     }
   }
 
   render() {
     // const { content, type } = this.props;
 
+    let tmpStyle = '';
+    if (!this.state.withMask) {
+      tmpStyle = 'display: none';
+    }
+
     let tmpNode = htmlToElement(`
       <div id='${ prefix }-keyMenu-box' class='hidden'>
-        <div id='${ prefix }-keyMenu-mask' class='${ prefix }'></div>
+        <div id='${ prefix }-keyMenu-mask' class='${ prefix }' style='${ tmpStyle }'></div>
         <div id='${ prefix }-keyMenu-wrapper' class='${ prefix }'>
           <div id='${ prefix }-keyMenu-content' class='${ prefix }'>
             <div class='${ prefix }-keyMenu-row ${ prefix }'>
@@ -103,15 +121,15 @@ export default class KeyMenu {
     this.keyMenuLastItem = tmpNode.querySelectorAll(`.${ prefix }-keyMenu-item`)[6];
     this.keyMenuMask = tmpNode.querySelector(`#${ prefix }-keyMenu-mask`);
     console.log('keyMenu: ', this.keyMenu);
-    let G = document.querySelector(`#${ prefix }-keyMenu-wrapper`);
+    let G = document.querySelector(`#${ prefix }-keyMenu-box`);
     // Before render(init), there should be no dom as G
     if (G) {
       G.parentNode.removeChild(G);
       console.log('here remove');
-    } else {
-      document.body.appendChild(tmpNode);
-      console.log('here append');
     }
+
+    document.body.appendChild(tmpNode);
+    console.log('here append');
 
     return tmpNode;
   }
