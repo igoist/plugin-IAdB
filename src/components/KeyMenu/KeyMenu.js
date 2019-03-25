@@ -38,6 +38,10 @@ export default class KeyMenu {
           this.keyMenu.className = 'IAdB prepareForLeaving';
           this.keyMenuLastItem.removeEventListener('transitionend', handleTransitionEnd);
           this.switchDoing(false);
+          if (this.props.showCallback) {
+            console.log('here, showCall');
+            this.props.showCallback();
+          }
         };
         this.keyMenuLastItem.addEventListener('transitionend', handleTransitionEnd, false);
       }, 36); // set 2 frame delay -- if hidden has not completed, and the 'ready' have been set, then you guess
@@ -59,6 +63,9 @@ export default class KeyMenu {
           this.keyMenu.className = 'IAdB';
           this.keyMenuMask.removeEventListener('transitionend', handleTransitionEnd);
           this.switchDoing(false);
+          if (this.props.hideCallback) {
+            this.props.hideCallback();
+          }
         };
         this.keyMenuMask.addEventListener('transitionend', handleTransitionEnd, false);
       } else {
@@ -69,6 +76,9 @@ export default class KeyMenu {
           this.keyMenu.className = 'IAdB';
           this.keyMenuLastItem.removeEventListener('transitionend', handleTransitionEnd);
           this.switchDoing(false);
+          if (this.props.hideCallback) {
+            this.props.hideCallback();
+          }
         };
         this.keyMenuLastItem.addEventListener('transitionend', handleTransitionEnd, false);
       }

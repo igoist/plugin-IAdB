@@ -43,7 +43,14 @@ const IAdBState = {
   let keyArray = '';
   let idName = 'iadb_reset_site_style';
 
-  const keyMenu = returnKeyMenu({});
+  const keyMenu = returnKeyMenu({
+    // showCallback: () => {
+    //   console.log('for showCall');
+    // },
+    // hideCallback: () => {
+    //   console.log('for hideCall');
+    // }
+  });
 
 
   let trickStyle = document.createElement('style');
