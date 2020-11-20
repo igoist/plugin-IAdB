@@ -1,4 +1,6 @@
-(function() {
+const mainF = function () {
+  const Q = (s) => document.querySelector(s);
+  const QA = (s) => document.querySelectorAll(s);
   /**
    * 顾老几行代码知乎热门屏蔽
    * 再看看自己当初写的实在太蠢萌，而且之前一直不晓得 Mutation 功能存在
@@ -6,37 +8,40 @@
    * 留一线情面，不把其直接 remove，而是用模拟点击的方式屏蔽，话说这注释也是好玩
    */
 
-  function purify (nodes) {
+  function purify(nodes) {
     for (let node of nodes) {
       if (node.textContent.indexOf('热门内容, ') === 0) {
-        node.querySelector('.TopstoryItem-rightButton').click()
+        node.querySelector('.TopstoryItem-rightButton').click();
         // node.parentNode.removeChild(node) // 做人留一线，先注释掉
         console.log(node);
       }
     }
   }
 
-  const mo = new MutationObserver(mutations => {
+  const mo = new MutationObserver((mutations) => {
     for (let mutation of mutations) {
       if (mutation.type === 'childList') {
-        purify(mutation.addedNodes)
+        purify(mutation.addedNodes);
       }
     }
-  })
+  });
 
-  purify(document.querySelectorAll('.TopstoryItem'))
-  if (document.querySelector('.TopstoryMain > div')) {
-    mo.observe(document.querySelector('.TopstoryMain > div'), { childList: true })
+  purify(QA('.TopstoryItem'));
+
+  if (Q('.TopstoryMain > div')) {
+    mo.observe(Q('.TopstoryMain > div'), { childList: true });
   }
   /**
    * 首页去 Sidebar
    * 排版调整
    */
-  let GlobalSideBar = document.querySelector('.GlobalSideBar');
+  let GlobalSideBar = Q('.GlobalSideBar');
   if (GlobalSideBar) {
     GlobalSideBar.remove();
-    let TopstoryMain = document.querySelector('.TopstoryMain');
-    TopstoryMain.style.width = '100%';
+    let TopstoryMain = Q('.TopstoryMain');
+    if (TopstoryMain) {
+      TopstoryMain.style.width = '100%';
+    }
   }
 
   /**
@@ -45,19 +50,19 @@
    * .Question-sideColumn 侧栏
    * .Question-main 主要内容，对其排版样式重新自定义
    */
-  let AdblockBanner = document.querySelector('.AdblockBanner');
+  let AdblockBanner = Q('.AdblockBanner');
 
   if (AdblockBanner) {
     AdblockBanner.remove();
   }
 
-  let QuestionSideColumn = document.querySelector('.Question-sideColumn');
+  let QuestionSideColumn = Q('.Question-sideColumn');
 
   if (QuestionSideColumn) {
     QuestionSideColumn.remove();
   }
 
-  let QuestionMain = document.querySelector('.Question-main');
+  let QuestionMain = Q('.Question-main');
 
   if (QuestionMain) {
     QuestionMain.style = `
@@ -67,8 +72,35 @@
       width: 1170px;
     `;
 
-    let QuestionMainColumn = document.querySelector('.Question-mainColumn');
+    let QuestionMainColumn = Q('.Question-mainColumn');
 
     QuestionMainColumn.style.width = '100%';
   }
-})();
+
+  /**
+   * 2020.11.20
+   */
+
+  let TopstoryMainColumn = Q('.Topstory-mainColumn');
+  if (TopstoryMainColumn) {
+    TopstoryMainColumn.style.width = '100%';
+  }
+
+  console.log('=========', TopstoryMainColumn);
+
+  let SearchMain = Q('.SearchMain');
+  if (SearchMain) {
+    SearchMain.style.width = '100%';
+  }
+
+  let SearchSideBar = Q('.SearchSideBar');
+  if (SearchSideBar) {
+    SearchSideBar.style.display = 'none';
+  }
+};
+
+try {
+  mainF();
+} catch (err) {
+  console.log(`%cmainF catch%c: ${err}`, 'background: #fff; color:  #f49cec;', 'color: #149cec;', err);
+}
