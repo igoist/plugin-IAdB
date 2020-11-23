@@ -1,11 +1,10 @@
-import { log, decode, md5, prefix } from 'Util';
+import { log, decode, md5, prefix } from '@Utils';
 import './oneForAll.css';
 
-import { returnKeyMenu } from 'Components/KeyMenu';
+import { returnKeyMenu } from '@Components/KeyMenu';
 
 const { dev } = log;
 const { decodeUnicode } = decode;
-
 
 // import { Message } from '../components/Message/';
 
@@ -16,10 +15,11 @@ const IAdBState = {
   bgImage: true,
   noImage: false,
   readCode: false,
-  programSwitch: true,
+  programSwitch: true
 };
 
-(function() {
+(function () {
+  console.log('eeee2');
   /**
    * backgroundColor
    * fontColor
@@ -44,6 +44,7 @@ const IAdBState = {
   let idName = 'iadb_reset_site_style';
 
   const keyMenu = returnKeyMenu({
+    withMask: true
     // showCallback: () => {
     //   console.log('for showCall');
     // },
@@ -51,7 +52,6 @@ const IAdBState = {
     //   console.log('for hideCall');
     // }
   });
-
 
   let trickStyle = document.createElement('style');
   trickStyle.id = idName;
@@ -79,6 +79,11 @@ const IAdBState = {
           }
         }
         return true;
+      case '001':
+        if (!keyMenu.state.doing) {
+          document.title = 'Yahaha';
+        }
+        return true;
       default:
         console.log('無駄ですよ');
         return false;
@@ -89,18 +94,18 @@ const IAdBState = {
     const { backgroundColor, fontColor, ifBgImage, ifNoImage, ifReadCode } = config;
 
     return `
-      ${ ifReadCode ? '*:not(pre):not(code):not(span):not(.' + prefix + ')' : '*:not(.' + prefix + ')' },
+      ${ifReadCode ? '*:not(pre):not(code):not(span):not(.' + prefix + ')' : '*:not(.' + prefix + ')'},
       *:before,
       *:after {
-        background-color: ${ backgroundColor }!important;
-        border-color: ${ backgroundColor }!important;
-        color: ${ fontColor }!important;
+        background-color: ${backgroundColor}!important;
+        border-color: ${backgroundColor}!important;
+        color: ${fontColor}!important;
         box-shadow: none!important;
         text-shadow: none!important;
-        ${ ifBgImage ? 'background-image: none!important;' : '' }
+        ${ifBgImage ? 'background-image: none!important;' : ''}
       }
 
-      ${ ifNoImage ? 'img { visibility: hidden!important; }' : '' }
+      ${ifNoImage ? 'img { visibility: hidden!important; }' : ''}
 
       hr {
         border: none!important;
@@ -112,7 +117,7 @@ const IAdBState = {
     `;
   };
 
-  chrome.storage.sync.get(KeyCodeArr, result => {
+  chrome.storage.sync.get(KeyCodeArr, (result) => {
     fontColor = result.color;
     ifBgImage = result.bgImage;
     ifNoImage = result.noImage;
@@ -144,12 +149,12 @@ const IAdBState = {
 
     // 以上为初始与执行 & 以下为持久存在事件
 
-    let handleIClickEvent = e => {
+    let handleIClickEvent = (e) => {
       console.log('e.key: ', e.key, ' keyArray: ', keyArray);
       console.log('e.keyCode: ', e.keyCode);
       console.log('cC: ', cC, ' switchFlag:', switchFlag);
 
-      chrome.storage.sync.get(KeyCodeArr, result => {
+      chrome.storage.sync.get(KeyCodeArr, (result) => {
         fontColor = result.color;
         ifBgImage = result.bgImage;
         ifNoImage = result.noImage;
@@ -186,55 +191,56 @@ const IAdBState = {
 
               // Message.success('Switch On');
             }
-          } else if (e.key === 'e' || e.key === 'E' && cC === 1 && !switchFlag) {
-            let formData = new FormData();
+            // ---------------------------
+            // } else if (e.key === 'e' || e.key === 'E' && cC === 1 && !switchFlag) {
+            //   let formData = new FormData();
 
-            let q = window.getSelection().toString();
-            let appid = 20181026000225932;
-            let salt = 666666;
-            formData.append('q', q);
-            formData.append('from', 'en');
-            formData.append('to', 'zh');
-            formData.append('appid', appid);
-            formData.append('salt', salt);
+            //   let q = window.getSelection().toString();
+            //   let appid = 20181026000225932;
+            //   let salt = 666666;
+            //   formData.append('q', q);
+            //   formData.append('from', 'en');
+            //   formData.append('to', 'zh');
+            //   formData.append('appid', appid);
+            //   formData.append('salt', salt);
 
-            let sign = md5(appid + q + salt + '2jWjLSYSR71Vd1YTOMPV');
-            formData.append('sign', sign);
+            //   let sign = md5(appid + q + salt + '2jWjLSYSR71Vd1YTOMPV');
+            //   formData.append('sign', sign);
 
-            let xhr = new XMLHttpRequest();
-            xhr.open('POST', 'https://fanyi-api.baidu.com/api/trans/vip/translate');
-            // xhr.onprogress = (e) => {
-            //   if (e.lengthComputable) {
-            //     progress.style.width = (e.loaded / e.total) * 100 + '%';
-            //   }
-            // };
-            xhr.onloadend = () => {
-              if (xhr.readyState === 4 && xhr.status === 200) {
-                let obj = JSON.parse(xhr.response);
-                let resultArr = obj.trans_result;
-                let result = decodeUnicode(resultArr[0].dst);
-                // dev({
-                //   title: 'oneForAll - translate',
-                //   text: obj,
-                //   textColor: 'green',
-                // });
-                dev({
-                  title: 'oneForAll - translate',
-                  text: resultArr,
-                  textColor: 'green',
-                });
-                dev({
-                  title: 'oneForAll - translate',
-                  text: result,
-                  textColor: 'green',
-                });
-              }
-              if (xhr.readyState === 4 && xhr.status === 413) {
-              }
-            };
-            xhr.send(formData);
-            cC = 0;
-          } else if (document.activeElement.nodeName !== 'INPUT' && keyArray.length < 3 && (47 < e.keyCode && e.keyCode < 58)) {
+            //   let xhr = new XMLHttpRequest();
+            //   xhr.open('POST', 'https://fanyi-api.baidu.com/api/trans/vip/translate');
+            //   // xhr.onprogress = (e) => {
+            //   //   if (e.lengthComputable) {
+            //   //     progress.style.width = (e.loaded / e.total) * 100 + '%';
+            //   //   }
+            //   // };
+            //   xhr.onloadend = () => {
+            //     if (xhr.readyState === 4 && xhr.status === 200) {
+            //       let obj = JSON.parse(xhr.response);
+            //       let resultArr = obj.trans_result;
+            //       let result = decodeUnicode(resultArr[0].dst);
+            //       // dev({
+            //       //   title: 'oneForAll - translate',
+            //       //   text: obj,
+            //       //   textColor: 'green',
+            //       // });
+            //       dev({
+            //         title: 'oneForAll - translate',
+            //         text: resultArr,
+            //         textColor: 'green',
+            //       });
+            //       dev({
+            //         title: 'oneForAll - translate',
+            //         text: result,
+            //         textColor: 'green',
+            //       });
+            //     }
+            //     if (xhr.readyState === 4 && xhr.status === 413) {
+            //     }
+            //   };
+            //   xhr.send(formData);
+            //   cC = 0;
+          } else if (document.activeElement.nodeName !== 'INPUT' && keyArray.length < 3 && 47 < e.keyCode && e.keyCode < 58) {
             // keyMenu 显示 && keyArray.length < 3 && 焦点非 input && key 0 ~ 9
             keyArray += e.key;
             if (keyArray.length === 3) {
@@ -245,6 +251,11 @@ const IAdBState = {
                 keyArray = keyArray.slice(1, 3);
               }
             }
+          } else if (e.keyCode === 27 && cC === 1) {
+            window.chrome.runtime.sendMessage('kfajbgpmhinphopgjjempdcgihajeejb', {
+              to: 'huaban-bg',
+              act: 'toggleREPartner'
+            });
           } else {
             keyArray = '';
             cC = 0;

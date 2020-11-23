@@ -1,7 +1,6 @@
-import { dom, prefix } from 'Util';
+import { dom, prefix } from '@Utils';
 
 const { htmlToElement } = dom;
-
 
 export default class KeyMenu {
   constructor(props) {
@@ -52,34 +51,27 @@ export default class KeyMenu {
     if (this.tmpNode && this.state.show) {
       this.switchDoing(true);
       this.state.show = false;
+
+      let handleTransitionEnd = (e) => {
+        console.log('fadeOut without type:', e.target === this.keyMenuMask, e.target === this.keyMenuLastItem);
+        this.tmpNode.classList.add('hidden');
+        if (e.target === this.keyMenuMask) {
+          e.target.classList.remove('fadeOut');
+        }
+        this.keyMenu.className = 'IAdB';
+        e.target.removeEventListener('transitionend', handleTransitionEnd);
+        this.switchDoing(false);
+        if (this.props.hideCallback) {
+          this.props.hideCallback();
+        }
+      };
+
+      this.keyMenu.classList.add('leaving');
+
       if (this.state.withMask) {
         this.keyMenuMask.classList.add('fadeOut');
-        this.keyMenu.classList.add('leaving');
-
-        let handleTransitionEnd = () => {
-          console.log('fadeOut transitionEnd');
-          this.tmpNode.classList.add('hidden');
-          this.keyMenuMask.classList.remove('fadeOut');
-          this.keyMenu.className = 'IAdB';
-          this.keyMenuMask.removeEventListener('transitionend', handleTransitionEnd);
-          this.switchDoing(false);
-          if (this.props.hideCallback) {
-            this.props.hideCallback();
-          }
-        };
         this.keyMenuMask.addEventListener('transitionend', handleTransitionEnd, false);
       } else {
-        this.keyMenu.classList.add('leaving');
-        let handleTransitionEnd = () => {
-          console.log('fadeOut without mask transitionEnd');
-          this.tmpNode.classList.add('hidden');
-          this.keyMenu.className = 'IAdB';
-          this.keyMenuLastItem.removeEventListener('transitionend', handleTransitionEnd);
-          this.switchDoing(false);
-          if (this.props.hideCallback) {
-            this.props.hideCallback();
-          }
-        };
         this.keyMenuLastItem.addEventListener('transitionend', handleTransitionEnd, false);
       }
     }
@@ -94,31 +86,31 @@ export default class KeyMenu {
     }
 
     let tmpNode = htmlToElement(`
-      <div id='${ prefix }-keyMenu-box' class='hidden'>
-        <div id='${ prefix }-keyMenu-mask' class='${ prefix }' style='${ tmpStyle }'></div>
-        <div id='${ prefix }-keyMenu-wrapper' class='${ prefix }'>
-          <div id='${ prefix }-keyMenu-content' class='${ prefix }'>
-            <div class='${ prefix }-keyMenu-row ${ prefix }'>
-              <div class='${ prefix }-keyMenu-item ${ prefix }' style='--item-index:0;'>
-                <button class='${ prefix }-btn-neon ${ prefix }' style='--color: #f05050;'>A</button>
+      <div id='${prefix}-keyMenu-box' class='hidden'>
+        <div id='${prefix}-keyMenu-mask' class='${prefix}' style='${tmpStyle}'></div>
+        <div id='${prefix}-keyMenu-wrapper' class='${prefix}'>
+          <div id='${prefix}-keyMenu-content' class='${prefix}'>
+            <div class='${prefix}-keyMenu-row ${prefix}'>
+              <div class='${prefix}-keyMenu-item ${prefix}' style='--item-index:0;'>
+                <button class='${prefix}-btn-neon ${prefix}' style='--color: #f05050;'>A</button>
               </div>
-              <div class='${ prefix }-keyMenu-item ${ prefix }' style='--item-index:1;'>
-                <button class='${ prefix }-btn-neon ${ prefix }' style='--color: #ff9900;'>S</button>
+              <div class='${prefix}-keyMenu-item ${prefix}' style='--item-index:1;'>
+                <button class='${prefix}-btn-neon ${prefix}' style='--color: #ff9900;'>S</button>
               </div>
-              <div class='${ prefix }-keyMenu-item ${ prefix }' style='--item-index:2;'>
-                <button class='${ prefix }-btn-neon ${ prefix }' style='--color: #ffd52e;'>D</button>
+              <div class='${prefix}-keyMenu-item ${prefix}' style='--item-index:2;'>
+                <button class='${prefix}-btn-neon ${prefix}' style='--color: #ffd52e;'>D</button>
               </div>
-              <div class='${ prefix }-keyMenu-item ${ prefix }' style='--item-index:3;'>
-                <button class='${ prefix }-btn-neon ${ prefix }' style='--color: #49dd8e;'>F</button>
+              <div class='${prefix}-keyMenu-item ${prefix}' style='--item-index:3;'>
+                <button class='${prefix}-btn-neon ${prefix}' style='--color: #49dd8e;'>F</button>
               </div>
-              <div class='${ prefix }-keyMenu-item ${ prefix }' style='--item-index:4;'>
-                <button class='${ prefix }-btn-neon ${ prefix }' style='--color: #a8f0aa;'>G</button>
+              <div class='${prefix}-keyMenu-item ${prefix}' style='--item-index:4;'>
+                <button class='${prefix}-btn-neon ${prefix}' style='--color: #a8f0aa;'>G</button>
               </div>
-              <div class='${ prefix }-keyMenu-item ${ prefix }' style='--item-index:5;'>
-                <button class='${ prefix }-btn-neon ${ prefix }' style='--color: #58b3ff;'>H</button>
+              <div class='${prefix}-keyMenu-item ${prefix}' style='--item-index:5;'>
+                <button class='${prefix}-btn-neon ${prefix}' style='--color: #58b3ff;'>H</button>
               </div>
-              <div class='${ prefix }-keyMenu-item ${ prefix }' style='--item-index:6;'>
-                <button class='${ prefix }-btn-neon ${ prefix }' style='--color: #ae99ff;'>J</button>
+              <div class='${prefix}-keyMenu-item ${prefix}' style='--item-index:6;'>
+                <button class='${prefix}-btn-neon ${prefix}' style='--color: #ae99ff;'>J</button>
               </div>
             </div>
           </div>
@@ -127,11 +119,11 @@ export default class KeyMenu {
     `);
 
     this.tmpNode = tmpNode;
-    this.keyMenu = tmpNode.querySelector(`#${ prefix }-keyMenu-wrapper`);
-    this.keyMenuLastItem = tmpNode.querySelectorAll(`.${ prefix }-keyMenu-item`)[6];
-    this.keyMenuMask = tmpNode.querySelector(`#${ prefix }-keyMenu-mask`);
+    this.keyMenu = tmpNode.querySelector(`#${prefix}-keyMenu-wrapper`);
+    this.keyMenuLastItem = tmpNode.querySelectorAll(`.${prefix}-keyMenu-item`)[6];
+    this.keyMenuMask = tmpNode.querySelector(`#${prefix}-keyMenu-mask`);
     console.log('keyMenu: ', this.keyMenu);
-    let G = document.querySelector(`#${ prefix }-keyMenu-box`);
+    let G = document.querySelector(`#${prefix}-keyMenu-box`);
     // Before render(init), there should be no dom as G
     if (G) {
       G.parentNode.removeChild(G);

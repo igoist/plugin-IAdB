@@ -34,12 +34,15 @@
       "js": ["src/csdn.js"]
     },
     {
-      "matches": ["*://www.google.com.hk/*"],
+      "matches": ["*://www.google.com.hk/*", "*://www.google.com/*"],
       "js": ["src/google.js"]
     },
     {
       "matches": ["*://*.zhihu.com/*"],
-      "js": ["src/zhihu.js"]
+      "js": [
+        "dist/dll/react.dll.js",
+        "dist/zhihu.bundle.min.js"
+      ]
     }
   ],
   "manifest_version": 2,

@@ -1,3 +1,9 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { log } from '@Utils';
+
+const { useEffect, useState } = React;
+
 const mainF = function () {
   const Q = (s) => document.querySelector(s);
   const QA = (s) => document.querySelectorAll(s);
@@ -133,7 +139,10 @@ const mainF = function () {
     for (i = 0; i < mainArr.length; i++) {
       let tmp = Q(mainArr[i]);
       if (tmp) {
-        console.log(`${mainArr[i]} exist`);
+        log.l({
+          title: 'checkMS',
+          text: `${mainArr[i]} exist`
+        });
         console.log(tmp);
         x = {
           c: mainArr[i],
@@ -145,7 +154,10 @@ const mainF = function () {
     for (i = 0; i < sideBarArr.length; i++) {
       let tmp = Q(sideBarArr[i]);
       if (tmp) {
-        console.log(`${sideBarArr[i]} exist`);
+        log.l({
+          title: 'checkMS',
+          text: `${sideBarArr[i]} exist`
+        });
         console.log(tmp);
         y = {
           c: sideBarArr[i],
@@ -157,68 +169,53 @@ const mainF = function () {
     return [x, y];
   };
 
-  // checkMS();
-
-  const htmlToElement = (html) => {
-    let template = document.createElement('template');
-    html = html.trim();
-    template.innerHTML = html;
-    return template.content.firstChild;
-  };
-
   let div = document.createElement('div');
-  div.classList.add('zhihu-handler');
   document.body.appendChild(div);
 
   const prefix = 'zh';
 
-  const render = () => {
-    const [x, y] = checkMS();
+  const [x, y] = checkMS();
 
-    let tmp = htmlToElement(`
-      <div>
-        <div class='${prefix}-item ${x && x.a && 'active'}'>
-          <button class='xxx'>${x ? x.c : '...'}</button>
+  const R = () => {
+    const [a, setA] = useState(false);
+    const [b, setB] = useState(false);
+
+    useEffect(() => {
+      hA();
+      hB();
+    }, []);
+
+    const hA = () => {
+      if (a) {
+        x.d.style.width = '';
+      } else {
+        x.d.style.width = '100%';
+      }
+      setA(!a);
+    };
+
+    const hB = () => {
+      if (b) {
+        y.d.style.display = '';
+      } else {
+        y.d.style.display = 'none';
+      }
+      setB(!b);
+    };
+
+    return (
+      <div className='zhihu-handler'>
+        <div className={`${prefix}-item ${a && 'active'}`} onClick={hA}>
+          <button class='xxx'>{x ? x.c : '...'}</button>
         </div>
-        <div class='${prefix}-item ${y && y.a && 'active'}'>
-          <button class='yyy'>${y ? y.c : '...'}</button>
+        <div className={`${prefix}-item ${b && 'active'}`} onClick={hB}>
+          <button class='yyy'>{y ? y.c : '...'}</button>
         </div>
       </div>
-    `);
-
-    const btns = tmp.querySelectorAll(`.${prefix}-item`);
-
-    if (x) {
-      btns[0].addEventListener('click', () => {
-        console.log(`handle ${x.c}`);
-        if (x.a) {
-          x.d.style.width = '';
-          x.a = false;
-        } else {
-          x.d.style.width = '100%';
-          x.a = true;
-        }
-      });
-    }
-
-    if (y) {
-      btns[1].addEventListener('click', () => {
-        console.log(`handle ${y.c}`);
-        if (y.a) {
-          y.d.style.display = '';
-          y.a = false;
-        } else {
-          y.d.style.display = 'none';
-          y.a = true;
-        }
-      });
-    }
-
-    div.innerHTML = '';
-    div.appendChild(tmp);
+    );
   };
 
-  render();
+  ReactDOM.render(<R />, div);
 };
 
 try {
@@ -226,8 +223,6 @@ try {
 } catch (err) {
   console.log(`%cmainF catch%c: ${err}`, 'background: #fff; color:  #f49cec;', 'color: #149cec;', err);
 }
-
-window.xtz = mainF();
 
 /**
  * /hot 首页（热榜）
