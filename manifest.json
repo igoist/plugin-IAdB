@@ -1,7 +1,7 @@
 {
   "name": "IAdB",
   "description": "igoist AdBlock, aim at baidu, ...",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "background": {
     "scripts": ["src/background.js"],
     "persistent": false

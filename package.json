@@ -1,6 +1,6 @@
 {
   "name": "iadb",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "It means igoist's Ad Blocker.",
   "main": "index.js",
   "scripts": {

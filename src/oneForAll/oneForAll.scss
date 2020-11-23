@@ -129,5 +129,9 @@ $zh: 'zh';
     &.active {
       color: #86c7c7;
     }
+
+    &:first-child.active{
+      color: #86c797;
+    }
   }
 }

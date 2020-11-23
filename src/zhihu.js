@@ -1,12 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { log } from '@Utils';
+import { log, dom } from '@Utils';
 
 const { useEffect, useState } = React;
+const { Q, QA } = dom;
 
 const mainF = function () {
-  const Q = (s) => document.querySelector(s);
-  const QA = (s) => document.querySelectorAll(s);
   /**
    * 顾老几行代码知乎热门屏蔽
    * 再看看自己当初写的实在太蠢萌，而且之前一直不晓得 Mutation 功能存在
@@ -37,18 +36,6 @@ const mainF = function () {
   if (Q('.TopstoryMain > div')) {
     mo.observe(Q('.TopstoryMain > div'), { childList: true });
   }
-  /**
-   * 首页去 Sidebar
-   * 排版调整
-   */
-  // let GlobalSideBar = Q('.GlobalSideBar');
-  // if (GlobalSideBar) {
-  //   GlobalSideBar.remove();
-  //   let TopstoryMain = Q('.TopstoryMain');
-  //   if (TopstoryMain) {
-  //     TopstoryMain.style.width = '100%';
-  //   }
-  // }
 
   /**
    * 问题答案页
@@ -63,69 +50,6 @@ const mainF = function () {
 
   // if (AdblockBanner) {
   //   AdblockBanner.remove();
-  // }
-
-  // let QuestionSideColumn = Q('.Question-sideColumn');
-
-  // if (QuestionSideColumn) {
-  //   QuestionSideColumn.style.display = 'none';
-  // }
-
-  // let QuestionMain = Q('.Question-main');
-
-  // if (QuestionMain) {
-  //   QuestionMain.style.width = '100%';
-
-  //   let QuestionMainColumn = Q('.Question-mainColumn');
-
-  //   if (QuestionMainColumn) {
-  //     QuestionMainColumn.style.width = '100%';
-
-  //     let p = QuestionMainColumn.parentNode;
-  //     if (p && p.className.indexOf('ListShortcut') !== -1) {
-  //       p.style.width = '100%';
-  //     }
-  //   }
-
-  //   let ViewAllBtns = QA('.Question-main .ViewAll');
-  //   if (ViewAllBtns && ViewAllBtns.length > 0) {
-  //     for (let i = 0; i < ViewAllBtns.length; i++) {
-  //       ViewAllBtns[i].addEventListener('click', () => {
-  //         console.log(`${i} clicked`);
-  //         setTimeout(() => {
-  //           QuestionMainColumn = Q('.Question-mainColumn');
-  //           QuestionSideColumn = Q('.Question-sideColumn');
-  //           if (QuestionMainColumn) {
-  //             QuestionMainColumn.style.width = '100%';
-  //           }
-  //           if (QuestionSideColumn) {
-  //             QuestionSideColumn.style.display = 'none';
-  //           }
-  //         }, 1000);
-  //       });
-  //     }
-  //   }
-  // }
-
-  /**
-   * 首页热榜
-   */
-  // let TopstoryMainColumn = Q('.Topstory-mainColumn');
-  // if (TopstoryMainColumn) {
-  //   TopstoryMainColumn.style.width = '100%';
-  // }
-
-  /**
-   * 搜索页
-   */
-  // let SearchMain = Q('.SearchMain');
-  // if (SearchMain) {
-  //   SearchMain.style.width = '100%';
-  // }
-
-  // let SearchSideBar = Q('.SearchSideBar');
-  // if (SearchSideBar) {
-  //   SearchSideBar.style.display = 'none';
   // }
 
   ////////////
@@ -173,17 +97,43 @@ const mainF = function () {
   document.body.appendChild(div);
 
   const prefix = 'zh';
-
-  const [x, y] = checkMS();
+  const [main, siderBar] = checkMS();
 
   const R = () => {
+    const [x, setX] = useState(main);
+    const [y, setY] = useState(siderBar);
     const [a, setA] = useState(false);
     const [b, setB] = useState(false);
 
     useEffect(() => {
       hA();
       hB();
+
+      let ViewAllBtns = QA('.Question-main .ViewAll');
+      if (ViewAllBtns.length > 0) {
+        for (let i = 0; i < ViewAllBtns.length; i++) {
+          ViewAllBtns[i].addEventListener('click', () => {
+            setTimeout(() => {
+              const [main, siderBar] = checkMS();
+              setA(false);
+              setB(false);
+              setX(main);
+              setY(siderBar);
+            }, 1000);
+          });
+        }
+      }
     }, []);
+
+    useEffect(() => {
+      // console.log('x change: ', x.c, x && x.d.style.width, a);
+      hA();
+    }, [x]);
+
+    useEffect(() => {
+      // console.log('y change: ', y.c, y && y.d.style.display, b);
+      hB();
+    }, [y]);
 
     const hA = () => {
       if (a) {
@@ -204,12 +154,12 @@ const mainF = function () {
     };
 
     return (
-      <div className='zhihu-handler'>
-        <div className={`${prefix}-item ${a && 'active'}`} onClick={hA}>
-          <button class='xxx'>{x ? x.c : '...'}</button>
+      <div className='IAdB zhihu-handler'>
+        <div className={`IAdB ${prefix}-item ${a && 'active'}`} onClick={hA}>
+          <button class='IAdB xxx'>{x ? x.c : '...'}</button>
         </div>
-        <div className={`${prefix}-item ${b && 'active'}`} onClick={hB}>
-          <button class='yyy'>{y ? y.c : '...'}</button>
+        <div className={`IAdB ${prefix}-item ${b && 'active'}`} onClick={hB}>
+          <button class='IAdB yyy'>{y ? y.c : '...'}</button>
         </div>
       </div>
     );

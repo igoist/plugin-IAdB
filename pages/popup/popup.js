@@ -11,14 +11,7 @@
 //       }
 //     );
 //   });
-const KeyCodeArr = [
-  'color',
-  'darkMode',
-  'bgImage',
-  'noImage',
-  'readCode',
-  'programSwitch',
-];
+const KeyCodeArr = ['color', 'darkMode', 'bgImage', 'noImage', 'readCode', 'programSwitch'];
 
 let fontColor;
 let ifFontColorSwitch;
@@ -31,9 +24,9 @@ let programSwitch;
 
 let lis = document.querySelectorAll('.nav-tags li');
 
-chrome.storage.sync.get(KeyCodeArr, result => {
+chrome.storage.sync.get(KeyCodeArr, (result) => {
   fontColor = result.color;
-  ifFontColorSwitch = fontColor === '#86c797' ? false : true;
+  ifFontColorSwitch = fontColor === '#b8b8b8' ? false : true;
 
   ifDarkMode = result.darkMode;
 
@@ -44,7 +37,6 @@ chrome.storage.sync.get(KeyCodeArr, result => {
   ifReadCode = result.readCode;
 
   programSwitch = result.programSwitch;
-
 
   if (ifDarkMode) {
     lis[0].classList.add('active');
@@ -66,76 +58,93 @@ chrome.storage.sync.get(KeyCodeArr, result => {
   }
 });
 
-
-lis[0].addEventListener('click', e => {
+lis[0].addEventListener('click', (e) => {
   e.preventDefault();
 
   ifDarkMode = !ifDarkMode;
 
-  chrome.storage.sync.set({
-    darkMode: ifDarkMode
-  }, () => {
-    lis[0].classList.toggle('active');
-  });
+  chrome.storage.sync.set(
+    {
+      darkMode: ifDarkMode
+    },
+    () => {
+      lis[0].classList.toggle('active');
+    }
+  );
 });
 
-lis[1].addEventListener('click', e => {
+lis[1].addEventListener('click', (e) => {
   e.preventDefault();
 
-  fontColor = !ifFontColorSwitch ? '#86c7c7' : '#86c797';
+  fontColor = !ifFontColorSwitch ? '#b8b8b8' : '#86c7c7';
 
-  chrome.storage.sync.set({
-    color: fontColor
-  }, () => {
-    ifFontColorSwitch = !ifFontColorSwitch;
-    lis[1].classList.toggle('active');
-  });
+  chrome.storage.sync.set(
+    {
+      color: fontColor
+    },
+    () => {
+      ifFontColorSwitch = !ifFontColorSwitch;
+      lis[1].classList.toggle('active');
+    }
+  );
 });
 
-lis[2].addEventListener('click', e => {
+lis[2].addEventListener('click', (e) => {
   e.preventDefault();
 
   ifBgImage = !ifBgImage;
 
-  chrome.storage.sync.set({
-    bgImage: ifBgImage
-  }, () => {
-    lis[2].classList.toggle('active');
-  });
+  chrome.storage.sync.set(
+    {
+      bgImage: ifBgImage
+    },
+    () => {
+      lis[2].classList.toggle('active');
+    }
+  );
 });
 
-lis[3].addEventListener('click', e => {
+lis[3].addEventListener('click', (e) => {
   e.preventDefault();
 
   ifNoImage = !ifNoImage;
 
-  chrome.storage.sync.set({
-    noImage: ifNoImage
-  }, () => {
-    lis[3].classList.toggle('active');
-  });
+  chrome.storage.sync.set(
+    {
+      noImage: ifNoImage
+    },
+    () => {
+      lis[3].classList.toggle('active');
+    }
+  );
 });
 
-lis[4].addEventListener('click', e => {
+lis[4].addEventListener('click', (e) => {
   e.preventDefault();
 
   ifReadCode = !ifReadCode;
 
-  chrome.storage.sync.set({
-    readCode: ifReadCode
-  }, () => {
-    lis[4].classList.toggle('active');
-  });
+  chrome.storage.sync.set(
+    {
+      readCode: ifReadCode
+    },
+    () => {
+      lis[4].classList.toggle('active');
+    }
+  );
 });
 
-lis[6].addEventListener('click', e => {
+lis[6].addEventListener('click', (e) => {
   e.preventDefault();
 
   programSwitch = !programSwitch;
 
-  chrome.storage.sync.set({
-    programSwitch
-  }, () => {
-    lis[6].classList.toggle('active');
-  });
+  chrome.storage.sync.set(
+    {
+      programSwitch
+    },
+    () => {
+      lis[6].classList.toggle('active');
+    }
+  );
 });

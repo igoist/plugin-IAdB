@@ -1,15 +1,16 @@
 const IAdBState = {
   // color: '#3aa757',
-  color: '#86c797',
+  // color: '#86c797',
   // color: '#86c7c7',
+  color: '#b8b8b8',
   darkMode: false,
   bgImage: true,
-  noImage: true,
+  noImage: false,
   readCode: false,
-  programSwitch: true,
+  programSwitch: true
 };
 
-chrome.runtime.onInstalled.addListener(function() {
+chrome.runtime.onInstalled.addListener(function () {
   // chrome.contextMenus.create({
   //   "id": "sampleContextMenu",
   //   "title": "Sample Context Menu",
@@ -17,8 +18,8 @@ chrome.runtime.onInstalled.addListener(function() {
   // });
   // chrome.storage.local.set(IAdBState);
 
-  chrome.storage.sync.set(IAdBState, function() {
-    console.log("And the color is green.");
+  chrome.storage.sync.set(IAdBState, function () {
+    console.log('And the color is green.');
   });
 
   // chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
@@ -33,13 +34,11 @@ chrome.runtime.onInstalled.addListener(function() {
   // });
 });
 
-
 // chrome.bookmarks.onCreated.addListener(function() {
 //   // Events must be registered synchronously from the start of th page
 //   // do something
 //   console.log(chrome.bookmarks);
 // });
-
 
 // chrome.runtime.onMessage.addListener(function(message, sender, reply) {
 //   chrome.runtime.onMessage.removeListener(event);
@@ -52,8 +51,6 @@ chrome.runtime.onInstalled.addListener(function() {
 //   url: [{urlMatches : 'https://www.baidu.com/'}]
 // });
 
-
-
 let testFunc = () => {
   console.log('Yes!');
-}
+};

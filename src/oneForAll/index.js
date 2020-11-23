@@ -10,7 +10,7 @@ const { decodeUnicode } = decode;
 
 // import { IAdBState } from '../background';
 const IAdBState = {
-  color: '#86c797',
+  color: '#b8b8b8',
   darkMode: false,
   bgImage: true,
   noImage: false,
@@ -32,7 +32,7 @@ const IAdBState = {
    * keyMenu 就是 keyMenu
    */
   let backgroundColor = '#2a2a2a';
-  let fontColor = '#86c797';
+  let fontColor = '#86c7c7';
   let darkMode;
   let switchFlag;
   let ifBgImage;
