@@ -1,4 +1,4 @@
-import { dom } from 'Util';
+import { dom } from '@Utils';
 
 const { htmlToElement } = dom;
 
@@ -51,11 +51,11 @@ export default class Message {
     const { content, type } = this.props;
 
     let tmpNode = htmlToElement(`
-      <div class='message'>
-        <div class='message-content'>
-          <div class='message-custom-content message-${ type }'>
-            <i class='icon response-${ type }'></i>
-            <span>${ content }</span>
+      <div class='IAdB message'>
+        <div class='IAdB message-content'>
+          <div class='IAdB message-custom-content message-${type}'>
+            <i class='IAdB icon response-${type}'></i>
+            <span class='IAdB'>${content}</span>
           </div>
         </div>
       </div>
@@ -70,6 +70,7 @@ export default class Message {
       span.appendChild(tmpNode);
       let div = document.createElement('div');
       div.classList.add('global-message');
+      div.classList.add('IAdB');
       div.appendChild(span);
       document.body.appendChild(div);
     }

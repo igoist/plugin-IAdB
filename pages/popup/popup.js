@@ -11,7 +11,7 @@
 //       }
 //     );
 //   });
-const KeyCodeArr = ['color', 'darkMode', 'bgImage', 'noImage', 'readCode', 'programSwitch'];
+const KeyCodeArr = ['ifDarkMode', 'fontColor', 'ifBgImage', 'ifNoImage', 'ifReadCode', 'ifProgramSwitch'];
 
 let fontColor;
 let ifFontColorSwitch;
@@ -20,23 +20,23 @@ let ifDarkMode;
 let ifBgImage;
 let ifNoImage;
 let ifReadCode;
-let programSwitch;
+let ifProgramSwitch;
 
 let lis = document.querySelectorAll('.nav-tags li');
 
 chrome.storage.sync.get(KeyCodeArr, (result) => {
-  fontColor = result.color;
-  ifFontColorSwitch = fontColor === '#b8b8b8' ? false : true;
+  ifDarkMode = result.ifDarkMode;
 
-  ifDarkMode = result.darkMode;
+  fontColor = result.fontColor;
+  ifFontColorSwitch = fontColor === '#86c7c7' ? true : false;
 
-  ifBgImage = result.bgImage;
+  ifBgImage = result.ifBgImage;
 
-  ifNoImage = result.noImage;
+  ifNoImage = result.ifNoImage;
 
-  ifReadCode = result.readCode;
+  ifReadCode = result.ifReadCode;
 
-  programSwitch = result.programSwitch;
+  ifProgramSwitch = result.ifProgramSwitch;
 
   if (ifDarkMode) {
     lis[0].classList.add('active');
@@ -53,7 +53,7 @@ chrome.storage.sync.get(KeyCodeArr, (result) => {
   if (ifReadCode) {
     lis[4].classList.add('active');
   }
-  if (programSwitch) {
+  if (ifProgramSwitch) {
     lis[6].classList.add('active');
   }
 });
@@ -65,7 +65,7 @@ lis[0].addEventListener('click', (e) => {
 
   chrome.storage.sync.set(
     {
-      darkMode: ifDarkMode
+      ifDarkMode,
     },
     () => {
       lis[0].classList.toggle('active');
@@ -76,11 +76,11 @@ lis[0].addEventListener('click', (e) => {
 lis[1].addEventListener('click', (e) => {
   e.preventDefault();
 
-  fontColor = !ifFontColorSwitch ? '#b8b8b8' : '#86c7c7';
+  fontColor = !ifFontColorSwitch ? '#86c7c7' : '#b8b8b8';
 
   chrome.storage.sync.set(
     {
-      color: fontColor
+      fontColor,
     },
     () => {
       ifFontColorSwitch = !ifFontColorSwitch;
@@ -96,7 +96,7 @@ lis[2].addEventListener('click', (e) => {
 
   chrome.storage.sync.set(
     {
-      bgImage: ifBgImage
+      ifBgImage,
     },
     () => {
       lis[2].classList.toggle('active');
@@ -111,7 +111,7 @@ lis[3].addEventListener('click', (e) => {
 
   chrome.storage.sync.set(
     {
-      noImage: ifNoImage
+      ifNoImage,
     },
     () => {
       lis[3].classList.toggle('active');
@@ -126,7 +126,7 @@ lis[4].addEventListener('click', (e) => {
 
   chrome.storage.sync.set(
     {
-      readCode: ifReadCode
+      ifReadCode,
     },
     () => {
       lis[4].classList.toggle('active');
@@ -137,11 +137,11 @@ lis[4].addEventListener('click', (e) => {
 lis[6].addEventListener('click', (e) => {
   e.preventDefault();
 
-  programSwitch = !programSwitch;
+  ifProgramSwitch = !ifProgramSwitch;
 
   chrome.storage.sync.set(
     {
-      programSwitch
+      ifProgramSwitch,
     },
     () => {
       lis[6].classList.toggle('active');

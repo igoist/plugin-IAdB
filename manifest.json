@@ -15,7 +15,10 @@
     {
       "matches": ["*://*/*"],
       "run_at": "document_end",
-      "js": ["dist/js/oneForAll.bundle.min.js"]
+      "js": [
+        "dist/dll/react.dll.js",
+        "dist/js/oneForAll.bundle.min.js"
+      ]
     },
     {
       "matches": ["*://*.zhangxinxu.com/*"],
@@ -40,7 +43,6 @@
     {
       "matches": ["*://*.zhihu.com/*"],
       "js": [
-        "dist/dll/react.dll.js",
         "dist/js/zhihu.bundle.min.js"
       ]
     }
