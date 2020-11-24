@@ -1,14 +1,4 @@
-const IAdBState = {
-  // color: '#3aa757',
-  // color: '#86c797',
-  // color: '#86c7c7',
-  color: '#b8b8b8',
-  darkMode: false,
-  bgImage: true,
-  noImage: false,
-  readCode: false,
-  programSwitch: true
-};
+import { IAdBState } from '@Utils';
 
 chrome.runtime.onInstalled.addListener(function () {
   // chrome.contextMenus.create({
@@ -54,3 +44,5 @@ chrome.runtime.onInstalled.addListener(function () {
 let testFunc = () => {
   console.log('Yes!');
 };
+
+testFunc();

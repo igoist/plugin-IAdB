@@ -3,7 +3,7 @@
   "description": "igoist AdBlock, aim at baidu, ...",
   "version": "0.0.3",
   "background": {
-    "scripts": ["src/background.js"],
+    "scripts": ["dist/js/background.bundle.min.js"],
     "persistent": false
   },
   "icons": {
@@ -15,7 +15,7 @@
     {
       "matches": ["*://*/*"],
       "run_at": "document_end",
-      "js": ["dist/oneForAll.bundle.min.js"]
+      "js": ["dist/js/oneForAll.bundle.min.js"]
     },
     {
       "matches": ["*://*.zhangxinxu.com/*"],
@@ -41,7 +41,7 @@
       "matches": ["*://*.zhihu.com/*"],
       "js": [
         "dist/dll/react.dll.js",
-        "dist/zhihu.bundle.min.js"
+        "dist/js/zhihu.bundle.min.js"
       ]
     }
   ],
