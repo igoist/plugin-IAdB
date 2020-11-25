@@ -1,14 +1,156 @@
 import { dom, prefix } from '@Utils';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
+const { useEffect, useState, useRef } = React;
 const { htmlToElement } = dom;
 
-export default class KeyMenu {
+const KeyMenu2 = (props) => {
+  const { visible } = props;
+  const tNodeRef = useRef(null);
+  const keyMenuRef = useRef(null);
+  const lastItemRef = useRef(null);
+  const maskRef = useRef(null);
+  const lockRef = useRef(true);
+
+  useEffect(() => {
+    if (lockRef.current) {
+      return;
+    }
+    console.log('e t', visible, lockRef.current, tNodeRef.current, keyMenuRef.current, lastItemRef.current);
+    if (visible) {
+      handleShow();
+    } else {
+      handleHide();
+    }
+  }, [visible]);
+
+  useEffect(() => {
+    lockRef.current = false;
+  }, []);
+
+  const handleShow = () => {
+    console.log('enter show', lockRef.current);
+    lockRef.current = true;
+    tNodeRef.current.classList.remove('hidden');
+    setTimeout(() => {
+      keyMenuRef.current.classList.add('ready');
+      let handleTransitionEnd = () => {
+        console.log('keyMenu transitionEnd');
+        keyMenuRef.current.className = 'IAdB prepareForLeaving';
+        lastItemRef.current.removeEventListener('transitionend', handleTransitionEnd);
+
+        setTimeout(() => {
+          console.log('unlock');
+          lockRef.current = false;
+        }, 200);
+        // if (this.props.showCallback) {
+        //   console.log('here, showCall');
+        //   this.props.showCallback();
+        // }
+      };
+      lastItemRef.current.addEventListener('transitionend', handleTransitionEnd, false);
+    }, 36);
+  };
+
+  const handleHide = () => {
+    console.log('enter hide', lockRef.current);
+    lockRef.current = true;
+    let handleTransitionEnd = (e) => {
+      console.log('fadeOut without type:', e.target === maskRef.current, e.target === lastItemRef.current);
+      tNodeRef.current.classList.add('hidden');
+      // if (e.target === maskRef.current) {
+      maskRef.current.classList.remove('fadeOut');
+      // }
+      keyMenuRef.current.className = 'IAdB';
+      maskRef.current.removeEventListener('transitionend', handleTransitionEnd);
+      setTimeout(() => {
+        console.log('unlock');
+        lockRef.current = false;
+      }, 20);
+      // this.switchDoing(false);
+      // if (this.props.hideCallback) {
+      //   this.props.hideCallback();
+      // }
+    };
+
+    keyMenuRef.current.classList.add('leaving');
+
+    // if (this.state.withMask) {
+    if (true) {
+      maskRef.current.classList.add('fadeOut');
+      maskRef.current.addEventListener('transitionend', handleTransitionEnd, false);
+    } else {
+      lastItemRef.current.addEventListener('transitionend', handleTransitionEnd, false);
+    }
+  };
+
+  return (
+    <div id={`${prefix}-keyMenu-box`} className='IAdB hidden' ref={tNodeRef}>
+      <div id={`${prefix}-keyMenu-mask`} className={prefix} ref={maskRef}></div>
+      <div id={`${prefix}-keyMenu-wrapper`} className={prefix} ref={keyMenuRef}>
+        <div id={`${prefix}-keyMenu-content`} className={prefix}>
+          <div className={`${prefix} ${prefix}-keyMenu-row`}>
+            <div className={`${prefix} ${prefix}-keyMenu-item`} style={{ '--item-index': 0 }}>
+              <button className={`${prefix} ${prefix}-btn-neon`} style={{ '--color': '#f05050' }}>
+                A
+              </button>
+            </div>
+            <div className={`${prefix} ${prefix}-keyMenu-item`} style={{ '--item-index': 1 }}>
+              <button className={`${prefix} ${prefix}-btn-neon`} style={{ '--color': '#ff9900' }}>
+                S
+              </button>
+            </div>
+            <div className={`${prefix} ${prefix}-keyMenu-item`} style={{ '--item-index': 2 }}>
+              <button className={`${prefix} ${prefix}-btn-neon`} style={{ '--color': '#ffd52e' }}>
+                D
+              </button>
+            </div>
+            <div className={`${prefix} ${prefix}-keyMenu-item`} style={{ '--item-index': 3 }}>
+              <button className={`${prefix} ${prefix}-btn-neon`} style={{ '--color': '#49dd8e' }}>
+                F
+              </button>
+            </div>
+            <div className={`${prefix} ${prefix}-keyMenu-item`} style={{ '--item-index': 4 }}>
+              <button className={`${prefix} ${prefix}-btn-neon`} style={{ '--color': '#a8f0aa' }}>
+                G
+              </button>
+            </div>
+            <div className={`${prefix} ${prefix}-keyMenu-item`} style={{ '--item-index': 5 }}>
+              <button className={`${prefix} ${prefix}-btn-neon`} style={{ '--color': '#58b3ff' }}>
+                H
+              </button>
+            </div>
+            <div className={`${prefix} ${prefix}-keyMenu-item`} style={{ '--item-index': 6 }} ref={lastItemRef}>
+              <button className={`${prefix} ${prefix}-btn-neon`} style={{ '--color': '#ae99ff' }}>
+                J
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const renderKeyMenu = () => {
+  let div = document.createElement('div');
+  div.id = `${prefix}-keyMenu-box-parent`;
+  document.body.appendChild(div);
+
+  ReactDOM.render(<KeyMenu2 />, div);
+  keyMenu.init();
+};
+
+export { renderKeyMenu, KeyMenu2 };
+
+class KeyMenu {
   constructor(props) {
     this.props = props;
     this.state = {
       show: false,
       doing: false,
-      withMask: !!this.props.withMask
+      withMask: !!this.props.withMask,
     };
 
     this.init = this.init.bind(this);

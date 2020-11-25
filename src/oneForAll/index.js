@@ -12,7 +12,7 @@ const { useEffect, useState } = React;
 const { l } = log;
 const { scrollSmothlyTo } = dom;
 const { getStore } = extension;
-// const { renderKeyMenu } = KeyMenu;
+const { renderKeyMenu, KeyMenu2 } = KeyMenu;
 
 const mainF = function () {
   /**
@@ -42,32 +42,11 @@ const mainF = function () {
 
   const KeyCodeArr = Object.keys(IAdBState);
 
-  const dispatchMenuTask = (keyArray) => {
-    switch (keyArray) {
-      // case '000':
-      //   if (!keyMenu.state.doing) {
-      //     if (keyMenu.state.show) {
-      //       keyMenu.hide();
-      //     } else {
-      //       keyMenu.show();
-      //     }
-      //   }
-      //   return true;
-      case '001':
-        // if (!keyMenu.state.doing) {
-        document.title = 'Yahaha';
-        // }
-        return true;
-      default:
-        console.log('無駄ですよ');
-        return false;
-    }
-  };
-
   const R = () => {
     // const [s, setS] = useState(IAdBState);
     const { data: s, dispatch: useIAdBDispatch } = useIAdBHook.useContainer();
     const [switchFlag, setSwitchFlag] = useState(false);
+    const [kV, setKV] = useState(false);
 
     useEffect(() => {
       getStore(KeyCodeArr, (result) => {
@@ -80,6 +59,22 @@ const mainF = function () {
     }, []);
 
     useEffect(() => {
+      const dispatchMenuTask = (keyArray) => {
+        switch (keyArray) {
+          case '000':
+            setKV(!kV);
+            return true;
+          case '001':
+            // if (!keyMenu.state.doing) {
+            document.title = 'Yahaha';
+            // }
+            return true;
+          default:
+            console.log('無駄ですよ');
+            return false;
+        }
+      };
+
       const handleIClickEvent = (e) => {
         l({
           title: 'handleKeyDown',
@@ -150,7 +145,12 @@ const mainF = function () {
       };
     });
 
-    return <ResetStyle {...s} visible={switchFlag} />;
+    return (
+      <>
+        <ResetStyle {...s} visible={switchFlag} />
+        <KeyMenu2 visible={kV} />
+      </>
+    );
   };
 
   // if (darkMode && result.programSwitch) {

@@ -1,18 +1,15 @@
-import KeyMenu from './KeyMenu';
+import { renderKeyMenu, KeyMenu2 } from './KeyMenu';
 
+// const returnKeyMenu = (config) => {
+//   let { content, duration, type, withMask = true, showCallback = null, hideCallback = null } = config;
+//   return new KeyMenu({
+//     withMask: withMask,
+//     // content,
+//     // duration,
+//     // type
+//     showCallback: showCallback,
+//     hideCallback: hideCallback,
+//   });
+// }
 
-const returnKeyMenu = (config) => {
-  let { content, duration, type, withMask = true, showCallback = null, hideCallback = null } = config;
-  return new KeyMenu({
-    withMask: withMask,
-    // content,
-    // duration,
-    // type
-    showCallback: showCallback,
-    hideCallback: hideCallback,
-  });
-}
-
-export {
-  returnKeyMenu
-};
+export { renderKeyMenu, KeyMenu2 };
