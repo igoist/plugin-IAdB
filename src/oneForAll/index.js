@@ -1,15 +1,18 @@
-import { log, dom, IAdBState, prefix } from '@Utils';
+import { log, dom, extension, IAdBState, prefix, idName } from '@Utils';
 import './oneForAll.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { returnKeyMenu } from '@Components/KeyMenu';
+import { KeyMenu, ResetStyle } from '@Components';
 import { Message } from '@Components/Message';
+import { useIAdBHook, Provider } from '@Models';
 
 const { useEffect, useState } = React;
 const { l } = log;
 const { scrollSmothlyTo } = dom;
+const { getStore } = extension;
+// const { renderKeyMenu } = KeyMenu;
 
 const mainF = function () {
   /**
@@ -23,39 +26,37 @@ const mainF = function () {
    * ifProgramSwitch 插件开关
    * keyMenu 就是 keyMenu
    */
-  let backgroundColor = '#2a2a2a';
 
   let cC = 0;
   let keyArray = '';
-  let idName = 'iadb_reset_site_style';
 
-  const keyMenu = returnKeyMenu({
-    withMask: true,
-    // showCallback: () => {
-    //   console.log('for showCall');
-    // },
-    // hideCallback: () => {
-    //   console.log('for hideCall');
-    // }
-  });
+  // const keyMenu = returnKeyMenu({
+  //   withMask: true,
+  //   // showCallback: () => {
+  //   //   console.log('for showCall');
+  //   // },
+  //   // hideCallback: () => {
+  //   //   console.log('for hideCall');
+  //   // }
+  // });
 
   const KeyCodeArr = Object.keys(IAdBState);
 
   const dispatchMenuTask = (keyArray) => {
     switch (keyArray) {
-      case '000':
-        if (!keyMenu.state.doing) {
-          if (keyMenu.state.show) {
-            keyMenu.hide();
-          } else {
-            keyMenu.show();
-          }
-        }
-        return true;
+      // case '000':
+      //   if (!keyMenu.state.doing) {
+      //     if (keyMenu.state.show) {
+      //       keyMenu.hide();
+      //     } else {
+      //       keyMenu.show();
+      //     }
+      //   }
+      //   return true;
       case '001':
-        if (!keyMenu.state.doing) {
-          document.title = 'Yahaha';
-        }
+        // if (!keyMenu.state.doing) {
+        document.title = 'Yahaha';
+        // }
         return true;
       default:
         console.log('無駄ですよ');
@@ -63,22 +64,18 @@ const mainF = function () {
     }
   };
 
-  const getStore = (callback) => {
-    chrome.storage.sync.get(KeyCodeArr, (result) => {
-      callback({
-        ...result,
-      });
-    });
-  };
-
   const R = () => {
-    const [s, setS] = useState(IAdBState);
+    // const [s, setS] = useState(IAdBState);
+    const { data: s, dispatch: useIAdBDispatch } = useIAdBHook.useContainer();
     const [switchFlag, setSwitchFlag] = useState(false);
 
     useEffect(() => {
-      getStore((result) => {
+      getStore(KeyCodeArr, (result) => {
         setSwitchFlag(result.ifDarkMode);
-        setS({ ...result });
+        useIAdBDispatch({
+          type: 'SetData',
+          payload: { ...result },
+        });
       });
     }, []);
 
@@ -89,7 +86,7 @@ const mainF = function () {
           text: `e.key: ${e.key}, keyArray: ${keyArray}, e.keyCode: ${e.keyCode}, cC: ${cC}, switchFlag: ${switchFlag}`,
         });
 
-        getStore((result) => {
+        getStore(KeyCodeArr, (result) => {
           if (result.ifProgramSwitch) {
             if (e.ctrlKey) {
               cC += 1;
@@ -104,7 +101,7 @@ const mainF = function () {
               if (cC === 2 && switchFlag) {
                 setSwitchFlag(false);
 
-                keyMenu.hide();
+                // keyMenu.hide();
                 cC = 0;
                 Message.success('Switch Off');
               }
@@ -140,8 +137,9 @@ const mainF = function () {
             }
           }
 
-          setS({
-            ...result,
+          useIAdBDispatch({
+            type: 'SetData',
+            payload: { ...result },
           });
         });
       };
@@ -152,50 +150,24 @@ const mainF = function () {
       };
     });
 
-    const { fontColor, ifBgImage, ifNoImage, ifReadCode } = s;
-
-    if (switchFlag) {
-      return (
-        <style id={idName} type={'text/css'}>
-          {`
-${ifReadCode ? '*:not(pre):not(code):not(span):not(.' + prefix + ')' : '*:not(.' + prefix + ')'},
-*:before,
-*:after {
-  background-color: ${backgroundColor}!important;
-  border-color: ${backgroundColor}!important;
-  color: ${fontColor}!important;
-  box-shadow: none!important;
-  text-shadow: none!important;
-  ${ifBgImage ? 'background-image: none!important;' : ''}
-}
-
-${ifNoImage ? 'img { visibility: hidden!important; }' : ''}
-
-hr {
-  border: none!important;
-}
-
-iframe {
-  display: none!important;
-}
-        `}
-        </style>
-      );
-    } else {
-      return null;
-    }
+    return <ResetStyle {...s} visible={switchFlag} />;
   };
 
   // if (darkMode && result.programSwitch) {
   if (true) {
     let div = document.createElement('div');
     div.id = `${idName}-parent`;
-    document.body.appendChild(div);
 
+    // document.body.appendChild(div);
     document.body.insertBefore(div, document.body.children[0]);
 
-    ReactDOM.render(<R />, div);
-    keyMenu.init();
+    ReactDOM.render(
+      <Provider>
+        <R />
+      </Provider>,
+      div
+    );
+    // keyMenu.init();
   }
 };
 
