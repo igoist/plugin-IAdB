@@ -1,4 +1,4 @@
-import { log, IAdBState, prefix } from '@Utils';
+import { log, dom, IAdBState, prefix } from '@Utils';
 import './oneForAll.css';
 
 import React from 'react';
@@ -9,6 +9,7 @@ import { Message } from '@Components/Message';
 
 const { useEffect, useState } = React;
 const { l } = log;
+const { scrollSmothlyTo } = dom;
 
 const mainF = function () {
   /**
@@ -23,12 +24,6 @@ const mainF = function () {
    * keyMenu 就是 keyMenu
    */
   let backgroundColor = '#2a2a2a';
-  // let fontColor = '#86c7c7';
-  // let ifDarkMode;
-  // let switchFlag;
-  // let ifBgImage;
-  // let ifNoImage;
-  // let ifReadCode;
 
   let cC = 0;
   let keyArray = '';
@@ -130,6 +125,16 @@ const mainF = function () {
               //     act: 'toggleREPartner',
               //   });
             } else {
+              switch (e.keyCode) {
+                case 74: // j
+                  scrollSmothlyTo(window.scrollY + 100);
+                  break;
+                case 75: // k
+                  scrollSmothlyTo(window.scrollY - 100);
+                  break;
+                default:
+                  break;
+              }
               keyArray = '';
               cC = 0;
             }

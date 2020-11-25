@@ -8,6 +8,29 @@ const htmlToElement = (html) => {
 const Q = (s) => document.querySelector(s);
 const QA = (s) => document.querySelectorAll(s);
 
-export default { htmlToElement, Q, QA };
+const scrollSmothlyTo = (p) => {
+  // if (!window.requestAnimationFrame) {
+  //   window.requestAnimationFrame = (callback, el) => {
+  //     return setTimeout(callback, 17);
+  //   }
+  // }
 
-export { htmlToElement, Q, QA };
+  let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+
+  const step = () => {
+    const distance = p - scrollTop;
+
+    scrollTop += distance / 5;
+
+    if (Math.abs(distance) < 1) {
+      window.scrollTo(0, p);
+    } else {
+      window.scrollTo(0, scrollTop);
+      requestAnimationFrame(step);
+    }
+  };
+
+  step();
+};
+
+export { htmlToElement, Q, QA, scrollSmothlyTo };
