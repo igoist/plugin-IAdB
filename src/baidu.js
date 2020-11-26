@@ -13,6 +13,7 @@ let rs = document.getElementById('rs');
 // let kw = document.getElementById('kw'); // 搜索输入框
 
 let styleStr = `
+  #s-hotsearch-wrapper,
   #content_right {
     display: none;
   }
@@ -22,7 +23,7 @@ let styleStr = `
     width: 1240px;
   }
 
-  #content_left {
+  #container.sam_newgrid #content_left {
     padding: 0 20px;
     width: 100%;
     box-sizing: border-box;
@@ -31,13 +32,21 @@ let styleStr = `
     justify-content: space-between;
   }
 
+
   .c-container {
     padding: 12px;
-    width: 588px;
+    width: 100%;
     min-height: 160px;
     border: 1px solid transparent;
     box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.16);
     box-sizing: border-box;
+  }
+  .new-pmd.c-container {
+    width: 100%;
+  }
+
+  .new-pmd .c-span12 {
+    width: 100%;
   }
 
   #rs,
@@ -98,11 +107,9 @@ body.insertBefore(trickStyle, body.children[0]);
 //   }, 80);
 // });
 
-
 // kw.addEventListener('keydown', (e) => {
 //   document.getElementsByTagName('HEAD').item(0).appendChild(trickStyle);
 // });
-
 
 /*
  * 百科页内容处理
@@ -122,7 +129,6 @@ if (sideContent) {
   log('百科页右侧已移除');
 }
 
-
 if (topA) {
   topA.remove();
   log('百科页顶部广告 .topA 已移除');
@@ -137,7 +143,6 @@ if (afterContent) {
   afterContent.remove();
   log('百科页底部猜你喜欢 .after-content 已移除');
 }
-
 
 /**
  * 百度知道页

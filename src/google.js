@@ -1,6 +1,5 @@
 const log = console.log.bind(this);
 
-
 /*
  * Google 搜索结果页
  * 同百度，以 DOM 移除外加样式覆盖的方式
@@ -34,7 +33,7 @@ let styleStr = `
 
   .g {
     padding: 12px;
-    width: 588px;
+    width: 100%;
     min-height: 160px;
     border: 1px solid transparent;
     box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.16);
@@ -60,14 +59,26 @@ let styleStr = `
     color: #149cec;
   }
 
+  .s span.st em,
   span.st em {
     color: #ec414d;
+  }
+
+  .IsZvec {
+    max-width: 100%;
+  }
+
+  #center_col .kp-blk {
+    width: 100%;
+  }
+
+  .jmjoTe {
+    width: 100%;
   }
 `;
 
 let trickStyle = document.createElement('style');
 trickStyle.id = 'igoist_iadb';
-trickStyle.type = 'text/css';
 trickStyle.innerHTML = styleStr;
 
 let body = document.body;
