@@ -34,7 +34,8 @@ const mainF = function () {
   const R = () => {
     const { data: s, dispatch: useIAdBDispatch } = useIAdBHook.useContainer();
     const [switchFlag, setSwitchFlag] = useState(false);
-    const { dispatch: keyMenuDispatch } = useKeyMenuHook.useContainer();
+    const keyMenuHook = useKeyMenuHook.useContainer();
+    const { visible, dispatch: keyMenuDispatch } = keyMenuHook;
 
     useEffect(() => {
       getStore(KeyCodeArr, (result) => {
@@ -64,6 +65,10 @@ const mainF = function () {
       };
 
       const handleIClickEvent = (e) => {
+        if (visible) {
+          return;
+        }
+
         l({
           title: 'handleKeyDown',
           text: `e.key: ${e.key}, keyArray: ${keyArray}, e.keyCode: ${e.keyCode}, cC: ${cC}, switchFlag: ${switchFlag}`,

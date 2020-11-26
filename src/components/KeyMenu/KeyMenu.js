@@ -2,11 +2,13 @@ import { dom, prefix } from '@Utils';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { useKeyMenuHook } from '@Models';
+import { useIAdBHook, useKeyMenuHook } from '@Models';
 
 const { htmlToElement } = dom;
 
 const KeyMenu = () => {
+  const { data } = useIAdBHook.useContainer();
+  const { ifDarkMode, fontColor, ifBgImage, ifNoImage, ifReadCode, ifProgramSwitch } = data;
   const { tNodeRef, keyMenuRef, lastItemRef, maskRef } = useKeyMenuHook.useContainer();
 
   return (
@@ -15,27 +17,27 @@ const KeyMenu = () => {
       <div id={`${prefix}-keyMenu-wrapper`} className={prefix} ref={keyMenuRef}>
         <div id={`${prefix}-keyMenu-content`} className={prefix}>
           <div className={`${prefix} ${prefix}-keyMenu-row`}>
-            <div className={`${prefix} ${prefix}-keyMenu-item`} style={{ '--item-index': 0 }}>
+            <div className={`${prefix} ${prefix}-keyMenu-item ${ifDarkMode ? 'active' : ''}`} style={{ '--item-index': 0 }}>
               <button className={`${prefix} ${prefix}-btn-neon`} style={{ '--color': '#f05050' }}>
                 A
               </button>
             </div>
-            <div className={`${prefix} ${prefix}-keyMenu-item`} style={{ '--item-index': 1 }}>
+            <div className={`${prefix} ${prefix}-keyMenu-item ${fontColor === '#86c7c7' ? 'active' : ''}`} style={{ '--item-index': 1 }}>
               <button className={`${prefix} ${prefix}-btn-neon`} style={{ '--color': '#ff9900' }}>
                 S
               </button>
             </div>
-            <div className={`${prefix} ${prefix}-keyMenu-item`} style={{ '--item-index': 2 }}>
+            <div className={`${prefix} ${prefix}-keyMenu-item ${ifBgImage ? 'active' : ''}`} style={{ '--item-index': 2 }}>
               <button className={`${prefix} ${prefix}-btn-neon`} style={{ '--color': '#ffd52e' }}>
                 D
               </button>
             </div>
-            <div className={`${prefix} ${prefix}-keyMenu-item`} style={{ '--item-index': 3 }}>
+            <div className={`${prefix} ${prefix}-keyMenu-item ${ifNoImage ? 'active' : ''}`} style={{ '--item-index': 3 }}>
               <button className={`${prefix} ${prefix}-btn-neon`} style={{ '--color': '#49dd8e' }}>
                 F
               </button>
             </div>
-            <div className={`${prefix} ${prefix}-keyMenu-item`} style={{ '--item-index': 4 }}>
+            <div className={`${prefix} ${prefix}-keyMenu-item ${ifReadCode ? 'active' : ''}`} style={{ '--item-index': 4 }}>
               <button className={`${prefix} ${prefix}-btn-neon`} style={{ '--color': '#a8f0aa' }}>
                 G
               </button>
@@ -45,7 +47,7 @@ const KeyMenu = () => {
                 H
               </button>
             </div>
-            <div className={`${prefix} ${prefix}-keyMenu-item`} style={{ '--item-index': 6 }} ref={lastItemRef}>
+            <div className={`${prefix} ${prefix}-keyMenu-item ${ifProgramSwitch ? 'active' : ''}`} style={{ '--item-index': 6 }} ref={lastItemRef}>
               <button className={`${prefix} ${prefix}-btn-neon`} style={{ '--color': '#ae99ff' }}>
                 J
               </button>

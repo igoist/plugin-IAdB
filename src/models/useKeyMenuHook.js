@@ -1,9 +1,14 @@
 import * as React from 'react';
-import { useThrottleFn } from 'ahooks';
+import { useThrottleFn, useKeyPress } from 'ahooks';
 import { createContainer } from 'unstated-next';
+import { useIAdBHook } from '@Models';
 
 const { useEffect, useState, useRef } = React;
 
+/**
+ * 按键只在持有 hook 的当前 tab 生效
+ * 跟全局 chrome storage 需在 useIAdBHook 进行同步操作
+ */
 const useKeyMenuHook = () => {
   const [visible, setVisible] = useState(false);
   const tNodeRef = useRef(null);
@@ -11,6 +16,8 @@ const useKeyMenuHook = () => {
   const lastItemRef = useRef(null);
   const maskRef = useRef(null);
   const lockRef = useRef(1);
+  const { data, dispatch: IAdBDispatch } = useIAdBHook.useContainer();
+  const { ifDarkMode, fontColor, ifBgImage, ifNoImage, ifReadCode, ifProgramSwitch } = data;
 
   const { run: toggleKeyMenu } = useThrottleFn(
     () => {
@@ -25,6 +32,59 @@ const useKeyMenuHook = () => {
     },
     { wait: 500 }
   );
+
+  const wrapD = (payload) => {
+    if (visible) {
+      IAdBDispatch({
+        type: 'SetData',
+        payload,
+      });
+    }
+  };
+
+  useKeyPress('a', () => {
+    wrapD({
+      ifDarkMode: !ifDarkMode,
+    });
+  });
+
+  useKeyPress('s', () => {
+    wrapD({
+      fontColor: fontColor === '#86c7c7' ? '#b8b8b8' : '#86c7c7',
+    });
+  });
+
+  useKeyPress('d', () => {
+    wrapD({
+      ifBgImage: !ifBgImage,
+    });
+  });
+
+  useKeyPress('f', () => {
+    wrapD({
+      ifNoImage: !ifNoImage,
+    });
+  });
+
+  useKeyPress('g', () => {
+    wrapD({
+      ifReadCode: !ifReadCode,
+    });
+  });
+
+  useKeyPress('j', () => {
+    wrapD({
+      ifProgramSwitch: !ifProgramSwitch,
+    });
+  });
+
+  useKeyPress('ctrl', () => {
+    if (visible) {
+      if (lockRef.current < 1) {
+        setVisible(!visible);
+      }
+    }
+  });
 
   useEffect(() => {
     toggleKeyMenu();

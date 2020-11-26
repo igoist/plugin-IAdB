@@ -9,8 +9,8 @@ const prefix = 'IAdB';
 const idName = 'iadb_reset_site_style';
 
 const IAdBState = {
-  fontColor: '#b8b8b8',
   ifDarkMode: false,
+  fontColor: '#b8b8b8',
   ifBgImage: true,
   ifNoImage: false,
   ifReadCode: false,

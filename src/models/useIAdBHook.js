@@ -8,15 +8,20 @@ const useIAdBHook = () => {
   const [data, setData] = useState(IAdBState);
 
   // for test
-  useEffect(() => {}, [data]);
+  // useEffect(() => {
+  //   console.log('data change', data);
+  // }, [data]);
 
-  useEffect(() => {}, []);
+  // useEffect(() => {}, []);
 
   const dispatch = (action) => {
     switch (action.type) {
       case 'SetData':
         console.log('SetData', action.payload);
-        setData(action.payload);
+        setData({
+          ...data,
+          ...action.payload,
+        });
         break;
       default:
         break;
