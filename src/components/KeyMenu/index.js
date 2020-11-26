@@ -1,4 +1,4 @@
-import { renderKeyMenu, KeyMenu2 } from './KeyMenu';
+import { renderKeyMenu, KeyMenu } from './KeyMenu';
 
 // const returnKeyMenu = (config) => {
 //   let { content, duration, type, withMask = true, showCallback = null, hideCallback = null } = config;
@@ -12,4 +12,6 @@ import { renderKeyMenu, KeyMenu2 } from './KeyMenu';
 //   });
 // }
 
-export { renderKeyMenu, KeyMenu2 };
+export { renderKeyMenu, KeyMenu };
+
+export default KeyMenu;

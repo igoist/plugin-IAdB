@@ -7,19 +7,19 @@ module.exports = {
   mode: 'production',
 
   entry: {
-    react: ['react', 'react-dom']
+    react: ['react', 'react-dom', 'ahooks'],
   },
 
   output: {
     path: dllPath,
     filename: '[name].dll.js',
-    library: '[name]_[hash]'
+    library: '[name]_[hash]',
   },
 
   plugins: [
     new webpack.DllPlugin({
       name: '[name]_[hash]',
-      path: path.join(dllPath, '[name]-map.json')
-    })
-  ]
+      path: path.join(dllPath, '[name]-map.json'),
+    }),
+  ],
 };

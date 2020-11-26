@@ -2,88 +2,12 @@ import { dom, prefix } from '@Utils';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const { useEffect, useState, useRef } = React;
+import { useKeyMenuHook } from '@Models';
+
 const { htmlToElement } = dom;
 
-const KeyMenu2 = (props) => {
-  const { visible } = props;
-  const tNodeRef = useRef(null);
-  const keyMenuRef = useRef(null);
-  const lastItemRef = useRef(null);
-  const maskRef = useRef(null);
-  const lockRef = useRef(true);
-
-  useEffect(() => {
-    if (lockRef.current) {
-      return;
-    }
-    console.log('e t', visible, lockRef.current, tNodeRef.current, keyMenuRef.current, lastItemRef.current);
-    if (visible) {
-      handleShow();
-    } else {
-      handleHide();
-    }
-  }, [visible]);
-
-  useEffect(() => {
-    lockRef.current = false;
-  }, []);
-
-  const handleShow = () => {
-    console.log('enter show', lockRef.current);
-    lockRef.current = true;
-    tNodeRef.current.classList.remove('hidden');
-    setTimeout(() => {
-      keyMenuRef.current.classList.add('ready');
-      let handleTransitionEnd = () => {
-        console.log('keyMenu transitionEnd');
-        keyMenuRef.current.className = 'IAdB prepareForLeaving';
-        lastItemRef.current.removeEventListener('transitionend', handleTransitionEnd);
-
-        setTimeout(() => {
-          console.log('unlock');
-          lockRef.current = false;
-        }, 200);
-        // if (this.props.showCallback) {
-        //   console.log('here, showCall');
-        //   this.props.showCallback();
-        // }
-      };
-      lastItemRef.current.addEventListener('transitionend', handleTransitionEnd, false);
-    }, 36);
-  };
-
-  const handleHide = () => {
-    console.log('enter hide', lockRef.current);
-    lockRef.current = true;
-    let handleTransitionEnd = (e) => {
-      console.log('fadeOut without type:', e.target === maskRef.current, e.target === lastItemRef.current);
-      tNodeRef.current.classList.add('hidden');
-      // if (e.target === maskRef.current) {
-      maskRef.current.classList.remove('fadeOut');
-      // }
-      keyMenuRef.current.className = 'IAdB';
-      maskRef.current.removeEventListener('transitionend', handleTransitionEnd);
-      setTimeout(() => {
-        console.log('unlock');
-        lockRef.current = false;
-      }, 20);
-      // this.switchDoing(false);
-      // if (this.props.hideCallback) {
-      //   this.props.hideCallback();
-      // }
-    };
-
-    keyMenuRef.current.classList.add('leaving');
-
-    // if (this.state.withMask) {
-    if (true) {
-      maskRef.current.classList.add('fadeOut');
-      maskRef.current.addEventListener('transitionend', handleTransitionEnd, false);
-    } else {
-      lastItemRef.current.addEventListener('transitionend', handleTransitionEnd, false);
-    }
-  };
+const KeyMenu = () => {
+  const { tNodeRef, keyMenuRef, lastItemRef, maskRef } = useKeyMenuHook.useContainer();
 
   return (
     <div id={`${prefix}-keyMenu-box`} className='IAdB hidden' ref={tNodeRef}>
@@ -138,13 +62,13 @@ const renderKeyMenu = () => {
   div.id = `${prefix}-keyMenu-box-parent`;
   document.body.appendChild(div);
 
-  ReactDOM.render(<KeyMenu2 />, div);
+  ReactDOM.render(<KeyMenu />, div);
   keyMenu.init();
 };
 
-export { renderKeyMenu, KeyMenu2 };
+export { renderKeyMenu, KeyMenu };
 
-class KeyMenu {
+class KeyMenuOld {
   constructor(props) {
     this.props = props;
     this.state = {

@@ -1,9 +1,10 @@
 import * as React from 'react';
 
 import useIAdBHook from './useIAdBHook';
+import useKeyMenuHook from './useKeyMenuHook';
 
 // Level A B C D E, and then [E, D, C, B, A]
-const providers = [useIAdBHook.Provider];
+const providers = [useKeyMenuHook.Provider, useIAdBHook.Provider];
 
 // 数据 Provider 组合器
 const ProvidersComposer = (props) => {

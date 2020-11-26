@@ -6,13 +6,12 @@ import ReactDOM from 'react-dom';
 
 import { KeyMenu, ResetStyle } from '@Components';
 import { Message } from '@Components/Message';
-import { useIAdBHook, Provider } from '@Models';
+import { useIAdBHook, useKeyMenuHook, Provider } from '@Models';
 
 const { useEffect, useState } = React;
 const { l } = log;
 const { scrollSmothlyTo } = dom;
 const { getStore } = extension;
-const { renderKeyMenu, KeyMenu2 } = KeyMenu;
 
 const mainF = function () {
   /**
@@ -30,23 +29,12 @@ const mainF = function () {
   let cC = 0;
   let keyArray = '';
 
-  // const keyMenu = returnKeyMenu({
-  //   withMask: true,
-  //   // showCallback: () => {
-  //   //   console.log('for showCall');
-  //   // },
-  //   // hideCallback: () => {
-  //   //   console.log('for hideCall');
-  //   // }
-  // });
-
   const KeyCodeArr = Object.keys(IAdBState);
 
   const R = () => {
-    // const [s, setS] = useState(IAdBState);
     const { data: s, dispatch: useIAdBDispatch } = useIAdBHook.useContainer();
     const [switchFlag, setSwitchFlag] = useState(false);
-    const [kV, setKV] = useState(false);
+    const { dispatch: keyMenuDispatch } = useKeyMenuHook.useContainer();
 
     useEffect(() => {
       getStore(KeyCodeArr, (result) => {
@@ -62,12 +50,12 @@ const mainF = function () {
       const dispatchMenuTask = (keyArray) => {
         switch (keyArray) {
           case '000':
-            setKV(!kV);
+            keyMenuDispatch({
+              type: 'KeyMenuToggle',
+            });
             return true;
           case '001':
-            // if (!keyMenu.state.doing) {
             document.title = 'Yahaha';
-            // }
             return true;
           default:
             console.log('無駄ですよ');
@@ -148,7 +136,7 @@ const mainF = function () {
     return (
       <>
         <ResetStyle {...s} visible={switchFlag} />
-        <KeyMenu2 visible={kV} />
+        <KeyMenu />
       </>
     );
   };
