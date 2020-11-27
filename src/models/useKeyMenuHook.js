@@ -16,7 +16,7 @@ const useKeyMenuHook = () => {
   const lastItemRef = useRef(null);
   const maskRef = useRef(null);
   const lockRef = useRef(1);
-  const { data, dispatch: IAdBDispatch } = useIAdBHook.useContainer();
+  const { data, dispatch: useIAdBDispatch } = useIAdBHook.useContainer();
   const { ifDarkMode, fontColor, ifBgImage, ifNoImage, ifReadCode, ifProgramSwitch } = data;
 
   const { run: toggleKeyMenu } = useThrottleFn(
@@ -28,6 +28,9 @@ const useKeyMenuHook = () => {
         handleShow();
       } else {
         handleHide();
+        useIAdBDispatch({
+          type: 'DataSync',
+        });
       }
     },
     { wait: 500 }
@@ -35,8 +38,8 @@ const useKeyMenuHook = () => {
 
   const wrapD = (payload) => {
     if (visible) {
-      IAdBDispatch({
-        type: 'SetData',
+      useIAdBDispatch({
+        type: 'DataSet',
         payload,
       });
     }

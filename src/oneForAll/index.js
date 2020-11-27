@@ -13,7 +13,7 @@ const { l } = log;
 const { scrollSmothlyTo } = dom;
 const { getStore } = extension;
 
-const mainF = function () {
+const mainF = () => {
   /**
    * backgroundColor
    * fontColor
@@ -38,10 +38,14 @@ const mainF = function () {
     const { visible, dispatch: keyMenuDispatch } = keyMenuHook;
 
     useEffect(() => {
+      console.log('schange', s);
+    }, [s]);
+
+    useEffect(() => {
       getStore(KeyCodeArr, (result) => {
         setSwitchFlag(result.ifDarkMode);
         useIAdBDispatch({
-          type: 'SetData',
+          type: 'DataSet',
           payload: { ...result },
         });
       });
@@ -57,6 +61,11 @@ const mainF = function () {
             return true;
           case '001':
             document.title = 'Yahaha';
+            return true;
+          case '002':
+            useIAdBDispatch({
+              type: 'DataSync',
+            });
             return true;
           default:
             console.log('無駄ですよ');
@@ -126,7 +135,7 @@ const mainF = function () {
           }
 
           useIAdBDispatch({
-            type: 'SetData',
+            type: 'DataSet',
             payload: { ...result },
           });
         });
