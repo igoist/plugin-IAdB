@@ -11,7 +11,7 @@ import { useIAdBHook, useKeyMenuHook, Provider } from '@Models';
 const { useEffect, useState } = React;
 const { l } = log;
 const { scrollSmothlyTo } = dom;
-const { getStore } = extension;
+const { getStore, sendMessage } = extension;
 
 const mainF = () => {
   /**
@@ -33,13 +33,9 @@ const mainF = () => {
 
   const R = () => {
     const { data: s, dispatch: useIAdBDispatch } = useIAdBHook.useContainer();
+    const { visible, dispatch: keyMenuDispatch } = useKeyMenuHook.useContainer();
     const [switchFlag, setSwitchFlag] = useState(false);
-    const keyMenuHook = useKeyMenuHook.useContainer();
-    const { visible, dispatch: keyMenuDispatch } = keyMenuHook;
-
-    useEffect(() => {
-      console.log('schange', s);
-    }, [s]);
+    const [prevent, setPrevent] = useState(false);
 
     useEffect(() => {
       getStore(KeyCodeArr, (result) => {
@@ -66,7 +62,31 @@ const mainF = () => {
             useIAdBDispatch({
               type: 'DataSync',
             });
-            return true;
+          case '005':
+            setPrevent(!prevent);
+            l({
+              title: 'preventDefaultKeyDown',
+              text: `now is ${prevent}, will be ${!prevent}`,
+            });
+            break;
+          case '111':
+            sendMessage({ to: 'IAdB-bg', act: 'SaveTabs' }, (response) => {
+              l({
+                title: 'SaveTabs',
+                text: 'should be success',
+              });
+              Message.success(response.msg);
+            });
+            break;
+          case '112':
+            sendMessage({ to: 'IAdB-bg', act: 'GetTabs' }, (response) => {
+              l({
+                title: 'GetTabs',
+                text: 'should be success',
+              });
+              Message.success(response.msg);
+            });
+            break;
           default:
             console.log('無駄ですよ');
             return false;
@@ -76,6 +96,10 @@ const mainF = () => {
       const handleIClickEvent = (e) => {
         if (visible) {
           return;
+        }
+
+        if (prevent) {
+          e.preventDefault();
         }
 
         l({
@@ -171,6 +195,27 @@ const mainF = () => {
     );
     // keyMenu.init();
   }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      // backgroundMusic.play();
+      sendMessage({ greeting: 'kejian' }, (response) => {
+        l({
+          title: 'TEST',
+          text: 'kejian',
+        });
+        console.log(response);
+      });
+    } else {
+      sendMessage({ greeting: 'bukejian' }, (response) => {
+        l({
+          title: 'TEST',
+          text: 'bukejian',
+        });
+        console.log(response);
+      });
+    }
+  });
 };
 
 try {

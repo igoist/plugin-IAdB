@@ -1,16 +1,30 @@
-import { IAdBState } from '@Utils';
+import { IAdBState, extension } from '@Utils';
 
-chrome.runtime.onInstalled.addListener(function () {
+const { getStore, getStoreLocal, setStore, setStoreLocal } = extension;
+
+const saveTabs = () => {
+  chrome.tabs.query({}, (tabs) => {
+    setStoreLocal({
+      IAdBTabs: JSON.stringify(tabs),
+    });
+  });
+};
+
+const getTabs = () => {
+  getStoreLocal(['IAdBTabs'], (result) => {
+    let r = JSON.parse(result.IAdBTabs);
+    console.log(r);
+    return r;
+  });
+};
+
+chrome.runtime.onInstalled.addListener(function (details) {
   // chrome.contextMenus.create({
   //   "id": "sampleContextMenu",
   //   "title": "Sample Context Menu",
   //   "contexts": ["selection"]
   // });
   // chrome.storage.local.set(IAdBState);
-
-  chrome.storage.sync.set(IAdBState, function () {
-    console.log('And the color is green.');
-  });
 
   // chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
   //   chrome.declarativeContent.onPageChanged.addRules([{
@@ -22,6 +36,46 @@ chrome.runtime.onInstalled.addListener(function () {
   //     actions: [new chrome.declarativeContent.ShowPageAction()]
   //   }]);
   // });
+
+  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    console.log(sender.tab ? 'from a content script:' + sender.tab.url : 'from the extension');
+    console.log(sender, request);
+    if (request.to === 'IAdB-bg') {
+      switch (request.act) {
+        case 'SaveTabs':
+          sendResponse({ msg: 'save tabs success' });
+          saveTabs();
+          break;
+        case 'GetTabs':
+          sendResponse({ msg: 'get tabs success' });
+          getTabs();
+          break;
+        default:
+          break;
+      }
+    }
+  });
+
+  switch (details.reason) {
+    case 'install': // when user install
+      getStore(['fontColor'], (result) => {
+        if (result.fontColor === undefined) {
+          setStore(IAdBState);
+        }
+      });
+    case 'update': // when user update
+      getStore(['fontColor'], (result) => {
+        if (result.fontColor === undefined) {
+          setStore(IAdBState);
+        }
+      });
+      break;
+    case 'chrome_update':
+      console.log('chrome_update');
+      break;
+    default:
+      break;
+  }
 });
 
 // chrome.bookmarks.onCreated.addListener(function() {
@@ -40,9 +94,3 @@ chrome.runtime.onInstalled.addListener(function () {
 // }, {
 //   url: [{urlMatches : 'https://www.baidu.com/'}]
 // });
-
-let testFunc = () => {
-  console.log('Yes!');
-};
-
-testFunc();
