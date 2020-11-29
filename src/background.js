@@ -42,13 +42,16 @@ chrome.runtime.onInstalled.addListener(function (details) {
     console.log(sender, request);
     if (request.to === 'IAdB-bg') {
       switch (request.act) {
-        case 'SaveTabs':
+        case 'TabsSave':
           sendResponse({ msg: 'save tabs success' });
           saveTabs();
           break;
-        case 'GetTabs':
+        case 'TabsGet':
           sendResponse({ msg: 'get tabs success' });
           getTabs();
+          break;
+        case 'TabsRecover':
+          // to the tabs recover
           break;
         default:
           break;

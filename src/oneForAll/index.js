@@ -31,6 +31,16 @@ const mainF = () => {
 
   const KeyCodeArr = Object.keys(IAdBState);
 
+  const sendActToBG = (actName) => {
+    sendMessage({ to: 'IAdB-bg', act: actName }, (response) => {
+      l({
+        title: actName,
+        text: 'should be success',
+      });
+      Message.success(response.msg);
+    });
+  };
+
   const R = () => {
     const { data: s, dispatch: useIAdBDispatch } = useIAdBHook.useContainer();
     const { visible, dispatch: keyMenuDispatch } = useKeyMenuHook.useContainer();
@@ -69,23 +79,14 @@ const mainF = () => {
               text: `now is ${prevent}, will be ${!prevent}`,
             });
             break;
+          // 0111 ~ 0199 for sending actions to bg
           case '111':
-            sendMessage({ to: 'IAdB-bg', act: 'SaveTabs' }, (response) => {
-              l({
-                title: 'SaveTabs',
-                text: 'should be success',
-              });
-              Message.success(response.msg);
-            });
+            sendActToBG('TabsSave');
             break;
           case '112':
-            sendMessage({ to: 'IAdB-bg', act: 'GetTabs' }, (response) => {
-              l({
-                title: 'GetTabs',
-                text: 'should be success',
-              });
-              Message.success(response.msg);
-            });
+            sendActToBG('TabsGet');
+          case '113':
+            sendActToBG('TabsRecover');
             break;
           default:
             console.log('無駄ですよ');
