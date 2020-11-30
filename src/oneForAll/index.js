@@ -4,7 +4,7 @@ import './oneForAll.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { KeyMenu, ResetStyle } from '@Components';
+import { KeyMenu, ResetStyle, ListTabs } from '@Components';
 import { Message } from '@Components/Message';
 import { useIAdBHook, useKeyMenuHook, Provider } from '@Models';
 
@@ -31,13 +31,15 @@ const mainF = () => {
 
   const KeyCodeArr = Object.keys(IAdBState);
 
-  const sendActToBG = (actName) => {
+  const sendActToBG = (actName, f = true) => {
     sendMessage({ to: 'IAdB-bg', act: actName }, (response) => {
       l({
         title: actName,
         text: 'should be success',
       });
-      Message.success(response.msg);
+      if (f) {
+        Message.success(response.msg);
+      }
     });
   };
 
@@ -85,6 +87,7 @@ const mainF = () => {
             break;
           case '112':
             sendActToBG('TabsGet');
+            break;
           case '113':
             sendActToBG('TabsRecover');
             break;
@@ -176,6 +179,7 @@ const mainF = () => {
       <>
         <ResetStyle {...s} visible={switchFlag} />
         <KeyMenu />
+        {/* <ListTabs /> */}
       </>
     );
   };
@@ -199,22 +203,9 @@ const mainF = () => {
 
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
-      // backgroundMusic.play();
-      sendMessage({ greeting: 'kejian' }, (response) => {
-        l({
-          title: 'TEST',
-          text: 'kejian',
-        });
-        console.log(response);
-      });
+      sendActToBG('kejian', false);
     } else {
-      sendMessage({ greeting: 'bukejian' }, (response) => {
-        l({
-          title: 'TEST',
-          text: 'bukejian',
-        });
-        console.log(response);
-      });
+      sendActToBG('bukejian', false);
     }
   });
 };

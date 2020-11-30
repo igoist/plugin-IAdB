@@ -1,5 +1,7 @@
 /**
  * f(browser extension)
+ * keyArr as Array<any>
+ * keyAndValue as {}
  */
 const getStore = (keyArr, callback) => {
   chrome.storage.sync.get(keyArr, (result) => {

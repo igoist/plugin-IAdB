@@ -11,89 +11,101 @@ const saveTabs = () => {
 };
 
 const getTabs = () => {
-  getStoreLocal(['IAdBTabs'], (result) => {
-    let r = JSON.parse(result.IAdBTabs);
-    console.log(r);
-    return r;
+  return new Promise((resolve) => {
+    getStoreLocal(['IAdBTabs'], (result) => {
+      let r = JSON.parse(result.IAdBTabs);
+      resolve(r);
+    });
   });
 };
 
-chrome.runtime.onInstalled.addListener(function (details) {
-  // chrome.contextMenus.create({
-  //   "id": "sampleContextMenu",
-  //   "title": "Sample Context Menu",
-  //   "contexts": ["selection"]
-  // });
-  // chrome.storage.local.set(IAdBState);
+const main = () => {
+  chrome.runtime.onInstalled.addListener(function (details) {
+    // chrome.contextMenus.create({
+    //   "id": "sampleContextMenu",
+    //   "title": "Sample Context Menu",
+    //   "contexts": ["selection"]
+    // });
+    // chrome.storage.local.set(IAdBState);
 
-  // chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
-  //   chrome.declarativeContent.onPageChanged.addRules([{
-  //     conditions: [new chrome.declarativeContent.PageStateMatcher({
-  //       pageUrl: {
-  //         hostEquals: 'www.baidu.com'
-  //       },
-  //     })],
-  //     actions: [new chrome.declarativeContent.ShowPageAction()]
-  //   }]);
-  // });
+    // chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
+    //   chrome.declarativeContent.onPageChanged.addRules([{
+    //     conditions: [new chrome.declarativeContent.PageStateMatcher({
+    //       pageUrl: {
+    //         hostEquals: 'www.baidu.com'
+    //       },
+    //     })],
+    //     actions: [new chrome.declarativeContent.ShowPageAction()]
+    //   }]);
+    // });
 
-  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    console.log(sender.tab ? 'from a content script:' + sender.tab.url : 'from the extension');
-    console.log(sender, request);
-    if (request.to === 'IAdB-bg') {
-      switch (request.act) {
-        case 'TabsSave':
-          sendResponse({ msg: 'save tabs success' });
-          saveTabs();
-          break;
-        case 'TabsGet':
-          sendResponse({ msg: 'get tabs success' });
-          getTabs();
-          break;
-        case 'TabsRecover':
-          // to the tabs recover
-          break;
-        default:
-          break;
+    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+      // console.log(sender.tab ? 'from a content script:' + sender.tab.url : 'from the extension');
+      console.log(sender, request);
+      if (request.to === 'IAdB-bg') {
+        switch (request.act) {
+          case 'TabsSave':
+            sendResponse({ msg: 'save tabs success' });
+            saveTabs();
+            break;
+          case 'TabsGet':
+            sendResponse({ msg: 'get tabs success' });
+            // getTabs();
+            break;
+          case 'TabsRecover':
+            // to the tabs recover
+            break;
+          default:
+            if (request.act) {
+              sendResponse({ msg: request.act });
+            }
+            break;
+        }
       }
+    });
+
+    switch (details.reason) {
+      case 'install': // when user install
+        getStore(['fontColor'], (result) => {
+          if (result.fontColor === undefined) {
+            setStore(IAdBState);
+          }
+        });
+      case 'update': // when user update
+        getStore(['fontColor'], (result) => {
+          if (result.fontColor === undefined) {
+            setStore(IAdBState);
+          }
+        });
+        break;
+      case 'chrome_update':
+        console.log('chrome_update');
+        break;
+      default:
+        break;
     }
   });
 
-  switch (details.reason) {
-    case 'install': // when user install
-      getStore(['fontColor'], (result) => {
-        if (result.fontColor === undefined) {
-          setStore(IAdBState);
-        }
-      });
-    case 'update': // when user update
-      getStore(['fontColor'], (result) => {
-        if (result.fontColor === undefined) {
-          setStore(IAdBState);
-        }
-      });
-      break;
-    case 'chrome_update':
-      console.log('chrome_update');
-      break;
-    default:
-      break;
-  }
-});
+  // chrome.bookmarks.onCreated.addListener(function() {
+  //   // Events must be registered synchronously from the start of th page
+  //   // do something
+  //   console.log(chrome.bookmarks);
+  // });
 
-// chrome.bookmarks.onCreated.addListener(function() {
-//   // Events must be registered synchronously from the start of th page
-//   // do something
-//   console.log(chrome.bookmarks);
-// });
+  // chrome.runtime.onMessage.addListener(function(message, sender, reply) {
+  //   chrome.runtime.onMessage.removeListener(event);
+  // });
 
-// chrome.runtime.onMessage.addListener(function(message, sender, reply) {
-//   chrome.runtime.onMessage.removeListener(event);
-// });
+  // chrome.webNavigation.onCompleted.addListener(function() {
+  //   // alert("This is my test website!");
+  //   console.log('.........');
+  // }, {
+  //   url: [{urlMatches : 'https://www.baidu.com/'}]
+  // });
+};
 
-// chrome.webNavigation.onCompleted.addListener(function() {
-//   // alert("This is my test website!");
-//   console.log('.........');
-// }, {
-//   url: [{urlMatches : 'https://www.baidu.com/'}]
-// });
+try {
+  main();
+} catch (err) {
+  console.log(`%cmain catch%c: ${err}`, 'background: #fff; color:  #f49cec;', 'color: #149cec;', err);
+}
