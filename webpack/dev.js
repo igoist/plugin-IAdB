@@ -5,29 +5,30 @@ const path = require('path');
 
 let arr = [];
 let bundle;
-try {
-  bundle = path.resolve(__dirname, '../dist/dll/react-map.json');
-} catch (e) {
-  bundle = '';
-}
 
-arr.push(
-  merge(common[0], {
-    mode: 'development',
-    devtool: 'inline-source-map'
-  })
-);
+for (let i = 0; i < common.length; i++) {
+  let plugins = [];
 
-arr.push(
-  merge(common[1], {
-    mode: 'development',
-    devtool: 'inline-source-map',
-    plugins: [
+  if (i === 1 || i === 2) {
+    try {
+      bundle = path.resolve(__dirname, `../dist/dll/${i === 1 ? 'react' : 'admin'}-map.json`);
+    } catch (e) {
+      bundle = '';
+    }
+    plugins.push(
       new webpack.DllReferencePlugin({
-        manifest: bundle
+        manifest: bundle,
       })
-    ]
-  })
-);
+    );
+  }
+
+  arr.push(
+    merge(common[i], {
+      mode: 'development',
+      devtool: 'inline-source-map',
+      plugins,
+    })
+  );
+}
 
 module.exports = arr;

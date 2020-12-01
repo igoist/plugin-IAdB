@@ -16,6 +16,11 @@ const webpackConfig = [
       zhihu: [path.resolve(path.resolve(__dirname, '..'), path.resolve(srcPath, 'zhihu.js'))],
     },
   },
+  {
+    entry: {
+      admin: [path.resolve(path.resolve(__dirname, '..'), path.resolve(srcPath, 'pages/admin/index.js'))],
+    },
+  },
 ];
 
 let arr = [];

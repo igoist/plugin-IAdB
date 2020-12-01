@@ -4,10 +4,12 @@ const path = require('path');
 const dllPath = path.join(path.resolve(__dirname, '../'), 'dist/dll');
 
 module.exports = {
-  mode: 'production',
+  // mode: 'production',
+  mode: 'development',
 
   entry: {
     react: ['react', 'react-dom', 'ahooks'],
+    admin: ['react', 'react-dom', 'ahooks'], // antd
   },
 
   output: {
