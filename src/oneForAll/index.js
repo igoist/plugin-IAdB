@@ -4,7 +4,7 @@ import './oneForAll.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { KeyMenu, ResetStyle, ListTabs } from '@Components';
+import { KeyMenu, ResetStyle } from '@Components';
 import { Message } from '@Components/Message';
 import { useIAdBHook, useKeyMenuHook, Provider } from '@Models';
 
@@ -179,7 +179,7 @@ const mainF = () => {
       <>
         <ResetStyle {...s} visible={switchFlag} />
         <KeyMenu />
-        {/* <ListTabs /> */}
+        {/* <ListTabs /> it could be moved into iframe with ... */}
       </>
     );
   };

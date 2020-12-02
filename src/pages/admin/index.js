@@ -18,11 +18,14 @@ import ReactDOM from 'react-dom';
 // }
 
 // constructOptions(kButtonColors);
+import { ListTabs } from '@Components';
 
 const Admin = () => {
   return (
     <>
       <h1>Admin...x</h1>
+
+      <ListTabs />
     </>
   );
 };
