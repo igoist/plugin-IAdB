@@ -9,7 +9,7 @@ module.exports = {
 
   entry: {
     react: ['react', 'react-dom', 'ahooks'],
-    admin: ['react', 'react-dom', 'ahooks'], // antd
+    admin: ['react', 'react-dom', 'ahooks', 'antd'],
   },
 
   output: {
