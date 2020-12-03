@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import 'antd/dist/antd.css';
 // let page = document.getElementById('buttonDiv');
 
 // const kButtonColors = ['#3aa757', '#e8453c', '#f9bb2d', '#4688f1'];
@@ -23,8 +24,6 @@ import { ListTabs } from '@Components';
 const Admin = () => {
   return (
     <>
-      <h1>Admin...x</h1>
-
       <ListTabs />
     </>
   );

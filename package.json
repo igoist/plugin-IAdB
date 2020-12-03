@@ -22,6 +22,7 @@
   "homepage": "https://github.com/igoist/plugin-IAdB#readme",
   "dependencies": {
     "ahooks": "^2.9.1",
+    "antd": "^4.9.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "unstated-next": "^1.1.0"
