@@ -1,11 +1,8 @@
 import React from 'react';
 import { Button, Col, Form, Input, Row, Table, Select } from 'antd';
 import { useAntdTable } from 'ahooks';
-import { extension } from '@Utils';
 
-const { getStoreLocal } = extension;
-
-const returnGetTableData = (api) => {
+const returnGetTableData = (api, dataFetch, handleRes) => {
   return ({ current, pageSize }, formData) => {
     let query = `page=${current}&limit=${pageSize}`;
     Object.entries(formData).forEach(([key, value]) => {
@@ -16,36 +13,26 @@ const returnGetTableData = (api) => {
 
     console.log('queryx: ', query);
 
-    return new Promise((resolve) => {
-      getStoreLocal(['IAdBTabs'], (result) => {
-        // console.log('ListTabs: ', JSON.parse(result));
-        // console.log('ListTabs: ', result);
-        if (result.IAdBTabs) {
-          const l = JSON.parse(result.IAdBTabs);
-          resolve({
-            total: l.length,
-            list: l,
-          });
-        }
-      });
-    });
+    if (dataFetch) {
+      return dataFetch();
+    }
 
-    // return fetch(`${api}?${query}`)
-    //   .then((res) => res.json())
-    //   .then((res) => ({
-    //     total: res.total,
-    //     list: res.hits,
-    //   }));
+    return fetch(`${api}?${query}`)
+      .then((res) => res.json())
+      .then((res) => ({
+        total: res.total,
+        list: res.hits,
+      }));
   };
 };
 
 const TableGenerator = (config) => {
-  const { columns, api, tableRowKey, addBtn, withSearch } = config;
+  const { columns, api, tableRowKey, addBtn, withSearch, dataFetch, handleRes } = config;
 
   return () => {
     const [form] = Form.useForm();
 
-    const { tableProps, search } = useAntdTable(returnGetTableData(api), {
+    const { tableProps, search } = useAntdTable(returnGetTableData(api, dataFetch, handleRes), {
       defaultPageSize: 10,
       form,
     });
@@ -54,8 +41,9 @@ const TableGenerator = (config) => {
 
     const tmpArr = columns.map((item) => {
       if (item.supportSearch) {
+        console.log(item.dataIndex, item.key);
         return (
-          <Col key={'col-' + item.dataIndex} span={8}>
+          <Col key={'col-' + (item.dataIndex || item.key)} span={8}>
             <Form.Item label={item.title} name={item.dataIndex}>
               <Input placeholder={item.title} />
             </Form.Item>

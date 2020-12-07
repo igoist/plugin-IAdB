@@ -1,9 +1,9 @@
 import * as React from 'react';
-// import { extension } from '@Utils';
 // import { TableGenerator } from '@Components'; // いませんよ
 import { TableGenerator } from '../TableGenerator';
+import { extension } from '@Utils';
 
-// const { getStoreLocal } = extension;
+const { getStoreLocal } = extension;
 
 // const { useEffect, useState } = React;
 
@@ -47,58 +47,61 @@ import { TableGenerator } from '../TableGenerator';
 const columns = [
   {
     title: 'ID',
-    dataIndex: 'id',
+    key: 'id',
+    width: 80,
     supportSearch: true,
+    render: (item) => (
+      <a key={`id-${item.id}`} href={item.url} target='_blank' style={{ color: item.incognito ? '#149cec' : '#ec414d' }}>
+        {item.id}
+      </a>
+    ),
   },
   {
     title: '标题',
-    dataIndex: 'title',
+    key: 'title',
     supportSearch: true,
-  },
-  {
-    title: 'URL',
-    dataIndex: 'url',
-    supportSearch: true,
+    render: (item, index) => {
+      return (
+        <a key={`title-${index}`} href={item.url} target='_blank'>
+          {item.title}
+        </a>
+      );
+    },
   },
   {
     title: 'incognito',
     dataIndex: 'incognito',
+    width: 120,
     supportSearch: true,
+    render: (item) => <>{item ? 'Y' : 'N'}</>,
   },
-  // {
-  //   title: '操作',
-  //   dataIndex: '',
-  //   supportSearch: false,
-  //   key: 'x',
-  //   render: (item) => {
-  //     return (
-  //       <>
-  //         <a href={`/admin/anchor/edit/${item.id}`} style={{ marginRight: '12px' }}>
-  //           编辑
-  //         </a>
-  //         <a href={`/admin/live/anchor/${item.id}/add/`}>创建直播</a>
-  //       </>
-  //     );
-  //   },
-  // },
 ];
-
-const api = '/admin/anchor/api/listx';
-
-// const addBtn = {
-//   name: '添加讲师',
-//   url: '/admin/anchor/add',
-// };
 
 const tableRowKey = 'id';
 
 const tmpC = columns.filter((item) => item.supportSearch);
 const withSearch = tmpC.length > 0;
 
+const dataFetch = () => {
+  return new Promise((resolve) => {
+    getStoreLocal(['IAdBTabs'], (result) => {
+      if (result.IAdBTabs) {
+        const l = JSON.parse(result.IAdBTabs);
+        resolve({
+          total: l.length,
+          list: l,
+        });
+      }
+    });
+  });
+};
+
 export default TableGenerator({
   columns,
-  api,
+  // api,
   // addBtn,
   tableRowKey,
   withSearch,
+  dataFetch,
+  // handleRes,
 });
