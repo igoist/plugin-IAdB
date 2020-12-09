@@ -127,7 +127,7 @@ const mainF = function () {
     const [menu, setMenu] = useState(false);
 
     useEffect(() => {
-      // hA();
+      hFW();
       hFX();
       hFY();
 
@@ -163,6 +163,10 @@ const mainF = function () {
     }, [y]);
 
     const hFW = () => {
+      // title may not exist
+      if (!w) {
+        return;
+      }
       if (fW) {
         w.d.style.display = '';
       } else {
@@ -193,11 +197,16 @@ const mainF = function () {
       setMenu(!menu);
     };
 
+    let count = 2;
+    if (w) {
+      count++;
+    }
+
     return (
       <>
-        <div className={`IAdB zhihu-handler ${menu && 'hidden'}`}>
-          <div className={`IAdB ${prefix}-item www ${fW && 'active'}`} onClick={hFW}>
-            <button className='IAdB'>{w ? w.d.className : '...'}</button>
+        <div className={`IAdB zhihu-handler ${menu && 'hidden'}`} style={{ top: `${244 - count * 22}px` }}>
+          <div className={`IAdB ${prefix}-item www ${fW && 'active'}`} onClick={hFW} style={{ display: w ? '' : 'none' }}>
+            <button className='IAdB'>{w ? '.' + w.d.className : '...'}</button>
           </div>
           <div className={`IAdB ${prefix}-item xxx ${fX && 'active'}`} onClick={hFX}>
             <button className='IAdB'>{x ? x.c : '...'}</button>
