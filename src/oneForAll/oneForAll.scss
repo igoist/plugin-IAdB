@@ -117,7 +117,7 @@ $zh: 'zh';
 
 .zhihu-handler {
   position: fixed;
-  top: 200px;
+  top: 178px;
   right: 10px;
   padding: 10px;
   border: 1px solid #fff;
@@ -133,12 +133,16 @@ $zh: 'zh';
     height: 22px;
     line-height: 22px;
 
-    &.active {
-      color: #86c7c7;
+    &.www.active{
+      color: #e35877;
     }
 
-    &:first-child.active{
+    &.xxx.active{
       color: #86c797;
+    }
+
+    &.yyy.active {
+      color: #86c7c7;
     }
   }
 
