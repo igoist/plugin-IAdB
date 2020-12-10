@@ -136,7 +136,7 @@ const mainF = function () {
         for (let i = 0; i < ViewAllBtns.length; i++) {
           ViewAllBtns[i].addEventListener('click', () => {
             setTimeout(() => {
-              const [main, siderBar] = checkMS();
+              const [title, main, siderBar] = checkMS();
               setFX(false);
               setFY(false);
               setX(main);
