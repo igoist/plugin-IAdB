@@ -8,16 +8,17 @@ const log = console.log.bind(this);
  * 底部相关搜索不管
  */
 let styleStr = `
+  .big .lEXIrb,
   .mw,
   #center_col,
   #res {
     margin: 0 auto!important;
     padding: 0!important;
-    width: 1240px!important;
+    min-width: 1280px!important;
   }
 
   #ires .bkWMgd {
-    width: 1240px!important;
+    min-width: 1280px!important;
     padding: 0 20px;
     box-sizing: border-box;
     overflow: hidden;
@@ -47,7 +48,7 @@ let styleStr = `
     transform: translateY(-10px);
   }
 
-  .mw #rhs {
+  #rhs .VjDLd.liYKde {
     display: none!important;
   }
 
