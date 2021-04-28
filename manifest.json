@@ -15,10 +15,14 @@
     {
       "matches": ["*://*/*"],
       "run_at": "document_end",
-      "js": [
-        "dist/dll/react.dll.js",
-        "dist/js/oneForAll.bundle.min.js"
-      ]
+      "js": ["dist/dll/react.dll.js", "dist/js/oneForAll.bundle.min.js"],
+      "css": ["dist/css/IAdB.css"],
+      "exclude_matches": ["http://127.0.0.1:333/*", "http://127.0.0.1:3333/*", "http://localhost:3333/*"]
+    },
+    {
+      "matches": ["*://xxxxxxxxxxpinban.com/*"],
+      "run_at": "document_end",
+      "js": ["src/ptest.js"]
     },
     {
       "matches": ["*://*.zhangxinxu.com/*"],
@@ -42,9 +46,7 @@
     },
     {
       "matches": ["*://*.zhihu.com/*"],
-      "js": [
-        "dist/js/zhihu.bundle.min.js"
-      ]
+      "js": ["dist/js/zhihu.bundle.min.js"]
     }
   ],
   "manifest_version": 2,
@@ -58,11 +60,6 @@
     "default_title": "自定义广告屏蔽扩展",
     "default_popup": "pages/popup/index.html"
   },
-  "permissions": [
-    "activeTab",
-    "tabs",
-    "storage",
-    "declarativeContent",
-    "webNavigation", "*://*/*"
-  ]
+  "permissions": ["activeTab", "tabs", "storage", "declarativeContent", "webNavigation", "*://*/*"],
+  "web_accessible_resources": ["dist/css/pinit.min.css", "dist/css/IAdB.css", "dist/dll/reactForPinit.dll.js", "dist/js/pinit.min.js"]
 }

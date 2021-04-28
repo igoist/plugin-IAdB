@@ -1,0 +1,27 @@
+$keyCodeItemSize: 32px;
+
+##{$IAdB-prefix}-keyCodeBox-wrap {
+  position: absolute;
+  top: 50px;
+  left: 16px;
+}
+
+##{$IAdB-prefix}-keyCodeBox {
+  position: relative;
+  border-radius: 6px;
+  width: auto;
+  height: $keyCodeItemSize;
+  line-height: $keyCodeItemSize;
+  background-color: #000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+
+  .#{$IAdB-prefix}-keyCodeBox-item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: $keyCodeItemSize;
+    font-size: 18px;
+    color: #fff;
+  }
+}

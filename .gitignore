@@ -8,3 +8,5 @@ src/oneForAll.js
 
 dist/
 node_modules/
+
+public/css
