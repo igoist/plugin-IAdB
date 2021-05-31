@@ -14,6 +14,7 @@ const webpackConfig = [
     entry: {
       oneForAll: [path.resolve(path.resolve(__dirname, '..'), path.resolve(srcPath, 'oneForAll/index.js'))],
       zhihu: [path.resolve(path.resolve(__dirname, '..'), path.resolve(srcPath, 'zhihu.js'))],
+      baidu: [path.resolve(path.resolve(__dirname, '..'), path.resolve(srcPath, 'baidu.js'))],
     },
   },
   {

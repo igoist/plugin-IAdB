@@ -30,7 +30,7 @@
     },
     {
       "matches": ["*://*.baidu.com/*"],
-      "js": ["src/baidu.js"]
+      "js": ["dist/js/baidu.bundle.min.js"]
     },
     {
       "matches": ["*://lodash.com/*"],
@@ -47,6 +47,10 @@
     {
       "matches": ["*://*.zhihu.com/*"],
       "js": ["dist/js/zhihu.bundle.min.js"]
+    },
+    {
+      "matches": ["*://*.stackoverflow.com/*"],
+      "js": ["src/stackoverflow.js"]
     }
   ],
   "manifest_version": 2,
@@ -60,6 +64,6 @@
     "default_title": "自定义广告屏蔽扩展",
     "default_popup": "pages/popup/index.html"
   },
-  "permissions": ["activeTab", "tabs", "storage", "declarativeContent", "webNavigation", "*://*/*"],
+  "permissions": ["activeTab", "tabs", "storage", "sessions", "declarativeContent", "webNavigation", "*://*/*"],
   "web_accessible_resources": ["dist/css/pinit.min.css", "dist/css/IAdB.css", "dist/dll/reactForPinit.dll.js", "dist/js/pinit.min.js"]
 }

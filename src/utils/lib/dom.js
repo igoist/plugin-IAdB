@@ -147,3 +147,29 @@ export const scrollSmothlyTo = (delta, target) => {
 
   step();
 };
+
+import * as log from './log';
+
+export const returnTargetDOM = (array) => {
+  let t = null;
+
+  for (let i = 0; i < array.length; i++) {
+    let tmp = Q(array[i]);
+
+    if (tmp) {
+      log.l({
+        title: 'checkMS',
+        text: `${array[i]} exist`,
+      });
+
+      t = {
+        c: array[i],
+        d: tmp,
+      };
+
+      break;
+    }
+  }
+
+  return t;
+};

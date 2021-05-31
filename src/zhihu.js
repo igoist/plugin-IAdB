@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { log, dom } from '@Utils';
 
 const { useEffect, useState } = React;
-const { Q, QA } = dom;
+const { Q, QA, ETElHide, ETElShow, returnTargetDOM } = dom;
 
 const mainF = function () {
   /**
@@ -53,60 +53,16 @@ const mainF = function () {
   // }
 
   ////////////
-  let titleArr = ['.QuestionHeader-main .QuestionHeader-title'];
+  let topArr = ['.QuestionHeader-main .QuestionHeader-title'];
   let mainArr = ['.Topstory-mainColumn', '.SearchMain', '.Question-mainColumn', '.Profile-mainColumn', '.Collections-mainColumn'];
-
-  let sideBarArr = ['.GlobalSideBar', '.SearchSideBar', '.Question-sideColumn', '.Profile-sideColumn'];
+  let sidebarArr = ['.GlobalSideBar', '.SearchSideBar', '.Question-sideColumn', '.Profile-sideColumn'];
 
   const checkMS = () => {
-    let i;
     let w, x, y;
 
-    for (i = 0; i < titleArr.length; i++) {
-      let tmp = Q(titleArr[i]);
-
-      if (tmp) {
-        log.l({
-          title: 'checkMS',
-          text: `${titleArr[i]} exist`,
-        });
-        console.log(tmp);
-        w = {
-          c: titleArr[i],
-          d: tmp,
-        };
-      }
-    }
-
-    for (i = 0; i < mainArr.length; i++) {
-      let tmp = Q(mainArr[i]);
-      if (tmp) {
-        log.l({
-          title: 'checkMS',
-          text: `${mainArr[i]} exist`,
-        });
-        console.log(tmp);
-        x = {
-          c: mainArr[i],
-          d: tmp,
-        };
-      }
-    }
-
-    for (i = 0; i < sideBarArr.length; i++) {
-      let tmp = Q(sideBarArr[i]);
-      if (tmp) {
-        log.l({
-          title: 'checkMS',
-          text: `${sideBarArr[i]} exist`,
-        });
-        console.log(tmp);
-        y = {
-          c: sideBarArr[i],
-          d: tmp,
-        };
-      }
-    }
+    w = returnTargetDOM(topArr);
+    x = returnTargetDOM(mainArr);
+    y = returnTargetDOM(sidebarArr);
 
     return [w, x, y];
   };
@@ -114,67 +70,63 @@ const mainF = function () {
   let div = document.createElement('div');
   document.body.appendChild(div);
 
-  const prefix = 'zh';
-  const [title, main, siderBar] = checkMS();
+  const [top, main, sidebar] = checkMS();
+
+  const returnHandleFn = (el, flag, setFlag) => {
+    return () => {
+      if (!el) {
+        return;
+      }
+
+      if (flag) {
+        ETElShow(el.d);
+      } else {
+        ETElHide(el.d);
+      }
+
+      setFlag(!flag);
+    };
+  };
 
   const R = () => {
-    const [w, setW] = useState(title);
+    const [w, setW] = useState(top);
     const [x, setX] = useState(main);
-    const [y, setY] = useState(siderBar);
+    const [y, setY] = useState(sidebar);
     const [fW, setFW] = useState(false);
     const [fX, setFX] = useState(false);
     const [fY, setFY] = useState(false);
     const [menu, setMenu] = useState(false);
 
     useEffect(() => {
-      hFW();
-      hFX();
-      hFY();
-
       let ViewAllBtns = QA('.Question-main .ViewAll');
       if (ViewAllBtns.length > 0) {
         for (let i = 0; i < ViewAllBtns.length; i++) {
           ViewAllBtns[i].addEventListener('click', () => {
             setTimeout(() => {
-              const [title, main, siderBar] = checkMS();
+              const [top, main, sidebar] = checkMS();
               setFX(false);
               setFY(false);
               setX(main);
-              setY(siderBar);
+              setY(sidebar);
             }, 1000);
           });
         }
       }
     }, []);
 
-    // useEffect(() => {
-    //   // console.log('w change: ', w.c, w && w.d.style.width, a);
-    //   hFW();
-    // }, [w]);
+    useEffect(() => {
+      hFW();
+    }, [w]);
 
     useEffect(() => {
-      // console.log('x change: ', x.c, x && x.d.style.width, a);
       hFX();
     }, [x]);
 
     useEffect(() => {
-      // console.log('y change: ', y.c, y && y.d.style.display, b);
       hFY();
     }, [y]);
 
-    const hFW = () => {
-      // title may not exist
-      if (!w) {
-        return;
-      }
-      if (fW) {
-        w.d.style.display = '';
-      } else {
-        w.d.style.display = 'none';
-      }
-      setFW(!fW);
-    };
-
+    const hFW = returnHandleFn(w, fW, setFW);
     const hFX = () => {
       if (fX) {
         x.d.style.width = '';
@@ -183,40 +135,43 @@ const mainF = function () {
       }
       setFX(!fX);
     };
-
-    const hFY = () => {
-      if (fY) {
-        y.d.style.display = '';
-      } else {
-        y.d.style.display = 'none';
-      }
-      setFY(!fY);
-    };
+    const hFY = returnHandleFn(y, fY, setFY);
 
     const handleToggle = () => {
       setMenu(!menu);
     };
 
-    let count = 2;
+    let count = 0;
+
     if (w) {
       count++;
     }
 
+    if (x) {
+      count++;
+    }
+
+    if (y) {
+      count++;
+    }
+
+    const pf = 'et-side';
+
     return (
       <>
-        <div className={`IAdB zhihu-handler ${menu && 'hidden'}`} style={{ top: `${244 - count * 22}px` }}>
-          <div className={`IAdB ${prefix}-item www ${fW && 'active'}`} onClick={hFW} style={{ display: w ? '' : 'none' }}>
-            <button className='IAdB'>{w ? '.' + w.d.className : '...'}</button>
+        <div className={`IAdB ${pf}-wrap ${menu ? 'hidden' : ''}`} style={{ top: `${244 - count * 22}px` }}>
+          <div className={`IAdB ${pf}-item ${fW ? 'active' : ''} ${w ? '' : 'is-hidden'}`} onClick={hFW}>
+            <div className="IAdB et-btn">{w ? w.c : '...'}</div>
           </div>
-          <div className={`IAdB ${prefix}-item xxx ${fX && 'active'}`} onClick={hFX}>
-            <button className='IAdB'>{x ? x.c : '...'}</button>
+          <div className={`IAdB ${pf}-item ${fX ? 'active' : ''} ${x ? '' : 'is-hidden'}`} onClick={hFX}>
+            <div className="IAdB et-btn">{x ? x.c : '...'}</div>
           </div>
-          <div className={`IAdB ${prefix}-item yyy ${fY && 'active'}`} onClick={hFY}>
-            <button className='IAdB'>{y ? y.c : '...'}</button>
+          <div className={`IAdB ${pf}-item ${fY ? 'active' : ''} ${y ? '' : 'is-hidden'}`} onClick={hFY}>
+            <div className="IAdB et-btn">{y ? y.c : '...'}</div>
           </div>
         </div>
-        {/* <div className={`IAdB zhihu-handler-toggle ${!menu & 'hidden'}`}>Toggle</div> */}
-        <div className={`IAdB zhihu-handler-toggle`} onClick={handleToggle}>
+
+        <div className={`IAdB ${pf}-toggle`} onClick={handleToggle}>
           Toggle
         </div>
       </>

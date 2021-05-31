@@ -1,5 +1,5 @@
 // 闭包，后期再说
-const log = console.log.bind(this);
+const clog = console.log.bind(this);
 
 /*
  * 搜索结果页
@@ -13,11 +13,6 @@ let rs = document.getElementById('rs');
 // let kw = document.getElementById('kw'); // 搜索输入框
 
 let styleStr = `
-  #s-hotsearch-wrapper,
-  #content_right {
-    display: none;
-  }
-
   #container {
     margin: 0 auto;
     width: 1240px;
@@ -49,13 +44,6 @@ let styleStr = `
     width: 100%;
   }
 
-  #rs,
-  #rs_top_new,
-  .hit_top_new,
-  .leftBlock {
-    display: none!important;
-  }
-
   h3.t a {
     color: #149cec;
   }
@@ -65,15 +53,22 @@ let styleStr = `
   }
 `;
 
-if (contentRight) {
-  contentRight.remove();
-  log('搜索结果页右侧广告区已移除');
-}
+// #rs,
+// #rs_top_new,
+// .hit_top_new,
+// .leftBlock {
+//   display: none!important;
+// }
 
-if (rs) {
-  rs.remove();
-  log('底部相关搜索 #rs 已移除');
-}
+// if (contentRight) {
+//   contentRight.remove();
+//   clog('搜索结果页右侧广告区已移除');
+// }
+
+// if (rs) {
+//   rs.remove();
+//   clog('底部相关搜索 #rs 已移除');
+// }
 
 // 简单粗暴 -- 然后 Head 会刷新
 let trickStyle = document.createElement('style');
@@ -124,25 +119,25 @@ let topA = document.querySelector('.topA');
 let newSideShare = document.querySelector('.new-side-share');
 let afterContent = document.querySelector('.after-content');
 
-if (sideContent) {
-  sideContent.remove();
-  log('百科页右侧已移除');
-}
+// if (sideContent) {
+//   sideContent.remove();
+//   clog('百科页右侧已移除');
+// }
 
-if (topA) {
-  topA.remove();
-  log('百科页顶部广告 .topA 已移除');
-}
+// if (topA) {
+//   topA.remove();
+//   clog('百科页顶部广告 .topA 已移除');
+// }
 
-if (newSideShare) {
-  newSideShare.remove();
-  log('百科页右侧分享 .new-side-share 已移除');
-}
+// if (newSideShare) {
+//   newSideShare.remove();
+//   clog('百科页右侧分享 .new-side-share 已移除');
+// }
 
-if (afterContent) {
-  afterContent.remove();
-  log('百科页底部猜你喜欢 .after-content 已移除');
-}
+// if (afterContent) {
+//   afterContent.remove();
+//   clog('百科页底部猜你喜欢 .after-content 已移除');
+// }
 
 /**
  * 百度知道页
@@ -151,6 +146,157 @@ if (afterContent) {
 
 let aside = document.querySelector('aside');
 
-if (aside) {
-  aside.remove();
+// if (aside) {
+//   aside.remove();
+// }
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { dom } from '@Utils';
+
+const { useEffect, useState } = React;
+const { CE, ETElHide, ETElShow, returnTargetDOM } = dom;
+
+const mainF = () => {
+  const topArr = ['.topA'];
+
+  const mainArr = ['.c-group-wrapper'];
+
+  const sidebarArr = ['.cr-offset', '.side-content', '.new-side-share', 'aside'];
+
+  const bottomArr = ['.s-hotsearch-wrapper', '#rs', '.after-content'];
+
+  const checkMS = () => {
+    let w, x, y, z;
+
+    w = returnTargetDOM(topArr);
+    x = returnTargetDOM(mainArr);
+    y = returnTargetDOM(sidebarArr);
+    z = returnTargetDOM(bottomArr);
+
+    return [w, x, y, z];
+  };
+
+  let div = CE('div');
+  document.body.appendChild(div);
+
+  const [top, main, sidebar, bottom] = checkMS();
+
+  const returnHandleFn = (el, flag, setFlag) => {
+    return () => {
+      if (!el) {
+        return;
+      }
+
+      if (flag) {
+        ETElShow(el.d);
+      } else {
+        ETElHide(el.d);
+      }
+
+      setFlag(!flag);
+    };
+  };
+
+  const R = () => {
+    const [w, setW] = useState(top);
+    const [x, setX] = useState(main);
+    const [y, setY] = useState(sidebar);
+    const [z, setZ] = useState(bottom);
+    const [fW, setFW] = useState(false);
+    const [fX, setFX] = useState(false);
+    const [fY, setFY] = useState(false);
+    const [fZ, setFZ] = useState(false);
+    const [menu, setMenu] = useState(false);
+
+    useEffect(() => {}, []);
+
+    useEffect(() => {
+      hFW();
+    }, [w]);
+
+    useEffect(() => {
+      hFX();
+    }, [x]);
+
+    useEffect(() => {
+      hFY();
+    }, [y]);
+
+    useEffect(() => {
+      hFZ();
+    }, [z]);
+
+    const hFW = returnHandleFn(w, fW, setFW);
+    const hFX = returnHandleFn(x, fX, setFX);
+    const hFY = returnHandleFn(y, fY, setFY);
+    const hFZ = returnHandleFn(z, fZ, setFZ);
+
+    const handleToggle = () => {
+      setMenu(!menu);
+    };
+
+    let count = 0;
+
+    if (w) {
+      count++;
+    }
+
+    if (x) {
+      count++;
+    }
+
+    if (y) {
+      count++;
+    }
+
+    if (z) {
+      count++;
+    }
+
+    const pf = 'et-side';
+
+    return (
+      <>
+        <div className={`IAdB ${pf}-wrap ${menu ? 'hidden' : ''}`} style={{ top: `${244 - count * 22}px` }}>
+          <div className={`IAdB ${pf}-item ${fW ? 'active' : ''} ${w ? '' : 'is-hidden'}`} onClick={hFW}>
+            <div className="IAdB et-btn">{w ? w.c : '...'}</div>
+          </div>
+          <div className={`IAdB ${pf}-item ${fX ? 'active' : ''} ${x ? '' : 'is-hidden'}`} onClick={hFX}>
+            <div className="IAdB et-btn">{x ? x.c : '...'}</div>
+          </div>
+          <div className={`IAdB ${pf}-item ${fY ? 'active' : ''} ${y ? '' : 'is-hidden'}`} onClick={hFY}>
+            <div className="IAdB et-btn">{y ? y.c : '...'}</div>
+          </div>
+          <div className={`IAdB ${pf}-item ${fZ ? 'active' : ''} ${z ? '' : 'is-hidden'}`} onClick={hFZ}>
+            <div className="IAdB et-btn">{z ? z.c : '...'}</div>
+          </div>
+        </div>
+
+        <div className={`IAdB ${pf}-toggle`} onClick={handleToggle}>
+          Toggle
+        </div>
+      </>
+    );
+  };
+
+  ReactDOM.render(<R />, div);
+};
+
+try {
+  mainF();
+} catch (err) {
+  console.log(`%cmainF catch%c: ${err}`, 'background: #fff; color:  #f49cec;', 'color: #149cec;', err);
 }
+
+/**
+ * main
+ * .c-group-wrapper 搜索结果视频推荐
+ *
+ * sidebar
+ * .cr-offset 搜索结果右侧推荐
+ *
+ * bottom
+ * .s-hotsearch-wrapper 首页搜索框下, 百度热搜
+ * #rs 搜索结果底部相关搜索 related search...
+ */

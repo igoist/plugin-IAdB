@@ -1,25 +1,26 @@
-.clearfix {
-  &:before,
-  &:after {
-    content: '';
-    display: table;
+.#{$IAdB} {
+  &.clearfix {
+    &:before,
+    &:after {
+      content: '';
+      display: table;
+    }
+
+    &:after {
+      clear: both;
+    }
   }
 
-  &:after {
-    clear: both;
+  &::before,
+  &::after {
+    box-sizing: border-box;
   }
-}
 
-*:before,
-*:after {
-  box-sizing: border-box;
-}
+  &.clickable {
+    pointer-events: auto;
+  }
 
-.clickable {
-  pointer-events: auto;
-}
-
-.is-hidden {
-  display: none;
-  // opacity: 0;
+  &.is-hidden {
+    display: none;
+  }
 }

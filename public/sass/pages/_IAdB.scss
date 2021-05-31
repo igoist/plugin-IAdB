@@ -111,9 +111,24 @@
   }
 }
 
-$zh: 'zh';
+.#{$P}-ppp-wrap {
+  position: fixed;
+  top: 200px;
+  left: 200px;
+  width: 300px;
+  height: 300px;
+  background-color: #fff;
+}
 
-.zhihu-handler {
+.#{$P}-test {
+  border: 4px solid #86c7c7;
+  background-color: #333;
+}
+
+// 指定页面右侧栏
+$PS: $P + '-side';
+
+.#{$PS}-wrap {
   position: fixed;
   top: 178px;
   right: 10px;
@@ -126,30 +141,39 @@ $zh: 'zh';
   transition: right 0.24s ease-in-out;
   z-index: 10000;
 
-  .#{$zh}-item {
-    font-size: 14px;
-    height: 22px;
-    line-height: 22px;
-
-    &.www.active {
-      color: #e35877;
-    }
-
-    &.xxx.active {
-      color: #86c797;
-    }
-
-    &.yyy.active {
-      color: #86c7c7;
-    }
-  }
-
   &.hidden {
     right: -180px;
   }
 }
 
-.zhihu-handler-toggle {
+.#{$PS}-item {
+  font-size: 14px;
+  height: 22px;
+  line-height: 22px;
+
+  &:nth-child(1).active {
+    color: #e35877;
+  }
+
+  &:nth-child(2).active {
+    color: $turquoise;
+  }
+
+  &:nth-child(3).active {
+    color: $blue; //#86c7c7;
+  }
+
+  &:nth-child(4).active {
+    color: $purple;
+  }
+
+  .#{$P}-btn {
+    height: 22px;
+    line-height: 22px;
+  }
+}
+
+.#{$PS}-toggle {
   position: fixed;
   border: 1px solid #fff;
   border-radius: 6px;
@@ -160,6 +184,7 @@ $zh: 'zh';
   line-height: 32px;
   font-size: 14px;
   transition: all 0.24s ease-in-out;
+  cursor: pointer;
   z-index: 10000;
 
   &:active {
