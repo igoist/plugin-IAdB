@@ -1,6 +1,6 @@
 import { dom } from '@Utils';
 
-const { CE, Q, hbFade, htmlToElement } = dom;
+const { CE, Q, ETFade, htmlToElement } = dom;
 
 const HBMessage = (config) => {
   // tmp prefix
@@ -29,7 +29,7 @@ const HBMessage = (config) => {
 
   wrap.appendChild(msg);
 
-  hbFade({
+  ETFade({
     el: msg,
     isEnter: true,
   });
@@ -43,7 +43,7 @@ const HBMessage = (config) => {
 
     hasQuit = true;
 
-    hbFade({
+    ETFade({
       el: msg,
       callback: () => {
         wrap.removeChild(msg);

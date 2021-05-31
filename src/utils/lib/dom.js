@@ -44,13 +44,13 @@ export const toggleClass = (className, el) => {
   }
 };
 
-export const hbElHide = function (el) {
+export const ETElHide = function (el) {
   if (el) {
     el.style.display = 'none';
   }
 };
 
-export const hbElShow = function (el) {
+export const ETElShow = function (el) {
   if (el) {
     el.style.display = 'block';
   }
@@ -58,26 +58,22 @@ export const hbElShow = function (el) {
 
 /**
  * el
+ * name: string    'fade' | 'slide-up'
  * isEnter?: boolean
  * callback?: () => {}
  */
-export const hbFade = (config) => {
+export const ETAnimation = (config) => {
   // tmp prefix
-  const prefix = 'hblive';
+  const prefix = 'et';
 
-  const name = 'fade';
-
-  const el = config.el;
-  const isEnter = config.isEnter || false;
+  const { el, name, isEnter = false, callback } = config;
 
   const suffix = isEnter ? 'enter' : 'leave';
-  const callback = config.callback;
 
   const pf = `${prefix}-${name}-${suffix}`;
 
   // 避免冲突
   if (hasClass(`${pf}`, el)) {
-    console.log('enter hbFade return');
     return;
   }
 
@@ -94,6 +90,18 @@ export const hbFade = (config) => {
   el.addEventListener('animationend', handleFade);
   el.classList.add(`${pf}`);
   el.classList.add(`${pf}-active`);
+};
+
+export const ETFade = (config) => {
+  config.name = 'fade';
+
+  ETAnimation(config);
+};
+
+export const ETSlideUP = (config) => {
+  config.name = 'slide-up';
+
+  ETAnimation(config);
 };
 
 export const htmlToElement = (html) => {
