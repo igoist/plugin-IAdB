@@ -1,19 +1,25 @@
 import { log, dom, extension, IAdBState, prefix, idName } from '@Utils';
-import './oneForAll.css';
 
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import { useImmerReducer } from 'use-immer';
 
 import { KeyMenu, ResetStyle } from '@Components';
-import { Message } from '@Components/Message';
+import { ETMessage } from '@Components/ETMessage';
 import { useIAdBHook, useKeyMenuHook, Provider } from '@Models';
+
+import Hightlight from './Highlight';
 
 const { useEffect, useState } = React;
 const { l } = log;
 const { scrollSmothlyTo } = dom;
 const { getStore, sendMessage } = extension;
 
+import { sendActToBG } from './fns';
+import { returnCommands, returnDispatchMenuTask, initialState, reducer } from './tmp';
+
 const mainF = () => {
+  const pf = 'et';
   /**
    * backgroundColor
    * fontColor
@@ -31,27 +37,23 @@ const mainF = () => {
 
   const KeyCodeArr = Object.keys(IAdBState);
 
-  const sendActToBG = (actName, f = true) => {
-    sendMessage({ to: 'IAdB-bg', act: actName }, (response) => {
-      l({
-        title: actName,
-        text: 'should be success',
-      });
-      if (f) {
-        Message.success(response.msg);
-      }
-    });
-  };
-
   const R = () => {
     const { data: s, dispatch: useIAdBDispatch } = useIAdBHook.useContainer();
     const { visible, dispatch: keyMenuDispatch } = useKeyMenuHook.useContainer();
-    const [switchFlag, setSwitchFlag] = useState(false);
-    const [prevent, setPrevent] = useState(false);
+    // const [switchFlag, setSwitchFlag] = useState(false);
+    // const [prevent, setPrevent] = useState(false);
+
+    // const [PV, setPV] = useState(false);
+    const [state, dispatch] = useImmerReducer(reducer, initialState);
+    const { switchFlag, prevent, PV } = state;
 
     useEffect(() => {
       getStore(KeyCodeArr, (result) => {
-        setSwitchFlag(result.ifDarkMode);
+        dispatch({
+          type: 'setSwitchFlag',
+          payload: result.ifDarkMode,
+        });
+
         useIAdBDispatch({
           type: 'DataSet',
           payload: { ...result },
@@ -60,42 +62,12 @@ const mainF = () => {
     }, []);
 
     useEffect(() => {
-      const dispatchMenuTask = (keyArray) => {
-        switch (keyArray) {
-          case '000':
-            keyMenuDispatch({
-              type: 'KeyMenuToggle',
-            });
-            return true;
-          case '001':
-            document.title = 'Yahaha';
-            return true;
-          case '002':
-            useIAdBDispatch({
-              type: 'DataSync',
-            });
-          case '005':
-            setPrevent(!prevent);
-            l({
-              title: 'preventDefaultKeyDown',
-              text: `now is ${prevent}, will be ${!prevent}`,
-            });
-            break;
-          // 0111 ~ 0199 for sending actions to bg
-          case '111':
-            sendActToBG('TabsSave');
-            break;
-          case '112':
-            sendActToBG('TabsGet');
-            break;
-          case '113':
-            sendActToBG('TabsRecover');
-            break;
-          default:
-            console.log('無駄ですよ');
-            return false;
-        }
-      };
+      const commands = returnCommands({
+        keyMenuDispatch,
+        useIAdBDispatch,
+      });
+
+      const dispatchMenuTask = returnDispatchMenuTask(commands);
 
       const handleIClickEvent = (e) => {
         if (visible) {
@@ -117,18 +89,23 @@ const mainF = () => {
               cC += 1;
 
               if (cC === 3 && !switchFlag) {
-                setSwitchFlag(true);
+                dispatch({
+                  type: 'setSwitchFlag',
+                  payload: true,
+                });
 
                 cC = 0;
-                Message.success('Switch On');
+                ETMessage.success('Switch On');
               }
 
               if (cC === 2 && switchFlag) {
-                setSwitchFlag(false);
+                dispatch({
+                  type: 'setSwitchFlag',
+                  payload: false,
+                });
 
-                // keyMenu.hide();
                 cC = 0;
-                Message.success('Switch Off');
+                ETMessage.success('Switch Off');
               }
             } else if (document.activeElement.nodeName !== 'INPUT' && keyArray.length < 3 && 47 < e.keyCode && e.keyCode < 58) {
               // keyMenu 显示 && keyArray.length < 3 && 焦点非 input && key 0 ~ 9
@@ -149,10 +126,10 @@ const mainF = () => {
             } else {
               switch (e.keyCode) {
                 case 74: // j
-                  scrollSmothlyTo(window.scrollY + 100);
+                  scrollSmothlyTo(100);
                   break;
                 case 75: // k
-                  scrollSmothlyTo(window.scrollY - 100);
+                  scrollSmothlyTo(-100);
                   break;
                 default:
                   break;
@@ -179,18 +156,19 @@ const mainF = () => {
       <>
         <ResetStyle {...s} visible={switchFlag} />
         <KeyMenu />
+
         {/* <ListTabs /> it could be moved into iframe with ... */}
+
+        <Hightlight visible={PV} />
       </>
     );
   };
 
-  // if (darkMode && result.programSwitch) {
   if (true) {
     let div = document.createElement('div');
     div.id = `${idName}-parent`;
 
-    // document.body.appendChild(div);
-    document.body.insertBefore(div, document.body.children[0]);
+    document.body.appendChild(div);
 
     ReactDOM.render(
       <Provider>
