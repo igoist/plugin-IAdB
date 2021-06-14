@@ -15,7 +15,7 @@ const { l } = log;
 const { scrollSmothlyTo } = dom;
 const { getStore, sendMessage } = extension;
 
-import { sendActToBG } from './fns';
+import { ETSendMessage } from './fns';
 import { returnCommands, returnDispatchMenuTask, initialState, reducer } from './tmp';
 
 const mainF = () => {
@@ -40,25 +40,33 @@ const mainF = () => {
   const R = () => {
     const { data: s, dispatch: useIAdBDispatch } = useIAdBHook.useContainer();
     const { visible, dispatch: keyMenuDispatch } = useKeyMenuHook.useContainer();
-    // const [switchFlag, setSwitchFlag] = useState(false);
-    // const [prevent, setPrevent] = useState(false);
-
-    // const [PV, setPV] = useState(false);
     const [state, dispatch] = useImmerReducer(reducer, initialState);
     const { switchFlag, prevent, PV } = state;
 
     useEffect(() => {
       getStore(KeyCodeArr, (result) => {
-        dispatch({
-          type: 'setSwitchFlag',
-          payload: result.ifDarkMode,
-        });
-
         useIAdBDispatch({
           type: 'DataSet',
           payload: { ...result },
         });
       });
+
+      // 原本通过 getStore 获得 result.ifDarkMode
+      ETSendMessage(
+        {
+          type: 'et-bgc-confirm',
+          payload: {
+            url: location.hostname + location.pathname,
+          },
+        },
+        (res) => {
+          console.log('et-bgc-confirm', res);
+          dispatch({
+            type: 'initSwitchFlag',
+            payload: res.ifDarkMode,
+          });
+        }
+      );
     }, []);
 
     useEffect(() => {
@@ -179,13 +187,17 @@ const mainF = () => {
     // keyMenu.init();
   }
 
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') {
-      sendActToBG('kejian', false);
-    } else {
-      sendActToBG('bukejian', false);
-    }
-  });
+  // document.addEventListener('visibilitychange', () => {
+  //   if (document.visibilityState === 'visible') {
+  //     ETSendMessage({
+  //       type: 'kejian',
+  //     });
+  //   } else {
+  //     ETSendMessage({
+  //       type: 'bukejian',
+  //     });
+  //   }
+  // });
 };
 
 try {

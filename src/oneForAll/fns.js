@@ -24,17 +24,37 @@ export const addLink = async () => {
     .then((res) => res.json())
     .then((res) => res);
 
-  ETMessage[r.code === 0 ? 'success' : 'warn'](`${prefix} addLink: ${r.msg}`);
+  ETMessage[r.Code === 0 ? 'success' : 'warn'](`${prefix} addLink: ${r.msg}`);
 };
 
-export const sendActToBG = (actName, f = true) => {
-  sendMessage({ to: 'IAdB-bg', act: actName }, (response) => {
-    l({
-      title: actName,
-      text: 'should be success',
-    });
-    if (f) {
-      ETMessage.success(response.msg);
+/**
+ * props:
+ *   - type
+ *   - payload
+ */
+export const ETSendMessage = (props, callback) => {
+  sendMessage(
+    {
+      to: `${prefix}-bg`,
+      ...props,
+    },
+    (response) => {
+      l({
+        title: props.type,
+        text: 'should be success',
+      });
+
+      if (callback) {
+        callback(response);
+      }
+
+      if (response.msg) {
+        ETMessage.success(response.msg);
+      }
     }
-  });
+  );
 };
+
+// export const ETSendMessageBundle = {
+
+// }

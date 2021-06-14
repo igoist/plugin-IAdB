@@ -1,6 +1,6 @@
 import { IAdBState, extension } from '@Utils';
 
-const { getStore, getStoreLocal, setStore, setStoreLocal } = extension;
+const { getStore, getStoreLocal, setStore, setStoreLocal, ETXSenderGetTab, ETXTabRemove } = extension;
 
 const saveTabs = () => {
   chrome.tabs.query({}, (tabs) => {
@@ -17,6 +17,42 @@ const getTabs = () => {
       resolve(r);
     });
   });
+};
+
+const BGCAI = {
+  'www.host.com': {
+    total: 10,
+    count: 8,
+  },
+};
+
+window.BGCAI = BGCAI;
+
+const handleBGCAI = (url, action = 0) => {
+  let item = BGCAI[url];
+
+  if (item) {
+    item.total++;
+    console.log('handleBGCAI', action);
+    item.count += action;
+    console.log(item, BGCAI);
+  } else {
+    BGCAI[url] = {
+      total: 1,
+      count: action,
+    };
+  }
+};
+
+const confirmBGCAI = (url) => {
+  let item = BGCAI[url];
+
+  if (item) {
+    console.log(`confirmBGCAI: ${item.count} / ${item.total} = ${item.count / item.total}`);
+    return item.count / item.total > 0.5;
+  }
+
+  return true;
 };
 
 const main = () => {
@@ -39,11 +75,13 @@ const main = () => {
     //   }]);
     // });
 
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    const onMessage = (request, sender, sendResponse) => {
       // console.log(sender.tab ? 'from a content script:' + sender.tab.url : 'from the extension');
       console.log(sender, request);
+      const { payload } = request;
+
       if (request.to === 'IAdB-bg') {
-        switch (request.act) {
+        switch (request.type) {
           case 'TabsSave':
             sendResponse({ msg: 'save tabs success' });
             saveTabs();
@@ -55,6 +93,26 @@ const main = () => {
           case 'TabsRecover':
             // to the tabs recover
             break;
+
+          case 'et-bgc-confirm':
+            console.log('et-bgc-confirm');
+            sendResponse({
+              ifDarkMode: confirmBGCAI(payload.url),
+            });
+            break;
+          case 'et-bgc-update':
+            console.log('et-bgc-update');
+            console.log('==========', payload.url, payload.action, payload);
+            handleBGCAI(payload.url, payload.action);
+            break;
+          case 'et-bgc-inc':
+            // const tab = ETXSenderGetTab(sender);
+            // ETXTabRemove(tab.id);
+            // chrome.tabs.getSelected(null, (tab) => {
+            //   chrome.tabs.remove(tab.id, function (zzz) {
+            //   });
+            // });
+            break;
           default:
             if (request.act) {
               sendResponse({ msg: request.act });
@@ -62,7 +120,9 @@ const main = () => {
             break;
         }
       }
-    });
+    };
+
+    chrome.runtime.onMessage.addListener(onMessage);
 
     switch (details.reason) {
       case 'install': // when user install

@@ -1,4 +1,4 @@
-import { addLink, sendActToBG } from './fns';
+import { addLink, ETSendMessage } from './fns';
 
 export const returnCommands = (props) => {
   const { keyMenuDispatch, useIAdBDispatch } = props;
@@ -40,19 +40,19 @@ export const returnCommands = (props) => {
     // {
     //   key: '111',
     //   fn: () => {
-    //     sendActToBG('TabsSave');
+    //     ETSendMessage('TabsSave');
     //   },
     // },
     // {
     //   key: '112',
     //   fn: () => {
-    //     sendActToBG('TabsGet');
+    //     ETSendMessage('TabsGet');
     //   },
     // },
     // {
     //   key: '113',
     //   fn: () => {
-    //     sendActToBG('TabsRecover');
+    //     ETSendMessage('TabsRecover');
     //   },
     // },
     // {
@@ -61,6 +61,30 @@ export const returnCommands = (props) => {
     //     setPV(!PV);
     //   },
     // },
+    {
+      key: '666',
+      fn: () => {
+        ETSendMessage({
+          type: 'et-bgc-update',
+          payload: {
+            url: location.hostname + location.pathname,
+            action: 1,
+          },
+        });
+      },
+    },
+    {
+      key: '555',
+      fn: () => {
+        ETSendMessage({
+          type: 'et-bgc-update',
+          payload: {
+            url: location.hostname + location.pathname,
+            action: 0,
+          },
+        });
+      },
+    },
     {
       key: '999',
       fn: () => {
@@ -81,6 +105,7 @@ export const returnCommands = (props) => {
 //   window.fse();
 // })();
 
+// 传入 returnCommands 返回的 commands, 返回对应的 dispatch 函数
 export const returnDispatchMenuTask = (commands) => {
   return (keyArray) => {
     // switch (keyArray) {
@@ -106,13 +131,13 @@ export const returnDispatchMenuTask = (commands) => {
     //     break;
     //   // 0111 ~ 0199 for sending actions to bg
     //   case '111':
-    //     sendActToBG('TabsSave');
+    //     ETSendMessage('TabsSave');
     //     break;
     //   case '112':
-    //     sendActToBG('TabsGet');
+    //     ETSendMessage('TabsGet');
     //     break;
     //   case '113':
-    //     sendActToBG('TabsRecover');
+    //     ETSendMessage('TabsRecover');
     //     break;
     //   case '225':
     //     setPV(!PV);
@@ -148,8 +173,19 @@ export const reducer = (draft, action) => {
   switch (action.type) {
     case 'reset':
       return initialState;
+    case 'initSwitchFlag':
+      draft.switchFlag = action.payload;
+      break;
     case 'setSwitchFlag':
       draft.switchFlag = action.payload;
+      // initSwitchFlag 不算, 其他情况每次 set 都需要发送 update 事件
+      ETSendMessage({
+        type: 'et-bgc-update',
+        payload: {
+          url: location.hostname + location.pathname,
+          action: action.payload ? 1 : 0,
+        },
+      });
       break;
     case 'setPrevent':
       draft.prevent = action.payload;

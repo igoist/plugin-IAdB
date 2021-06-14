@@ -3,7 +3,7 @@
  * keyArr as Array<any>
  * keyAndValue as {}
  */
-const getStore = (keyArr, callback) => {
+export const getStore = (keyArr, callback) => {
   chrome.storage.sync.get(keyArr, (result) => {
     callback({
       ...result,
@@ -11,7 +11,7 @@ const getStore = (keyArr, callback) => {
   });
 };
 
-const getStoreLocal = (keyArr, callback) => {
+export const getStoreLocal = (keyArr, callback) => {
   chrome.storage.local.get(keyArr, (result) => {
     callback({
       ...result,
@@ -19,7 +19,7 @@ const getStoreLocal = (keyArr, callback) => {
   });
 };
 
-const setStore = (keyAndValue, callback) => {
+export const setStore = (keyAndValue, callback) => {
   chrome.storage.sync.set(keyAndValue, (a, b) => {
     if (callback) {
       callback();
@@ -27,7 +27,7 @@ const setStore = (keyAndValue, callback) => {
   });
 };
 
-const setStoreLocal = (keyAndValue, callback) => {
+export const setStoreLocal = (keyAndValue, callback) => {
   chrome.storage.local.set(keyAndValue, (a, b) => {
     if (callback) {
       callback();
@@ -35,8 +35,19 @@ const setStoreLocal = (keyAndValue, callback) => {
   });
 };
 
-const sendMessage = (data, callback) => {
+export const sendMessage = (data, callback) => {
   chrome.runtime.sendMessage(data, callback);
 };
 
-export { getStore, getStoreLocal, setStore, setStoreLocal, sendMessage };
+/**
+ * ======== bg only ========
+ * ETXSenderGetTab
+ * ETXTabRemove
+ **/
+export const ETXSenderGetTab = (sender) => {
+  return sender.tab;
+};
+
+export const ETXTabRemove = (id, callback) => {
+  chrome.tabs.remove(id, callback);
+};
