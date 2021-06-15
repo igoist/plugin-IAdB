@@ -141,8 +141,35 @@ $PS: $P + '-side';
   transition: right 0.24s ease-in-out;
   z-index: 10000;
 
-  &.hidden {
-    right: -180px;
+  &.is-hidden {
+    display: none;
+  }
+
+  &.#{$P}-fade-enter.#{$P}-fade-enter-active {
+    animation-name: ETSideFadeEnter;
+  }
+
+  &.#{$P}-fade-leave.#{$P}-fade-leave-active {
+    animation-name: ETSideFadeLeave;
+  }
+}
+
+@keyframes ETSideFadeEnter {
+  0% {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes ETSideFadeLeave {
+  to {
+    transform: translateY(-10px);
+    opacity: 0;
   }
 }
 
@@ -185,13 +212,14 @@ $PS: $P + '-side';
   font-size: 14px;
   transition: all 0.24s ease-in-out;
   cursor: pointer;
+  user-select: none;
   z-index: 10000;
 
   &:active {
     transform: scale(0.86);
   }
 
-  &.hidden {
+  &.is-hidden {
     opacity: 0;
   }
 }

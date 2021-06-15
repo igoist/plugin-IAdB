@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { log, dom } from '@Utils';
 
-const { useEffect, useState } = React;
-const { Q, QA, ETElHide, ETElShow, returnTargetDOM } = dom;
+const { useEffect, useState, useRef } = React;
+const { Q, QA, addClass, removeClass, ETFade, ETElHide, ETElShow, returnTargetDOM } = dom;
 
 const mainF = function () {
   /**
@@ -95,7 +95,11 @@ const mainF = function () {
     const [fW, setFW] = useState(false);
     const [fX, setFX] = useState(false);
     const [fY, setFY] = useState(false);
-    const [menu, setMenu] = useState(false);
+    const [menu, setMenu] = useState(true);
+
+    const btnRef = useRef(null);
+
+    const pf = 'et-side';
 
     useEffect(() => {
       let ViewAllBtns = QA('.Question-main .ViewAll');
@@ -112,6 +116,13 @@ const mainF = function () {
           });
         }
       }
+
+      // 通用绑定
+      document.body.addEventListener('et-side-toggle', () => {
+        if (btnRef.current) {
+          btnRef.current.click();
+        }
+      });
     }, []);
 
     useEffect(() => {
@@ -125,6 +136,26 @@ const mainF = function () {
     useEffect(() => {
       hFY();
     }, [y]);
+
+    useEffect(() => {
+      let el = Q(`.${pf}-wrap`);
+
+      if (menu) {
+        removeClass('is-hidden', el);
+
+        ETFade({
+          el,
+          isEnter: true,
+        });
+      } else {
+        ETFade({
+          el,
+          callback: () => {
+            addClass('is-hidden', el);
+          },
+        });
+      }
+    }, [menu]);
 
     const hFW = returnHandleFn(w, fW, setFW);
     const hFX = () => {
@@ -155,11 +186,9 @@ const mainF = function () {
       count++;
     }
 
-    const pf = 'et-side';
-
     return (
       <>
-        <div className={`IAdB ${pf}-wrap ${menu ? 'hidden' : ''}`} style={{ top: `${244 - count * 22}px` }}>
+        <div className={`IAdB ${pf}-wrap`} style={{ top: `${244 - count * 22}px` }}>
           <div className={`IAdB ${pf}-item ${fW ? 'active' : ''} ${w ? '' : 'is-hidden'}`} onClick={hFW}>
             <div className="IAdB et-btn">{w ? w.c : '...'}</div>
           </div>
@@ -171,7 +200,7 @@ const mainF = function () {
           </div>
         </div>
 
-        <div className={`IAdB ${pf}-toggle`} onClick={handleToggle}>
+        <div className={`IAdB ${pf}-toggle`} onClick={handleToggle} ref={btnRef}>
           Toggle
         </div>
       </>

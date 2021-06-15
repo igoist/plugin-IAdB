@@ -115,6 +115,10 @@ const mainF = () => {
                 cC = 0;
                 ETMessage.success('Switch Off');
               }
+            } else if (e.altKey) {
+              if (e.keyCode === 67) {
+                document.body.dispatchEvent(new Event('et-side-toggle'));
+              }
             } else if (document.activeElement.nodeName !== 'INPUT' && keyArray.length < 3 && 47 < e.keyCode && e.keyCode < 58) {
               // keyMenu 显示 && keyArray.length < 3 && 焦点非 input && key 0 ~ 9
               keyArray += e.key;
