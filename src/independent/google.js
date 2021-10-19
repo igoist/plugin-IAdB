@@ -8,6 +8,11 @@ const log = console.log.bind(this);
  * 底部相关搜索不管
  */
 let styleStr = `
+  .D6j0vc {
+    width: 100%;
+    max-width: unset!important;
+  }
+
   .big .lEXIrb,
   .mw,
   #center_col,
