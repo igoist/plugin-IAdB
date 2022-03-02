@@ -19,7 +19,7 @@ import 'antd/dist/antd.css';
 // }
 
 // constructOptions(kButtonColors);
-import { ListTabs } from '@Components';
+import { ListTabs } from '@ComponentsAdmin';
 
 const Admin = () => {
   return (

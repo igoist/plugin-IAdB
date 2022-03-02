@@ -3,14 +3,14 @@ import { idName, prefix } from '@Utils';
 
 const ResetStyle = (props) => {
   const backgroundColor = '#2a2a2a';
-  const { fontColor, ifBgImage, ifNoImage, ifReadCode, visible } = props;
+  const { fontColor, ifBgImage, ifNoImage, ifReadCode, ifDarkMode } = props;
 
-  if (visible) {
+  if (ifDarkMode) {
     return (
       <style id={idName} type={'text/css'}>
         {`
 ${ifReadCode ? '*:not(pre):not(code):not(span):not(.' + prefix + ')' : '*:not(.' + prefix + ')'},
-*:before,
+*:not(html):before,
 *:after {
 background-color: ${backgroundColor}!important;
 border-color: ${backgroundColor}!important;

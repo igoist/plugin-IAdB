@@ -26,6 +26,7 @@ for (let i = 0; i < common.length; i++) {
     merge(common[i], {
       mode: 'development',
       devtool: 'inline-source-map',
+      cache: true,
       plugins,
     })
   );

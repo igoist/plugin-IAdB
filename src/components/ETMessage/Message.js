@@ -1,8 +1,8 @@
-import { dom } from '@Utils';
+import { prefix as IAdB, dom } from '@Utils';
 
 const { CE, Q, ETFade, htmlToElement } = dom;
 
-const HBMessage = (config) => {
+const ETMessage = (config) => {
   // tmp prefix
   const prefix = 'et';
 
@@ -13,15 +13,15 @@ const HBMessage = (config) => {
 
   if (!wrap) {
     wrap = CE('div');
-    wrap.className = `${pf}-wrap`;
+    wrap.className = `${pf}-wrap ${IAdB}`;
     document.body.appendChild(wrap);
   }
 
   const t = `${pf}-${type}`;
 
   const msg = htmlToElement(`
-    <div class='${pf}'>
-      <div class='${pf}-content ${t}'>
+    <div class='${pf} ${IAdB}'>
+      <div class='${pf}-content ${t} ${IAdB}'>
         ${content}
       </div>
     </div>
@@ -58,4 +58,4 @@ const HBMessage = (config) => {
   }, duration);
 };
 
-export default HBMessage;
+export default ETMessage;
