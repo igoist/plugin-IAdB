@@ -29,7 +29,7 @@ const useKeyMenuHook = () => {
       } else {
         handleHide();
         useIAdBDispatch({
-          type: 'DataSync',
+          type: 'IAdBStateSync',
         });
       }
     },
@@ -39,7 +39,7 @@ const useKeyMenuHook = () => {
   const wrapD = (payload) => {
     if (visible) {
       useIAdBDispatch({
-        type: 'DataSet',
+        type: 'IAdBStateSet',
         payload,
       });
     }

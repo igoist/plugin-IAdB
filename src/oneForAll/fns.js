@@ -28,11 +28,15 @@ export const addLink = async () => {
 };
 
 /**
+ * 一种方式是 props 中约定一个变量，控制是否最后显示消息
+ * 另一种是 background 中约定的 response，不要消息时不返回 msg
+ * 目前选择了后者
  * props:
  *   - type
  *   - payload
  */
 export const ETSendMessage = (props, callback) => {
+  console.log('ETSendMessage to', `${prefix}-bg`);
   sendMessage(
     {
       to: `${prefix}-bg`,
@@ -48,7 +52,7 @@ export const ETSendMessage = (props, callback) => {
         callback(response);
       }
 
-      if (response.msg) {
+      if (response && response.msg) {
         ETMessage.success(response.msg);
       }
     }
@@ -58,3 +62,35 @@ export const ETSendMessage = (props, callback) => {
 // export const ETSendMessageBundle = {
 
 // }
+
+/**
+ * 传 pathname, 返回处理后的 pathname
+ * /art/44/slug/works/ -> /art/**
+ */
+const regexNumber = /\d+/;
+
+export const returnPathname = (p) => {
+  let arr = p.split('/');
+
+  let cur = -1;
+
+  for (let i = 0; i < arr.length; i++) {
+    if (regexNumber.test(arr[i])) {
+      cur = i;
+      break;
+    }
+  }
+
+  if (cur !== -1) {
+    arr[cur] = '**';
+    arr = arr.slice(0, cur + 1);
+  }
+
+  let pathname = arr.join('/');
+
+  return pathname;
+};
+
+export const returnURL = () => {
+  return location.hostname + returnPathname(location.pathname);
+};

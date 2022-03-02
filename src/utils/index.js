@@ -3,6 +3,7 @@ import * as log from './lib/log';
 
 import * as decode from './lib/decode';
 import * as extension from './lib/extension';
+import * as time from './lib/time';
 import md5 from './lib/md5';
 
 const prefix = 'IAdB';
@@ -17,4 +18,4 @@ const IAdBState = {
   ifProgramSwitch: true,
 };
 
-export { prefix, idName, IAdBState, dom, log, decode, md5, extension };
+export { prefix, idName, IAdBState, dom, log, decode, md5, extension, time };

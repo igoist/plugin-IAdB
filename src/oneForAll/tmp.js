@@ -1,11 +1,16 @@
-import { addLink, ETSendMessage } from './fns';
+import { addLink, returnURL, ETSendMessage } from './fns';
 
+/**
+ * 这里一个问题
+ * props 是固定的一些值
+ */
 export const returnCommands = (props) => {
-  const { keyMenuDispatch, useIAdBDispatch } = props;
+  const { IAdBState, useIAdBDispatch, keyMenuDispatch } = props;
 
   return [
     {
       key: '000',
+      desc: 'Toggle KeyMenu',
       fn: () => {
         keyMenuDispatch({
           type: 'KeyMenuToggle',
@@ -14,35 +19,98 @@ export const returnCommands = (props) => {
     },
     {
       key: '001',
+      desc: '修改页面标题',
       fn: () => {
         document.title = 'Yahaha';
       },
     },
     {
       key: '002',
+      desc: 'IAdB 状态数据同步到 storage',
       fn: () => {
         useIAdBDispatch({
-          type: 'DataSync',
+          type: 'IAdBStateSync',
         });
       },
     },
-    // {
-    //   key: '005',
-    //   fn: () => {
-    //     setPrevent(!prevent);
-    //     l({
-    //       title: 'preventDefaultKeyDown',
-    //       text: `now is ${prevent}, will be ${!prevent}`,
-    //     });
-    //   },
-    // },
+    {
+      key: '003',
+      desc: '切换 ifDarkMode，并更新 bgc 数据',
+      fn: (payload) => {
+        ETSendMessage({
+          type: 'et-bgc-update',
+          payload: {
+            url: returnURL(),
+            action: payload.action ? 1 : 0,
+          },
+        });
+        useIAdBDispatch({
+          type: 'IAdBStateSet',
+          payload: {
+            ifDarkMode: payload.action,
+          },
+        });
+      },
+    },
     // 0111 ~ 0199 for sending actions to bg
     // {
     //   key: '111',
+    //   desc: '保存当前 Tabs(仅对非匿名窗口有效)',
     //   fn: () => {
     //     ETSendMessage('TabsSave');
     //   },
     // },
+    {
+      key: '100',
+      desc: '工作时间统计开始或结束',
+      fn: () => {
+        ETSendMessage(
+          {
+            type: 'et-bgc-work-time',
+          },
+          (res) => {
+            console.log(res.msg);
+          }
+        );
+      },
+    },
+    {
+      key: '101',
+      desc: '今日工作时间统计',
+      fn: () => {
+        ETSendMessage(
+          {
+            type: 'et-bgc-work-time-show',
+          },
+          (res) => {
+            let result = JSON.parse(res.result);
+
+            for (let i = 0; i < result.length; i++) {
+              console.log(`start: ${result[i].start} -- ms: ${result[i].ms}`);
+            }
+          }
+        );
+      },
+    },
+    {
+      key: '111',
+      desc: 'ifDarkMode 取反',
+      fn: () => {
+        ETSendMessage({
+          type: 'et-bgc-update',
+          payload: {
+            url: returnURL(),
+            flag: IAdBState.ifDarkMode, // 取反再取反
+          },
+        });
+        useIAdBDispatch({
+          type: 'IAdBStateSet',
+          payload: {
+            ifDarkMode: !IAdBState.ifDarkMode,
+          },
+        });
+      },
+    },
     // {
     //   key: '112',
     //   fn: () => {
@@ -61,28 +129,11 @@ export const returnCommands = (props) => {
     //     setPV(!PV);
     //   },
     // },
+    // 复制选中文字（反禁止转载）
     {
-      key: '666',
+      key: '333',
       fn: () => {
-        ETSendMessage({
-          type: 'et-bgc-update',
-          payload: {
-            url: location.hostname + location.pathname,
-            action: 1,
-          },
-        });
-      },
-    },
-    {
-      key: '555',
-      fn: () => {
-        ETSendMessage({
-          type: 'et-bgc-update',
-          payload: {
-            url: location.hostname + location.pathname,
-            action: 0,
-          },
-        });
+        navigator.clipboard.writeText(document.getSelection());
       },
     },
     {
@@ -94,65 +145,15 @@ export const returnCommands = (props) => {
   ];
 };
 
-// (() => {
-//   window.fse = () => {
-//     console.log(chrome.sessions);
-//   };
-
-//   console.log('=========;, ', chrome.sessions);
-
-//   console.log('IADB init', window, window.chrome.runtime.getManifest());
-//   window.fse();
-// })();
-
 // 传入 returnCommands 返回的 commands, 返回对应的 dispatch 函数
 export const returnDispatchMenuTask = (commands) => {
-  return (keyArray) => {
-    // switch (keyArray) {
-    //   case '000':
-    //     keyMenuDispatch({
-    //       type: 'KeyMenuToggle',
-    //     });
-    //     return true;
-    //   case '001':
-    //     document.title = 'Yahaha';
-    //     return true;
-    //   case '002':
-    //     useIAdBDispatch({
-    //       type: 'DataSync',
-    //     });
-    //     break;
-    //   case '005':
-    //     setPrevent(!prevent);
-    //     l({
-    //       title: 'preventDefaultKeyDown',
-    //       text: `now is ${prevent}, will be ${!prevent}`,
-    //     });
-    //     break;
-    //   // 0111 ~ 0199 for sending actions to bg
-    //   case '111':
-    //     ETSendMessage('TabsSave');
-    //     break;
-    //   case '112':
-    //     ETSendMessage('TabsGet');
-    //     break;
-    //   case '113':
-    //     ETSendMessage('TabsRecover');
-    //     break;
-    //   case '225':
-    //     setPV(!PV);
-    //     break;
-    //   case '999':
-    //     addLink();
-    //     break;
-    //   default:
-    //     console.log('無駄ですよ');
-    //     return false;
-    // }
+  // keyArray 实际就是个三位数字字符串
+  // payload 固定为 object
+  return (keyArray, payload) => {
     for (let i = 0; i < commands.length; i++) {
       let command = commands[i];
       if (command.key === keyArray) {
-        command.fn();
+        command.fn(payload);
         console.log('fn!!!', command);
         return true;
       }
@@ -164,7 +165,6 @@ export const returnDispatchMenuTask = (commands) => {
 };
 
 export const initialState = {
-  switchFlag: false,
   prevent: false,
   PV: false,
 };
@@ -173,20 +173,6 @@ export const reducer = (draft, action) => {
   switch (action.type) {
     case 'reset':
       return initialState;
-    case 'initSwitchFlag':
-      draft.switchFlag = action.payload;
-      break;
-    case 'setSwitchFlag':
-      draft.switchFlag = action.payload;
-      // initSwitchFlag 不算, 其他情况每次 set 都需要发送 update 事件
-      ETSendMessage({
-        type: 'et-bgc-update',
-        payload: {
-          url: location.hostname + location.pathname,
-          action: action.payload ? 1 : 0,
-        },
-      });
-      break;
     case 'setPrevent':
       draft.prevent = action.payload;
       break;

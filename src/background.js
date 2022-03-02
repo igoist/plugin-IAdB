@@ -1,6 +1,8 @@
 import { IAdBState, extension } from '@Utils';
+import { handleWorkTimeData, returnWorkTimeArrStr } from './backgroundFns';
+import BGCAI from './BGCAI';
 
-const { getStore, getStoreLocal, setStore, setStoreLocal, ETXSenderGetTab, ETXTabRemove } = extension;
+const { getStore, getStoreLocal, setStore, setStoreLocal, getOrCreateStorage, ETXSenderGetTab, ETXTabRemove } = extension;
 
 const saveTabs = () => {
   chrome.tabs.query({}, (tabs) => {
@@ -10,7 +12,7 @@ const saveTabs = () => {
   });
 };
 
-const getTabs = () => {
+const getTabsOld = () => {
   return new Promise((resolve) => {
     getStoreLocal(['IAdBTabs'], (result) => {
       let r = JSON.parse(result.IAdBTabs);
@@ -19,43 +21,23 @@ const getTabs = () => {
   });
 };
 
-const BGCAI = {
-  'www.host.com': {
-    total: 10,
-    count: 8,
-  },
+const getTabs = () => {
+  return new Promise((resolve) => {
+    chrome.tabs.query({}, (tabs) => {
+      resolve(tabs);
+    });
+  });
 };
 
-window.BGCAI = BGCAI;
+const main = async () => {
+  /**
+   * workTime 初始为 0
+   * 当计时开始，赋值 +new Date()，如此一来，之后统计时间只需要算一下 duration/delta
+   * workTimeData 关键词 'YMD': [{ start, ms }]
+   */
+  let workTime = 0;
+  let workTimeData = {};
 
-const handleBGCAI = (url, action = 0) => {
-  let item = BGCAI[url];
-
-  if (item) {
-    item.total++;
-    console.log('handleBGCAI', action);
-    item.count += action;
-    console.log(item, BGCAI);
-  } else {
-    BGCAI[url] = {
-      total: 1,
-      count: action,
-    };
-  }
-};
-
-const confirmBGCAI = (url) => {
-  let item = BGCAI[url];
-
-  if (item) {
-    console.log(`confirmBGCAI: ${item.count} / ${item.total} = ${item.count / item.total}`);
-    return item.count / item.total > 0.5;
-  }
-
-  return true;
-};
-
-const main = () => {
   chrome.runtime.onInstalled.addListener(function (details) {
     // chrome.contextMenus.create({
     //   "id": "sampleContextMenu",
@@ -75,55 +57,6 @@ const main = () => {
     //   }]);
     // });
 
-    const onMessage = (request, sender, sendResponse) => {
-      // console.log(sender.tab ? 'from a content script:' + sender.tab.url : 'from the extension');
-      console.log(sender, request);
-      const { payload } = request;
-
-      if (request.to === 'IAdB-bg') {
-        switch (request.type) {
-          case 'TabsSave':
-            sendResponse({ msg: 'save tabs success' });
-            saveTabs();
-            break;
-          case 'TabsGet':
-            sendResponse({ msg: 'get tabs success' });
-            // getTabs();
-            break;
-          case 'TabsRecover':
-            // to the tabs recover
-            break;
-
-          case 'et-bgc-confirm':
-            console.log('et-bgc-confirm');
-            sendResponse({
-              ifDarkMode: confirmBGCAI(payload.url),
-            });
-            break;
-          case 'et-bgc-update':
-            console.log('et-bgc-update');
-            console.log('==========', payload.url, payload.action, payload);
-            handleBGCAI(payload.url, payload.action);
-            break;
-          case 'et-bgc-inc':
-            // const tab = ETXSenderGetTab(sender);
-            // ETXTabRemove(tab.id);
-            // chrome.tabs.getSelected(null, (tab) => {
-            //   chrome.tabs.remove(tab.id, function (zzz) {
-            //   });
-            // });
-            break;
-          default:
-            if (request.act) {
-              sendResponse({ msg: request.act });
-            }
-            break;
-        }
-      }
-    };
-
-    chrome.runtime.onMessage.addListener(onMessage);
-
     switch (details.reason) {
       case 'install': // when user install
         getStore(['fontColor'], (result) => {
@@ -131,10 +64,28 @@ const main = () => {
             setStore(IAdBState);
           }
         });
+        getStore(['workTime', 'workTimeData'], (result) => {
+          if (result.workTime !== undefined) {
+            workTime = parseInt(result.workTime);
+          }
+          if (result.workTimeData !== undefined) {
+            workTimeData = JSON.parse(result.workTimeData);
+          }
+        });
       case 'update': // when user update
+        console.log('user update');
         getStore(['fontColor'], (result) => {
           if (result.fontColor === undefined) {
             setStore(IAdBState);
+          }
+        });
+        getStore(['workTime', 'workTimeData'], (result) => {
+          if (result.workTime !== undefined) {
+            workTime = parseInt(result.workTime);
+          }
+          if (result.workTimeData !== undefined) {
+            workTimeData = JSON.parse(result.workTimeData);
+            console.log('now workTimeData', workTimeData);
           }
         });
         break;
@@ -145,6 +96,110 @@ const main = () => {
         break;
     }
   });
+
+  // 需要注意的是 await 前置会导致错过 onInstalled
+  // const BGCAI = await getOrCreateStorage('BGCAI', {});
+
+  window.BGCAI = BGCAI;
+  window.workTimeData = workTimeData;
+
+  const handleBGCAI = (url, action = 0) => {
+    let item = BGCAI[url];
+
+    if (item) {
+      item.total++;
+      console.log('handleBGCAI', action);
+      item.count += action;
+      console.log(item, BGCAI);
+    } else {
+      BGCAI[url] = {
+        total: 1,
+        count: action,
+      };
+    }
+  };
+
+  const confirmBGCAI = (url) => {
+    let item = BGCAI[url];
+
+    if (item) {
+      console.log(`confirmBGCAI: ${item.count} / ${item.total} = ${item.count / item.total}`);
+      return item.count / item.total > 0.5;
+    }
+
+    return true;
+  };
+
+  const onMessage = (request, sender, sendResponse) => {
+    // console.log(sender.tab ? 'from a content script:' + sender.tab.url : 'from the extension');
+    console.log(sender, request);
+    const { payload } = request;
+    let tmp; // for any tmp result
+
+    if (request.to === 'IAdB-bg') {
+      switch (request.type) {
+        case 'TabsSave':
+          sendResponse({ msg: 'save tabs success' });
+          saveTabs();
+          break;
+        case 'TabsGet':
+          sendResponse({ msg: 'get tabs success' });
+          // getTabs();
+          break;
+        case 'TabsRecover':
+          // to the tabs recover
+          break;
+        case 'et-bgc-confirm':
+          sendResponse({
+            ifDarkMode: confirmBGCAI(payload.url),
+          });
+          break;
+        case 'et-bgc-update':
+          console.log('et-bgc-update: ', payload.url, payload.action, payload);
+          handleBGCAI(payload.url, payload.action);
+          sendResponse({ msg: 'et-bgc-update success' });
+          break;
+        case 'et-bgc-work-time':
+          if (workTime === 0) {
+            sendResponse({ msg: '始まり' });
+            workTime = +new Date();
+            setStore({ workTime });
+          } else {
+            tmp = handleWorkTimeData({
+              data: workTimeData,
+              start: workTime,
+              end: +new Date(),
+            });
+
+            workTime = 0;
+            workTimeData = tmp[0];
+
+            setStore({ workTime, workTimeData: JSON.stringify(workTimeData) });
+            sendResponse({ msg: `お疲れ様でした。時間は ${tmp[1]}ms / ${tmp[2]}` });
+          }
+          break;
+        case 'et-bgc-work-time-show':
+          tmp = returnWorkTimeArrStr(workTimeData);
+          sendResponse({ result: tmp });
+          break;
+        case '....':
+          // const tab = ETXSenderGetTab(sender);
+          // ETXTabRemove(tab.id);
+          // chrome.tabs.getSelected(null, (tab) => {
+          //   chrome.tabs.remove(tab.id, function (zzz) {
+          //   });
+          // });
+          break;
+        default:
+          if (request.act) {
+            sendResponse({ msg: request.act });
+          }
+          break;
+      }
+    }
+  };
+
+  chrome.runtime.onMessage.addListener(onMessage);
 
   // chrome.bookmarks.onCreated.addListener(function() {
   //   // Events must be registered synchronously from the start of th page
@@ -162,6 +217,23 @@ const main = () => {
   // }, {
   //   url: [{urlMatches : 'https://www.baidu.com/'}]
   // });
+
+  // await 的任务放在前面会导致
+
+  window.getTabs = async () => {
+    const tabs = await getTabs();
+
+    // console.log('=========', tabs);
+    for (let i = 0; i < tabs.length; i++) {
+      console.log(`${tabs[i].id} - ${tabs[i].title} - ${tabs[i].url}`);
+    }
+  };
+
+  window.closeTab = (id) => {
+    chrome.tabs.remove(id, function () {
+      console.log('should be successful');
+    });
+  };
 };
 
 try {
