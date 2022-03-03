@@ -20,8 +20,8 @@ const ETMessage = (config) => {
   const t = `${pf}-${type}`;
 
   const msg = htmlToElement(`
-    <div class='${pf} ${IAdB}'>
-      <div class='${pf}-content ${t} ${IAdB}'>
+    <div class='${pf}'>
+      <div class='${pf}-content ${t}'>
         ${content}
       </div>
     </div>

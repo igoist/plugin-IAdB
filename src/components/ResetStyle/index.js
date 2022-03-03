@@ -9,7 +9,8 @@ const ResetStyle = (props) => {
     return (
       <style id={idName} type={'text/css'}>
         {`
-${ifReadCode ? '*:not(pre):not(code):not(span):not(.' + prefix + ')' : '*:not(.' + prefix + ')'},
+${ifReadCode ? '*:not(pre):not(code):not(span),' : ''}
+${'*:not(.' + prefix + ', ' + prefix + ' *)'},
 *:not(html):before,
 *:after {
 background-color: ${backgroundColor}!important;

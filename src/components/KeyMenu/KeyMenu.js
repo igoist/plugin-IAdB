@@ -12,43 +12,47 @@ const KeyMenu = () => {
   const { tNodeRef, keyMenuRef, lastItemRef, maskRef } = useKeyMenuHook.useContainer();
 
   return (
-    <div id={`${prefix}-keyMenu-box`} className='IAdB hidden' ref={tNodeRef}>
+    <div id={`${prefix}-keyMenu-box`} className={`${prefix} hidden`} ref={tNodeRef}>
       <div id={`${prefix}-keyMenu-mask`} className={prefix} ref={maskRef}></div>
       <div id={`${prefix}-keyMenu-wrapper`} className={prefix} ref={keyMenuRef}>
         <div id={`${prefix}-keyMenu-content`} className={prefix}>
-          <div className={`${prefix} ${prefix}-keyMenu-row`}>
-            <div className={`${prefix} ${prefix}-keyMenu-item ${ifDarkMode ? 'active' : ''}`} style={{ '--item-index': 0 }}>
-              <button className={`${prefix} ${prefix}-btn-neon`} style={{ '--color': '#f05050' }}>
+          <div className={`${prefix}-keyMenu-row`}>
+            <div className={`${prefix}-keyMenu-item ${ifDarkMode ? 'active' : ''}`} style={{ '--item-index': 0 }}>
+              <button className={`${prefix}-btn-neon`} style={{ '--color': '#f05050' }}>
                 A
               </button>
             </div>
-            <div className={`${prefix} ${prefix}-keyMenu-item ${fontColor === '#86c7c7' ? 'active' : ''}`} style={{ '--item-index': 1 }}>
-              <button className={`${prefix} ${prefix}-btn-neon`} style={{ '--color': '#ff9900' }}>
+            <div className={`${prefix}-keyMenu-item ${fontColor === '#86c7c7' ? 'active' : ''}`} style={{ '--item-index': 1 }}>
+              <button className={`${prefix}-btn-neon`} style={{ '--color': '#ff9900' }}>
                 S
               </button>
             </div>
-            <div className={`${prefix} ${prefix}-keyMenu-item ${ifBgImage ? 'active' : ''}`} style={{ '--item-index': 2 }}>
-              <button className={`${prefix} ${prefix}-btn-neon`} style={{ '--color': '#ffd52e' }}>
+            <div className={`${prefix}-keyMenu-item ${ifBgImage ? 'active' : ''}`} style={{ '--item-index': 2 }}>
+              <button className={`${prefix}-btn-neon`} style={{ '--color': '#ffd52e' }}>
                 D
               </button>
             </div>
-            <div className={`${prefix} ${prefix}-keyMenu-item ${ifNoImage ? 'active' : ''}`} style={{ '--item-index': 3 }}>
-              <button className={`${prefix} ${prefix}-btn-neon`} style={{ '--color': '#49dd8e' }}>
+            <div className={`${prefix}-keyMenu-item ${ifNoImage ? 'active' : ''}`} style={{ '--item-index': 3 }}>
+              <button className={`${prefix}-btn-neon`} style={{ '--color': '#49dd8e' }}>
                 F
               </button>
             </div>
-            <div className={`${prefix} ${prefix}-keyMenu-item ${ifReadCode ? 'active' : ''}`} style={{ '--item-index': 4 }}>
-              <button className={`${prefix} ${prefix}-btn-neon`} style={{ '--color': '#a8f0aa' }}>
+            <div className={`${prefix}-keyMenu-item ${ifReadCode ? 'active' : ''}`} style={{ '--item-index': 4 }}>
+              <button className={`${prefix}-btn-neon`} style={{ '--color': '#a8f0aa' }}>
                 G
               </button>
             </div>
-            <div className={`${prefix} ${prefix}-keyMenu-item`} style={{ '--item-index': 5 }}>
-              <button className={`${prefix} ${prefix}-btn-neon`} style={{ '--color': '#58b3ff' }}>
+            <div className={`${prefix}-keyMenu-item`} style={{ '--item-index': 5 }}>
+              <button className={`${prefix}-btn-neon`} style={{ '--color': '#58b3ff' }}>
                 H
               </button>
             </div>
-            <div className={`${prefix} ${prefix}-keyMenu-item ${ifProgramSwitch ? 'active' : ''}`} style={{ '--item-index': 6 }} ref={lastItemRef}>
-              <button className={`${prefix} ${prefix}-btn-neon`} style={{ '--color': '#ae99ff' }}>
+            <div
+              className={`${prefix}-keyMenu-item ${ifProgramSwitch ? 'active' : ''}`}
+              style={{ '--item-index': 6 }}
+              ref={lastItemRef}
+            >
+              <button className={`${prefix}-btn-neon`} style={{ '--color': '#ae99ff' }}>
                 J
               </button>
             </div>
