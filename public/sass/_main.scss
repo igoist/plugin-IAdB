@@ -11,7 +11,7 @@
   */
 
 @import 'abstracts/_variables';
-// @import 'mixin/_tabs';
+@import 'mixin/_common';
 
 @import 'base/_animation';
 // @import 'base/_reset';
@@ -22,7 +22,7 @@
 // @import 'layout/_footer';
 
 @import 'components/_button';
-// @import 'components/_course-material';
+@import 'components/_fadeLayer';
 @import 'components/_input';
 // @import 'components/_modal';
 @import 'components/_message';

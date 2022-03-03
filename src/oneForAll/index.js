@@ -2,10 +2,13 @@ import { log, dom, extension, IAdBState, idName } from '@Utils';
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-// import { useImmerReducer } from 'use-immer';
+import { useImmerReducer } from 'use-immer';
 
-import { KeyMenu, ResetStyle } from '@Components';
+import { FadeLayer, KeyMenu, ResetStyle } from '@Components';
 import { useIAdBHook, useKeyMenuHook, Provider } from '@Models';
+
+import Keys from './Keys';
+import Panel from './Panel';
 
 const { useEffect } = React;
 const { l } = log;
@@ -13,7 +16,7 @@ const { scrollSmothlyTo } = dom;
 const { getStore } = extension;
 
 import { returnURL, ETSendMessage } from './fns';
-import { returnCommands, returnDispatchMenuTask } from './tmp';
+import { returnCommands, returnDispatchMenuTask, initialState, reducer } from './tmp';
 
 const mainF = () => {
   /**
@@ -36,6 +39,24 @@ const mainF = () => {
   const R = () => {
     const { data: IAdBState, dispatch: useIAdBDispatch } = useIAdBHook.useContainer();
     const { visible, dispatch: keyMenuDispatch } = useKeyMenuHook.useContainer();
+
+    const [state, dispatch] = useImmerReducer(reducer, initialState);
+    const { keys } = state;
+
+    const commands = returnCommands({
+      IAdBState,
+      useIAdBDispatch,
+      keyMenuDispatch,
+      dispatch,
+    });
+
+    // 会在 Panel 以及 handleIClickEvent 中使用到，此外这里需不需要 useMemo，结论是不需要
+    const dispatchMenuTask = returnDispatchMenuTask(commands);
+
+    const PanelProps = {
+      commands,
+      dispatch: dispatchMenuTask,
+    };
 
     useEffect(() => {
       getStore(KeyCodeArr, (result) => {
@@ -69,14 +90,6 @@ const mainF = () => {
     }, []);
 
     useEffect(() => {
-      const commands = returnCommands({
-        IAdBState,
-        useIAdBDispatch,
-        keyMenuDispatch,
-      });
-
-      const dispatchMenuTask = returnDispatchMenuTask(commands);
-
       const handleIClickEvent = (e) => {
         if (visible) {
           return;
@@ -89,6 +102,7 @@ const mainF = () => {
 
         if (IAdBState.ifProgramSwitch) {
           if (e.keyCode === 27) {
+            // esc
             keyArray = '';
             cC = 0;
           } else if (e.ctrlKey) {
@@ -111,6 +125,7 @@ const mainF = () => {
             }
           } else if (e.altKey) {
             if (e.keyCode === 67) {
+              // alt + c
               document.body.dispatchEvent(new Event('et-side-toggle'));
             }
           } else if (document.activeElement.nodeName !== 'INPUT' && keyArray.length < 3 && 47 < e.keyCode && e.keyCode < 58) {
@@ -143,6 +158,11 @@ const mainF = () => {
             keyArray = '';
             cC = 0;
           }
+
+          dispatch({
+            type: 'setKeys',
+            payload: keyArray.split(''),
+          });
         }
       };
 
@@ -152,11 +172,20 @@ const mainF = () => {
       };
     });
 
+    const fadeLayerPanelProps = {
+      layerKeyCode: 80,
+      main: () => <Panel {...PanelProps} />,
+    };
+
     return (
       <>
         {/* ResetStyle 的 visible 改用了 ifDarkMode */}
         <ResetStyle {...IAdBState} />
         <KeyMenu />
+
+        <FadeLayer {...fadeLayerPanelProps} />
+
+        <Keys keys={keys} />
 
         {/* <ListTabs /> it could be moved into iframe with ... */}
       </>
@@ -166,6 +195,8 @@ const mainF = () => {
   if (true) {
     let div = document.createElement('div');
     div.id = `${idName}-parent`;
+    div.classList.add('IAdB');
+    div.classList.add('IAdB-wrap');
 
     document.body.appendChild(div);
 
@@ -175,7 +206,6 @@ const mainF = () => {
       </Provider>,
       div
     );
-    // keyMenu.init();
   }
 };
 

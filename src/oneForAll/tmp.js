@@ -5,7 +5,7 @@ import { addLink, returnURL, ETSendMessage } from './fns';
  * props 是固定的一些值
  */
 export const returnCommands = (props) => {
-  const { IAdBState, useIAdBDispatch, keyMenuDispatch } = props;
+  const { IAdBState, useIAdBDispatch, keyMenuDispatch, dispatch } = props;
 
   return [
     {
@@ -123,12 +123,6 @@ export const returnCommands = (props) => {
     //     ETSendMessage('TabsRecover');
     //   },
     // },
-    // {
-    //   key: '225',
-    //   fn: () => {
-    //     setPV(!PV);
-    //   },
-    // },
     // 复制选中文字（反禁止转载）
     {
       key: '333',
@@ -165,19 +159,14 @@ export const returnDispatchMenuTask = (commands) => {
 };
 
 export const initialState = {
-  prevent: false,
-  PV: false,
+  menuVisible: false,
+  keys: [],
 };
 
 export const reducer = (draft, action) => {
   switch (action.type) {
-    case 'reset':
-      return initialState;
-    case 'setPrevent':
-      draft.prevent = action.payload;
-      break;
-    case 'setPV':
-      draft.PV = action.payload;
+    case 'setKeys':
+      draft.keys = action.payload;
       break;
   }
 };

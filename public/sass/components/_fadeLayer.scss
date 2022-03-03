@@ -1,0 +1,22 @@
+$PFL: $P + '-fade-layer';
+
+.#{$PFL}-top {
+  position: fixed;
+  inset: 0;
+  background-color: transparent;
+  transition: all 0.36s ease-in-out;
+  z-index: 9999999;
+}
+
+.#{$PFL}-inner {
+  margin: 0 auto;
+  max-width: 648px;
+  height: 100vh;
+  background-color: transparent;
+  overflow: auto;
+
+  &.is-inset {
+    margin-top: 5vh;
+    height: 90vh;
+  }
+}

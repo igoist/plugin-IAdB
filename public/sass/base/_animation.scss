@@ -1,26 +1,38 @@
+// 备注：插件项目中的动画一般不会太多，可以集中在这里，不用单独归到各自 page
 $PF: $P + '-fade';
 
-.#{$PF}-enter,
-.#{$PF}-leave {
-  animation-duration: 0.3s;
-  animation-fill-mode: both;
-  animation-play-state: paused;
+@include ETAnimationMixin($PF);
+
+// wrap 淡入淡出
+.#{$P}-fade-layer-inner {
+  &.is-hidden {
+    display: none;
+  }
+
+  &.#{$P}-fade-enter.#{$P}-fade-enter-active {
+    animation-name: ETFadeLayerFadeEnter;
+  }
+
+  &.#{$P}-fade-leave.#{$P}-fade-leave-active {
+    animation-name: ETFadeLayerFadeLeave;
+  }
 }
 
-.#{$PF}-enter.#{$PF}-enter-active {
-  animation-play-state: running;
+@keyframes ETFadeLayerFadeEnter {
+  0% {
+    transform: translateY(-16px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
-.#{$PF}-leave.#{$PF}-leave-active {
-  animation-play-state: running;
-  pointer-events: none;
-}
-
-.#{$PF}-enter,
-.#{$PF}-leave {
-  animation-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
-}
-
-.#{$PF}-enter {
-  opacity: 0;
+@keyframes ETFadeLayerFadeLeave {
+  to {
+    transform: translateY(-16px);
+    opacity: 0;
+  }
 }
