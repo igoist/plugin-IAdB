@@ -1,4 +1,4 @@
-import { log, dom, extension, IAdBState, idName } from '@Utils';
+import { log, dom, extension, keyCode, IAdBState, idName } from '@Utils';
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
@@ -14,6 +14,7 @@ const { useEffect } = React;
 const { l } = log;
 const { scrollSmothlyTo } = dom;
 const { getStore } = extension;
+const { returnKeyCode } = keyCode;
 
 import { returnURL, ETSendMessage } from './fns';
 import { returnCommands, returnDispatchMenuTask, initialState, reducer } from './tmp';
@@ -173,7 +174,8 @@ const mainF = () => {
     });
 
     const fadeLayerPanelProps = {
-      layerKeyCode: 80,
+      suffix: 'panel',
+      layerKeyCode: returnKeyCode('p'),
       main: () => <Panel {...PanelProps} />,
     };
 

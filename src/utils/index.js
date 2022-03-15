@@ -1,15 +1,16 @@
-import * as dom from './lib/dom';
-import * as log from './lib/log';
+export * as dom from './lib/dom';
+export * as log from './lib/log';
 
-import * as decode from './lib/decode';
-import * as extension from './lib/extension';
-import * as time from './lib/time';
-import md5 from './lib/md5';
+export * as decode from './lib/decode';
+export * as extension from './lib/extension';
+export * as keyCode from './lib/keyCode';
+export * as time from './lib/time';
+export { default as md5 } from './lib/md5';
 
-const prefix = 'IAdB';
-const idName = 'iadb_reset_site_style';
+export const prefix = 'IAdB';
+export const idName = 'iadb_reset_site_style';
 
-const IAdBState = {
+export const IAdBState = {
   ifDarkMode: false,
   fontColor: '#b8b8b8',
   ifBgImage: true,
@@ -17,5 +18,3 @@ const IAdBState = {
   ifReadCode: false,
   ifProgramSwitch: true,
 };
-
-export { prefix, idName, IAdBState, dom, log, decode, md5, extension, time };

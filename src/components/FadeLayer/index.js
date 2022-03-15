@@ -1,3 +1,9 @@
+/**
+ * 改版之后 FadeLayerTop 传参数别忘了 suffix
+ * 这里补充说明一下吧
+ * 淡入淡出的状态和逻辑全部写在这两层之之后，不影响到内外层
+ * 后面可能要考虑如何接入初始化和生命周期结束的回调
+ */
 import * as React from 'react';
 
 import { dom } from '@Utils';
@@ -13,15 +19,14 @@ const pf = 'et';
  * inner 才是真正需要动画淡入的 wrap
  */
 const FadeLayerInner = (props) => {
-  const { isInset, readyToLeave, handleInnerLeave, children } = props;
-  // console.log('her th theChildren', children);
+  const { layerClassNameEx, isInset, readyToLeave, handleInnerLeave, children } = props;
 
   const wrapName = `${pf}-fade-layer-inner`;
 
   // 淡入
   useEffect(() => {
     if (isInset) {
-      const w = Q(`.${wrapName}`);
+      const w = Q(`.${layerClassNameEx} .${wrapName}`);
 
       if (hasClass('is-hidden', w)) {
         removeClass('is-hidden', w);
@@ -41,7 +46,7 @@ const FadeLayerInner = (props) => {
   // 淡出
   useEffect(() => {
     if (readyToLeave) {
-      const w = Q(`.${wrapName}`);
+      const w = Q(`.${layerClassNameEx} .${wrapName}`);
 
       ETFade({
         el: w,
@@ -62,10 +67,12 @@ const FadeLayerInner = (props) => {
 };
 
 const FadeLayerTop = (props) => {
-  const { layerKeyCode, main } = props;
+  const { layerKeyCode, suffix, main } = props;
   const [visible, setVisible] = useState(false);
   const [readyToLeave, setReadyToLeave] = useState(false);
-  // console.log('here in f top', props);
+
+  const layerClassName = 'et-fade-layer-top';
+  const layerClassNameEx = `${layerClassName}-${suffix}`;
 
   useEffect(() => {
     const handle = (e) => {
@@ -95,14 +102,14 @@ const FadeLayerTop = (props) => {
 
   if (visible) {
     const innerProps = {
+      layerClassNameEx,
       isInset: true,
       readyToLeave,
       handleInnerLeave,
-      // theChildren: children,
     };
 
     return (
-      <div className={`et-fade-layer-top`}>
+      <div className={`${layerClassName} ${layerClassNameEx}`}>
         <FadeLayerInner {...innerProps}>{main()}</FadeLayerInner>
       </div>
     );
