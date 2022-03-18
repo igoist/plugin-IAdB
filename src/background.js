@@ -1,5 +1,5 @@
 import { IAdBState, extension } from '@Utils';
-import { handleWorkTimeData, returnWorkTimeArrStr } from './backgroundFns';
+import { handleWorkTimeData, returnWorkTimeArrStr, getNews } from './backgroundFns';
 import BGCAI from './BGCAI';
 
 const { getStore, getStoreLocal, setStore, setStoreLocal, getOrCreateStorage, ETXSenderGetTab, ETXTabRemove } = extension;
@@ -37,6 +37,7 @@ const main = async () => {
    */
   let workTime = 0;
   let workTimeData = {};
+  let news = {};
 
   chrome.runtime.onInstalled.addListener(function (details) {
     // chrome.contextMenus.create({
@@ -57,37 +58,33 @@ const main = async () => {
     //   }]);
     // });
 
+    const resetGlobals = () => {
+      getStore(['fontColor'], (result) => {
+        if (result.fontColor === undefined) {
+          setStore(IAdBState);
+        }
+      });
+      getStore(['workTime', 'workTimeData'], (result) => {
+        if (result.workTime !== undefined) {
+          workTime = parseInt(result.workTime);
+        }
+        if (result.workTimeData !== undefined) {
+          workTimeData = JSON.parse(result.workTimeData);
+        }
+      });
+      getStore(['news'], (result) => {
+        if (result.news !== undefined) {
+          news = JSON.parse(result.news);
+        }
+      });
+    };
+
     switch (details.reason) {
+      // 这里代码层面想优化可以优化，也可以不优化
       case 'install': // when user install
-        getStore(['fontColor'], (result) => {
-          if (result.fontColor === undefined) {
-            setStore(IAdBState);
-          }
-        });
-        getStore(['workTime', 'workTimeData'], (result) => {
-          if (result.workTime !== undefined) {
-            workTime = parseInt(result.workTime);
-          }
-          if (result.workTimeData !== undefined) {
-            workTimeData = JSON.parse(result.workTimeData);
-          }
-        });
+        resetGlobals();
       case 'update': // when user update
-        console.log('user update');
-        getStore(['fontColor'], (result) => {
-          if (result.fontColor === undefined) {
-            setStore(IAdBState);
-          }
-        });
-        getStore(['workTime', 'workTimeData'], (result) => {
-          if (result.workTime !== undefined) {
-            workTime = parseInt(result.workTime);
-          }
-          if (result.workTimeData !== undefined) {
-            workTimeData = JSON.parse(result.workTimeData);
-            console.log('now workTimeData', workTimeData);
-          }
-        });
+        resetGlobals();
         break;
       case 'chrome_update':
         console.log('chrome_update');
@@ -102,6 +99,7 @@ const main = async () => {
 
   window.BGCAI = BGCAI;
   window.workTimeData = workTimeData;
+  window.news = news;
 
   const handleBGCAI = (url, action = 0) => {
     let item = BGCAI[url];
@@ -159,7 +157,7 @@ const main = async () => {
           handleBGCAI(payload.url, payload.action);
           sendResponse({ msg: 'et-bgc-update success' });
           break;
-        case 'et-bgc-work-time':
+        case 'et-bg-work-time':
           if (workTime === 0) {
             sendResponse({ msg: '始まり' });
             workTime = +new Date();
@@ -178,10 +176,13 @@ const main = async () => {
             sendResponse({ msg: `お疲れ様でした。時間は ${tmp[1]}ms / ${tmp[2]}` });
           }
           break;
-        case 'et-bgc-work-time-show':
+        case 'et-bg-work-time-show':
           tmp = returnWorkTimeArrStr(workTimeData);
           sendResponse({ result: tmp });
           break;
+        case 'et-bg-news':
+          getNews(news, sendResponse, payload);
+          return true;
         case '....':
           // const tab = ETXSenderGetTab(sender);
           // ETXTabRemove(tab.id);

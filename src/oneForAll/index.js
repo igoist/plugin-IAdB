@@ -9,8 +9,9 @@ import { useIAdBHook, useKeyMenuHook, Provider } from '@Models';
 
 import Keys from './Keys';
 import Panel from './Panel';
+import News from './News';
 
-const { useEffect } = React;
+const { useEffect, useMemo } = React;
 const { l } = log;
 const { scrollSmothlyTo } = dom;
 const { getStore } = extension;
@@ -179,6 +180,16 @@ const mainF = () => {
       main: () => <Panel {...PanelProps} />,
     };
 
+    const FadeLayerNews = useMemo(() => {
+      const fadeLayerNewsProps = {
+        suffix: 'news',
+        layerKeyCode: returnKeyCode('w'),
+        main: () => <News />,
+      };
+
+      return <FadeLayer {...fadeLayerNewsProps} />;
+    }, []);
+
     return (
       <>
         {/* ResetStyle 的 visible 改用了 ifDarkMode */}
@@ -186,6 +197,7 @@ const mainF = () => {
         <KeyMenu />
 
         <FadeLayer {...fadeLayerPanelProps} />
+        {FadeLayerNews}
 
         <Keys keys={keys} />
 

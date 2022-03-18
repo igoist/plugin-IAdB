@@ -7,7 +7,8 @@
     "build:dll": "webpack --config webpack/dll.js",
     "build": "webpack --config webpack/dev.js",
     "release": "node scripts/release.js",
-    "dev": "webpack --config webpack/dev.js --watch"
+    "dev": "webpack --config webpack/dev.js --watch",
+    "css": "node scripts/css.js"
   },
   "repository": {
     "type": "git",

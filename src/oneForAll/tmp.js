@@ -66,7 +66,7 @@ export const returnCommands = (props) => {
       fn: () => {
         ETSendMessage(
           {
-            type: 'et-bgc-work-time',
+            type: 'et-bg-work-time',
           },
           (res) => {
             console.log(res.msg);
@@ -80,7 +80,7 @@ export const returnCommands = (props) => {
       fn: () => {
         ETSendMessage(
           {
-            type: 'et-bgc-work-time-show',
+            type: 'et-bg-work-time-show',
           },
           (res) => {
             let result = JSON.parse(res.result);

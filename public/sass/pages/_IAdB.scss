@@ -269,3 +269,31 @@ $list: (1, $blue), (2, $red), (3, $yellow), (4, $green), (5, $turquoise), (6, $b
 
   @include colorful;
 }
+
+$PN: $P + '-news';
+
+.#{$PN}-filter-btn {
+  display: inline-block;
+  border: 1px solid #e35877;
+  border-radius: 2px;
+  padding: 0 8px;
+  height: 18px;
+  line-height: 16px;
+  background-color: #e35877;
+  color: #fff;
+  font-size: 12px;
+}
+
+.#{$PN}-wrap {
+  background-color: #000;
+}
+
+.#{$PN}-item {
+  padding-left: 12px;
+  height: 16px;
+  line-height: 16px;
+  color: #fff;
+  font-size: 12px;
+
+  @include textOverflow;
+}
