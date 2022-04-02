@@ -33,6 +33,7 @@ for (let i = 0; i < webpackConfig.length; i++) {
         alias: {
           '@Components': path.resolve(path.resolve(__dirname, '..'), 'src/components/'),
           '@ComponentsAdmin': path.resolve(path.resolve(__dirname, '..'), 'src/componentsAdmin/'),
+          '@Hooks': path.resolve(path.resolve(__dirname, '..'), 'src/hooks/'),
           '@Models': path.resolve(path.resolve(__dirname, '..'), 'src/models/'),
           '@Utils': path.resolve(path.resolve(__dirname, '..'), 'src/utils/'),
         },

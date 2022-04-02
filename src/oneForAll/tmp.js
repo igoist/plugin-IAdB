@@ -1,11 +1,15 @@
 import { addLink, returnURL, ETSendMessage } from './fns';
 
+const outp = (props) => {
+  const [a, b] = props;
+  console.log(`Hello ${a}, my name is ${b}`);
+};
 /**
  * 这里一个问题
  * props 是固定的一些值
  */
 export const returnCommands = (props) => {
-  const { IAdBState, useIAdBDispatch, keyMenuDispatch, dispatch } = props;
+  const { IAdBState, inputList, useIAdBDispatch, keyMenuDispatch, dispatch } = props;
 
   return [
     {
@@ -131,6 +135,21 @@ export const returnCommands = (props) => {
       },
     },
     {
+      key: '555',
+      desc: 'output some info',
+      fn: () => {
+        outp(inputList);
+      },
+    },
+    {
+      key: '666',
+      fn: () => {
+        dispatch({
+          type: 'toggleInspect',
+        });
+      },
+    },
+    {
       key: '999',
       fn: () => {
         addLink();
@@ -161,12 +180,20 @@ export const returnDispatchMenuTask = (commands) => {
 export const initialState = {
   menuVisible: false,
   keys: [],
+  inspectOn: false,
+  modeInput: false,
 };
 
 export const reducer = (draft, action) => {
   switch (action.type) {
     case 'setKeys':
       draft.keys = action.payload;
+      break;
+    case 'toggleInspect':
+      draft.inspectOn = !draft.inspectOn;
+      break;
+    case 'toggleInputMode':
+      draft.modeInput = !draft.modeInput;
       break;
   }
 };

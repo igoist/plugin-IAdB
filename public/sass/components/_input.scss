@@ -41,3 +41,46 @@ $PT: $P + '-textarea';
   cursor: not-allowed;
   user-select: none;
 }
+
+$PGI: $P + '-global-input';
+
+.#{$PGI}-list {
+  position: fixed;
+  border-radius: 2px;
+  padding: 10px 12px;
+  top: 50%;
+  left: 50%;
+  min-width: 60px;
+  background-color: $bgColor;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  z-index: 9999999;
+}
+
+$list: (1, $blue), (2, $red), (3, $yellow), (4, $green), (5, $turquoise), (6, $blue), (7, $purple);
+@mixin PGIItemColorful {
+  @each $i, $color in $list {
+    &:nth-child(7n + #{$i}) {
+      color: $color;
+      // border-color: $color;
+      // box-shadow: 0 0 4px 1px $color, $color 0 0 3px 1px inset;
+
+      // &:hover {
+      //   box-shadow: 0 0 6px 1.5px $color, $color 0 0 4.5px 1.5px inset;
+      // }
+    }
+  }
+}
+
+.#{$PGI}-item {
+  height: 16px;
+  line-height: 16px;
+  font-weight: bold;
+  font-size: 14px;
+  font-family: system-ui;
+  @include PGIItemColorful;
+
+  &:not(.is-active) {
+    cursor: pointer;
+  }
+}

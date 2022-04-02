@@ -274,6 +274,7 @@ $PN: $P + '-news';
 
 .#{$PN}-filter-btn {
   display: inline-block;
+  margin-right: 12px;
   border: 1px solid #e35877;
   border-radius: 2px;
   padding: 0 8px;
@@ -296,4 +297,67 @@ $PN: $P + '-news';
   font-size: 12px;
 
   @include textOverflow;
+
+  &.#{$PN}-item-new {
+    color: $blue;
+  }
+
+  &.#{$PN}-item-old {
+    opacity: 0.8;
+  }
+}
+
+.#{$P}-inspect-el {
+  position: fixed;
+  bottom: 32px;
+  left: 0;
+  border-top-right-radius: 4px;
+  // border-bottom-right-radius: 4px;
+  display: flex;
+  padding: 6px 10px;
+  height: 32px;
+  background-color: #000;
+  line-height: 20px;
+  color: $blue;
+  font-size: 10px;
+  text-align: center;
+  z-index: 99999;
+}
+
+.#{$P}-test-selected {
+  filter: invert(100%);
+}
+
+.#{$P}-scroll-list-wrap {
+  position: relative;
+  overflow: scroll;
+  background-color: #333333;
+  text-align: left;
+}
+
+.#{$P}-scroll-list-item {
+  position: absolute;
+  padding: 0 12px;
+  width: 100%;
+  height: 28px;
+  line-height: 28px;
+  color: $blue;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  transition: border-width 0.5s, border-color 0.5s, background-color 0.5s;
+
+  &.is-selected {
+    border-left-width: 12px;
+    border-color: #86c797;
+    background-color: #291a1a;
+  }
+
+  .em {
+    color: $turquoise;
+    // color: #4fa;
+  }
 }

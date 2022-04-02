@@ -80,3 +80,15 @@ const handleFixedLayerFadeOut = () => {
   setTimeout(transitionEnd, 800);
 };
 ```
+
+## et-bg-news
+
+除了在 resetGlobals 中更新对象，后台一开始压根不用主动去请求
+
+完全由前台传参数来控制请求最新还是请求缓存
+
+## 配合 useInputHook 可以做的事情
+
+可以设置任何字符、数值类型参数
+
+由此可以完成包括 scrollSmothlyTo 滚动、各种简单数值计算、各种控制操作的传参

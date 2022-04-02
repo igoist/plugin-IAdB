@@ -8,7 +8,7 @@ import * as React from 'react';
 
 import { dom } from '@Utils';
 
-const { useState, useEffect } = React;
+const { useState, useEffect, useMemo } = React;
 
 const { Q, hasClass, addClass, removeClass, ETFade } = dom;
 
@@ -19,7 +19,7 @@ const pf = 'et';
  * inner 才是真正需要动画淡入的 wrap
  */
 const FadeLayerInner = (props) => {
-  const { layerClassNameEx, isInset, readyToLeave, handleInnerLeave, children } = props;
+  const { layerClassNameEx, isInset, readyToLeave, handleEnter, handleInnerLeave, children } = props;
 
   const wrapName = `${pf}-fade-layer-inner`;
 
@@ -34,6 +34,7 @@ const FadeLayerInner = (props) => {
         ETFade({
           el: w,
           isEnter: true,
+          callback: handleEnter, // enter callback
         });
       } else {
         return;
@@ -67,7 +68,7 @@ const FadeLayerInner = (props) => {
 };
 
 const FadeLayerTop = (props) => {
-  const { layerKeyCode, suffix, main } = props;
+  const { layerKeyCode, suffix, main, handleEnter, handleLeave } = props;
   const [visible, setVisible] = useState(false);
   const [readyToLeave, setReadyToLeave] = useState(false);
 
@@ -98,19 +99,27 @@ const FadeLayerTop = (props) => {
   const handleInnerLeave = () => {
     setVisible(false);
     setReadyToLeave(false);
+
+    // leave callback
+    if (handleLeave) {
+      handleLeave();
+    }
   };
+
+  const Main = useMemo(() => main(), [props]);
 
   if (visible) {
     const innerProps = {
       layerClassNameEx,
       isInset: true,
       readyToLeave,
+      handleEnter,
       handleInnerLeave,
     };
 
     return (
       <div className={`${layerClassName} ${layerClassNameEx}`}>
-        <FadeLayerInner {...innerProps}>{main()}</FadeLayerInner>
+        <FadeLayerInner {...innerProps}>{Main}</FadeLayerInner>
       </div>
     );
   } else {

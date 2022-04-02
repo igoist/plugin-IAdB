@@ -5,17 +5,19 @@ import * as ReactDOM from 'react-dom';
 import { useImmerReducer } from 'use-immer';
 
 import { FadeLayer, KeyMenu, ResetStyle } from '@Components';
-import { useIAdBHook, useKeyMenuHook, Provider } from '@Models';
+import { useIAdBHook, useInputHook, useKeyMenuHook, Provider } from '@Models';
 
+import Inputs from './Inputs';
 import Keys from './Keys';
 import Panel from './Panel';
 import News from './News';
+import Inspect from './Inspect';
 
 const { useEffect, useMemo } = React;
 const { l } = log;
 const { scrollSmothlyTo } = dom;
 const { getStore } = extension;
-const { returnKeyCode } = keyCode;
+const { returnModifierKeyArr, returnKeyCode, returnCode, returnInputKey } = keyCode;
 
 import { returnURL, ETSendMessage } from './fns';
 import { returnCommands, returnDispatchMenuTask, initialState, reducer } from './tmp';
@@ -35,24 +37,27 @@ const mainF = () => {
 
   let cC = 0;
   let keyArray = '';
+  let BAN = false;
 
   const KeyCodeArr = Object.keys(IAdBState);
 
   const R = () => {
     const { data: IAdBState, dispatch: useIAdBDispatch } = useIAdBHook.useContainer();
+    const { inputValue, inputList, inputMode, dispatch: useInputDispatch } = useInputHook.useContainer();
     const { visible, dispatch: keyMenuDispatch } = useKeyMenuHook.useContainer();
 
     const [state, dispatch] = useImmerReducer(reducer, initialState);
-    const { keys } = state;
+    const { keys, inspectOn } = state;
 
     const commands = returnCommands({
       IAdBState,
+      inputList,
       useIAdBDispatch,
       keyMenuDispatch,
       dispatch,
     });
 
-    // 会在 Panel 以及 handleIClickEvent 中使用到，此外这里需不需要 useMemo，结论是不需要
+    // 会在 Panel 以及 handleIKeypressEvent 中使用到，此外这里需不需要 useMemo，结论是不需要
     const dispatchMenuTask = returnDispatchMenuTask(commands);
 
     const PanelProps = {
@@ -92,17 +97,57 @@ const mainF = () => {
     }, []);
 
     useEffect(() => {
-      const handleIClickEvent = (e) => {
-        if (visible) {
+      const handleIKeypressEvent = (e) => {
+        if (BAN || visible) {
           return;
         }
 
         l({
           title: 'handleKeyDown',
-          text: `e.key: ${e.key}, keyArray: ${keyArray}, e.keyCode: ${e.keyCode}, cC: ${cC}, ifDarkMode: ${IAdBState.ifDarkMode}`,
+          text: `e.key: ${e.key}, keyArray: ${keyArray}, e.code: ${e.code}, e.keyCode: ${e.keyCode}, cC: ${cC}, ifDarkMode: ${IAdBState.ifDarkMode}`,
         });
 
         if (IAdBState.ifProgramSwitch) {
+          // Inputs start
+          if (inputMode) {
+            if (e.altKey && e.code === returnCode('m')) {
+              useInputDispatch({
+                type: 'InputToggleMode',
+              });
+            } else if (returnInputKey(e.code) !== undefined) {
+              useInputDispatch({
+                type: 'InputSetValue',
+                payload: e.key,
+              });
+            } else {
+              if (e.code === 'Backspace') {
+                useInputDispatch({
+                  type: 'InputBackspace',
+                });
+              }
+
+              if (e.code === 'Escape') {
+                let typeName = 'InputPopValue';
+
+                if (inputValue) {
+                  typeName = 'InputResetValue';
+                }
+
+                useInputDispatch({
+                  type: typeName,
+                });
+              }
+
+              if (e.code === 'Enter') {
+                useInputDispatch({
+                  type: 'InputPushValue',
+                });
+              }
+            }
+            return;
+          }
+          // Inputs end
+
           if (e.keyCode === 27) {
             // esc
             keyArray = '';
@@ -129,6 +174,11 @@ const mainF = () => {
             if (e.keyCode === 67) {
               // alt + c
               document.body.dispatchEvent(new Event('et-side-toggle'));
+            }
+            if (e.code === returnCode('m')) {
+              useInputDispatch({
+                type: 'InputToggleMode',
+              });
             }
           } else if (document.activeElement.nodeName !== 'INPUT' && keyArray.length < 3 && 47 < e.keyCode && e.keyCode < 58) {
             // keyMenu 显示 && keyArray.length < 3 && 焦点非 input && key 0 ~ 9
@@ -163,21 +213,27 @@ const mainF = () => {
 
           dispatch({
             type: 'setKeys',
-            payload: keyArray.split(''),
+            payload: [...returnModifierKeyArr(e), ...keyArray.split('')],
           });
         }
       };
 
-      document.addEventListener('keydown', handleIClickEvent, false);
+      document.addEventListener('keydown', handleIKeypressEvent, false);
       return () => {
-        document.removeEventListener('keydown', handleIClickEvent, false);
+        document.removeEventListener('keydown', handleIKeypressEvent, false);
       };
     });
 
     const fadeLayerPanelProps = {
       suffix: 'panel',
       layerKeyCode: returnKeyCode('p'),
-      main: () => <Panel {...PanelProps} />,
+      main: useMemo(() => () => <Panel {...PanelProps} />, [commands]),
+      handleEnter: () => {
+        BAN = true;
+      },
+      handleLeave: () => {
+        BAN = false;
+      },
     };
 
     const FadeLayerNews = useMemo(() => {
@@ -199,7 +255,10 @@ const mainF = () => {
         <FadeLayer {...fadeLayerPanelProps} />
         {FadeLayerNews}
 
+        <Inputs />
         <Keys keys={keys} />
+
+        <Inspect turnOn={inspectOn} />
 
         {/* <ListTabs /> it could be moved into iframe with ... */}
       </>
