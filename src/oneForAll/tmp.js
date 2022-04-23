@@ -150,6 +150,14 @@ export const returnCommands = (props) => {
       },
     },
     {
+      key: '665',
+      fn: () => {
+        dispatch({
+          type: 'togglePosition',
+        });
+      },
+    },
+    {
       key: '999',
       fn: () => {
         addLink();
@@ -181,6 +189,7 @@ export const initialState = {
   menuVisible: false,
   keys: [],
   inspectOn: false,
+  positionOn: false,
   modeInput: false,
 };
 
@@ -194,6 +203,9 @@ export const reducer = (draft, action) => {
       break;
     case 'toggleInputMode':
       draft.modeInput = !draft.modeInput;
+      break;
+    case 'togglePosition':
+      draft.positionOn = !draft.positionOn;
       break;
   }
 };

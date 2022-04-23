@@ -31,6 +31,10 @@ iframe {
 display: none!important;
 cursor: pointer;
 }
+
+.et-test-selected {
+filter: invert(100%);
+}
       `}
       </style>
     );

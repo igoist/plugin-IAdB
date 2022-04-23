@@ -12,6 +12,7 @@ import Keys from './Keys';
 import Panel from './Panel';
 import News from './News';
 import Inspect from './Inspect';
+import Position from './Position';
 
 const { useEffect, useMemo } = React;
 const { l } = log;
@@ -47,7 +48,7 @@ const mainF = () => {
     const { visible, dispatch: keyMenuDispatch } = useKeyMenuHook.useContainer();
 
     const [state, dispatch] = useImmerReducer(reducer, initialState);
-    const { keys, inspectOn } = state;
+    const { keys, inspectOn, positionOn } = state;
 
     const commands = returnCommands({
       IAdBState,
@@ -259,6 +260,7 @@ const mainF = () => {
         <Keys keys={keys} />
 
         <Inspect turnOn={inspectOn} />
+        <Position turnOn={positionOn} />
 
         {/* <ListTabs /> it could be moved into iframe with ... */}
       </>

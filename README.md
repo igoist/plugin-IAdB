@@ -87,8 +87,32 @@ const handleFixedLayerFadeOut = () => {
 
 完全由前台传参数来控制请求最新还是请求缓存
 
+
 ## 配合 useInputHook 可以做的事情
 
 可以设置任何字符、数值类型参数
 
 由此可以完成包括 scrollSmothlyTo 滚动、各种简单数值计算、各种控制操作的传参
+
+
+## 网页操作录制构想
+
+举例平常测试，无非是进行了滚动到指定位置、选择了指定元素、点击或者 hover、等待若干时间调用接口加载数据、判断数据，也就说，进行了一系列滚动、选择、点击、等待、数据判断等操作的排列组合，那么只将要这些操作抽象出来，最后加以上层逻辑的封装组合，即可实现对操作的录制
+
+actionType = {
+  timestamp: number,
+  type1: 滚动、选择、点击、等待、数据判断,
+  type2: dispatch | ... | ...,
+  params: [...]
+}
+
+## Inspect
+
+选择元素是很关键的一环，最简单的情况是元素带有 id，或者其某一项 className 能够唯一指定该元素。更普遍的当然是，最上层有一个唯一指定的父元素，经过若干层嵌套，定位到某一子节点的第 N 个 XX 元素。
+
+[
+  root/parent, className or id
+  the next, className/tag, n(第 n 个节点)
+  ...
+  the target, className/tag, n
+]
