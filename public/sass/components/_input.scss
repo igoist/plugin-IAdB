@@ -53,7 +53,7 @@ $PGI: $P + '-global-input';
   min-width: 60px;
   background-color: $bgColor;
   transform: translate(-50%, -50%);
-  overflow: hidden;
+  overflow: visible;
   z-index: 9999999;
 }
 
@@ -68,11 +68,15 @@ $list: (1, $blue), (2, $red), (3, $yellow), (4, $green), (5, $turquoise), (6, $b
       // &:hover {
       //   box-shadow: 0 0 6px 1.5px $color, $color 0 0 4.5px 1.5px inset;
       // }
+      &::before {
+        background-color: $color;
+      }
     }
   }
 }
 
 .#{$PGI}-item {
+  position: relative;
   height: 16px;
   line-height: 16px;
   font-weight: bold;
@@ -80,7 +84,95 @@ $list: (1, $blue), (2, $red), (3, $yellow), (4, $green), (5, $turquoise), (6, $b
   font-family: system-ui;
   @include PGIItemColorful;
 
+  &.#{$PGI}-type-dom,
+  &.#{$PGI}-type-object,
+  &.#{$PGI}-type-bool,
+  &.#{$PGI}-type-float,
+  &.#{$PGI}-type-int,
+  &.#{$PGI}-type-string {
+    padding-right: 28px;
+
+    &::before {
+      position: absolute;
+      top: 1px;
+      right: 0;
+      border-radius: 2px;
+      width: 14px;
+      height: 14px;
+      line-height: 14px;
+      color: #fff;
+      font-size: 10px;
+      text-align: center;
+      // transition: all 0.3s;
+    }
+  }
+
   &:not(.is-active) {
     cursor: pointer;
   }
+}
+
+$listType: ('string', 'S'), ('int', 'I'), ('float', 'F'), ('bool', 'B'), ('object', 'O'), ('dom', 'D'), ('domAll', 'A');
+
+@each $i, $t in $listType {
+  .#{$PGI}-type-#{$i} {
+    &::before {
+      content: $t;
+    }
+  }
+}
+
+$PGITS: $PGI + '-type-selector';
+
+.#{$PGITS} {
+  display: flex;
+  position: absolute;
+  top: 1px;
+  right: 0;
+  height: 14px;
+  transform: translateX(100%);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.#{$PGI}-item:hover .#{$PGITS} {
+  // 这里牢记，一旦涉及父元素 display 转变，很可能影响到子元素的 transition
+  // 除非用 fadeAnimation 的方式来大度处理渐变动画
+  // display: flex;
+  // display: block;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.#{$PGI}-item:hover .#{$PGITS}-item {
+  opacity: 1;
+  @include hoverTransitionDelay;
+}
+
+$list3: ('string', $blue), ('int', $red), ('float', $yellow), ('bool', $green), ('object', $turquoise), ('dom', $blue), ('domAll', $purple);
+@mixin PGITSItemColorful {
+  @each $s, $color in $list3 {
+    &.type-#{$s} {
+      background: $color;
+    }
+  }
+}
+
+.#{$PGITS}-item {
+  margin-left: 2px;
+  display: inline-block;
+  vertical-align: top;
+  border-radius: 2px;
+  width: 14px;
+  height: 14px;
+  line-height: 14px;
+  color: #fff;
+  font-size: 10px;
+  text-align: center;
+  user-select: none;
+  opacity: 0;
+  transition: all 0.12s ease-in-out;
+
+  @include PGITSItemColorful;
+  @include leaveTransitionDelay;
 }

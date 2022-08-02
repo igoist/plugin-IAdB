@@ -1,6 +1,5 @@
-import { extension, time } from '@Utils';
+import { time } from '@Utils';
 
-const { setStore } = extension;
 const { getYMD, getHMS } = time;
 
 export const handleWorkTimeData = (payload) => {
@@ -108,9 +107,10 @@ export const getNews = async (news, sendResponse, mode) => {
   console.log('================ news');
   console.log(news);
   console.log('================');
-  setStore({
-    news,
-  });
+  // Unchecked runtime.lastError: QUOTA_BYTES_PER_ITEM quota exceeded
+  // setStore({
+  //   news,
+  // });
 
   sendResponse({
     result: JSON.stringify(news),

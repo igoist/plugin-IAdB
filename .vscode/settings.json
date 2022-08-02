@@ -34,7 +34,7 @@
   //   "editor.defaultFormatter": "esbenp.prettier-vscode"
   // }
   /*  prettier的配置 */
-  "prettier.printWidth": 136, // 超过最大值换行
+  "prettier.printWidth": 300, // 超过最大值换行
   "prettier.tabWidth": 2, // 缩进字节数
   "prettier.useTabs": false, // 缩进不使用tab，使用空格
   "prettier.semi": true, // 句尾添加分号

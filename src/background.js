@@ -38,6 +38,7 @@ const main = async () => {
   let workTime = 0;
   let workTimeData = {};
   let news = {};
+  let defaultDarkMode = false;
 
   chrome.runtime.onInstalled.addListener(function (details) {
     // chrome.contextMenus.create({
@@ -72,11 +73,12 @@ const main = async () => {
           workTimeData = JSON.parse(result.workTimeData);
         }
       });
-      getStore(['news'], (result) => {
-        if (result.news !== undefined) {
-          news = JSON.parse(result.news);
-        }
-      });
+      // Unchecked runtime.lastError: QUOTA_BYTES_PER_ITEM quota exceeded
+      // getStore(['news'], (result) => {
+      //   if (result.news !== undefined) {
+      //     news = JSON.parse(result.news);
+      //   }
+      // });
     };
 
     switch (details.reason) {
@@ -100,15 +102,20 @@ const main = async () => {
   window.BGCAI = BGCAI;
   window.workTimeData = workTimeData;
   window.news = news;
+  window.defaultDarkMode = defaultDarkMode;
 
-  const handleBGCAI = (url, action = 0) => {
+  const handleBGCAI = ({ url, action = 0, totalAdd, countAdd }) => {
     let item = BGCAI[url];
 
     if (item) {
-      item.total++;
-      console.log('handleBGCAI', action);
-      item.count += action;
-      console.log(item, BGCAI);
+      if (totalAdd !== undefined) {
+        item.total += totalAdd;
+        item.count += countAdd;
+      } else {
+        item.total++;
+        item.count += action;
+      }
+      console.log('handleBGCAI', item);
     } else {
       BGCAI[url] = {
         total: 1,
@@ -125,7 +132,8 @@ const main = async () => {
       return item.count / item.total > 0.5;
     }
 
-    return true;
+    // 控制默认行为是否是 darkMode
+    return defaultDarkMode;
   };
 
   const onMessage = (request, sender, sendResponse) => {
@@ -154,7 +162,7 @@ const main = async () => {
           break;
         case 'et-bgc-update':
           console.log('et-bgc-update: ', payload.url, payload.action, payload);
-          handleBGCAI(payload.url, payload.action);
+          handleBGCAI({ ...payload });
           sendResponse({ msg: 'et-bgc-update success' });
           break;
         case 'et-bg-work-time':

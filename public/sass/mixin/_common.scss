@@ -57,3 +57,20 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+$nn: 7;
+@mixin hoverTransitionDelay {
+  @for $i from 1 through $nn {
+    &:nth-child(#{$nn}n + #{$i}) {
+      transition-delay: #{0.06 * $i}s;
+    }
+  }
+}
+
+@mixin leaveTransitionDelay {
+  @for $i from 1 through $nn {
+    &:nth-child(#{$nn}n + #{$i}) {
+      transition-delay: #{0.06 * ($nn - $i)}s;
+    }
+  }
+}
