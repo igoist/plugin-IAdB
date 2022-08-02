@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useIRecordsHook } from '@Models';
 
 const { useState, useEffect, useRef } = React;
 
@@ -7,6 +8,8 @@ const JustPosition = () => {
   const [y, setY] = useState(0);
 
   const layerRef = useRef();
+
+  const { recording, dispatch } = useIRecordsHook.useContainer();
 
   useEffect(() => {
     const layer = layerRef.current;
@@ -20,6 +23,17 @@ const JustPosition = () => {
       layer.classList.add('click-through');
       document.elementFromPoint(e.clientX, e.clientY).click();
       layer.classList.remove('click-through');
+
+      if (recording) {
+        console.log('here add record click');
+        dispatch({
+          type: 'RecordsAdd',
+          payload: {
+            type: 'click',
+            params: [e.clientX, e.clientY],
+          },
+        });
+      }
     };
 
     layer.addEventListener('mousemove', handle);
@@ -29,7 +43,7 @@ const JustPosition = () => {
       layer.removeEventListener('mousemove', handle);
       layer.removeEventListener('click', handleClick);
     };
-  }, []);
+  }, [recording, dispatch]);
 
   return (
     <>

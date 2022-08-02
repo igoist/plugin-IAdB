@@ -11,8 +11,8 @@ const ResetStyle = (props) => {
         {`
 ${ifReadCode ? '*:not(pre):not(code):not(span),' : ''}
 ${'*:not(.' + prefix + ', .' + prefix + ' *)'},
-*:not(html):before,
-*:after {
+${'*:not(html, .' + prefix + ', .' + prefix + ' *):before'},
+${'*:not(.' + prefix + ', .' + prefix + ' *):after'} {
 background-color: ${backgroundColor}!important;
 border-color: ${backgroundColor}!important;
 color: ${fontColor}!important;

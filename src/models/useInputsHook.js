@@ -3,7 +3,7 @@ import { createContainer } from 'unstated-next';
 
 const { useState } = React;
 
-const useInputHook = () => {
+const useInputsHook = () => {
   const [inputMode, setInputMode] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [inputList, setInputList] = useState([]);
@@ -38,4 +38,4 @@ const useInputHook = () => {
   return { inputMode, inputValue, inputList, dispatch };
 };
 
-export default createContainer(useInputHook);
+export default createContainer(useInputsHook);

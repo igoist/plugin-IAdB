@@ -5,7 +5,7 @@ import * as ReactDOM from 'react-dom';
 import { useImmerReducer } from 'use-immer';
 
 import { FadeLayer, KeyMenu, ResetStyle } from '@Components';
-import { useIAdBHook, useInputHook, useKeyMenuHook, Provider } from '@Models';
+import { useIAdBHook, useIRecordsHook, useInputsHook, useKeyMenuHook, Provider } from '@Models';
 
 import Inputs from './Inputs';
 import Keys from './Keys';
@@ -13,6 +13,7 @@ import Panel from './Panel';
 import News from './News';
 import Inspect from './Inspect';
 import Position from './Position';
+import Record from './Record';
 
 const { useEffect, useMemo } = React;
 const { l } = log;
@@ -40,11 +41,13 @@ const mainF = () => {
   let keyArray = '';
   let BAN = false;
 
-  const KeyCodeArr = Object.keys(IAdBState);
+  // const KeyCodeArr = Object.keys(IAdBState);
 
   const R = () => {
     const { data: IAdBState, dispatch: useIAdBDispatch } = useIAdBHook.useContainer();
-    const { inputValue, inputList, inputMode, dispatch: useInputDispatch } = useInputHook.useContainer();
+    const { recording, dispatch: useIRecordsHookDispatch } = useIRecordsHook.useContainer();
+
+    const { inputValue, inputList, inputMode, dispatch: useInputDispatch } = useInputsHook.useContainer();
     const { visible, dispatch: keyMenuDispatch } = useKeyMenuHook.useContainer();
 
     const [state, dispatch] = useImmerReducer(reducer, initialState);
@@ -53,7 +56,9 @@ const mainF = () => {
     const commands = returnCommands({
       IAdBState,
       inputList,
+      recording,
       useIAdBDispatch,
+      useIRecordsHookDispatch,
       keyMenuDispatch,
       dispatch,
     });
@@ -67,14 +72,15 @@ const mainF = () => {
     };
 
     useEffect(() => {
-      getStore(KeyCodeArr, (result) => {
-        useIAdBDispatch({
-          type: 'IAdBStateSet',
-          payload: { ...result },
-        });
-      });
+      // getStore(KeyCodeArr, (result) => {
+      //   console.log('11111111111111', result);
+      //   // useIAdBDispatch({
+      //   //   type: 'IAdBStateSet',
+      //   //   payload: { ...result },
+      //   // });
+      // });
 
-      // 原本通过 getStore 获得 result.ifDarkMode
+      // 原本应该是利用 store 同步，并通过 getStore 获得 result.ifDarkMode
       window.IAdBURL = returnURL();
       ETSendMessage(
         {
@@ -247,6 +253,16 @@ const mainF = () => {
       return <FadeLayer {...fadeLayerNewsProps} />;
     }, []);
 
+    const FadeLayerRecords = useMemo(() => {
+      const fadeLayerRecordsProps = {
+        suffix: 'records',
+        layerKeyCode: returnKeyCode('h'),
+        main: () => <Record />,
+      };
+
+      return <FadeLayer {...fadeLayerRecordsProps} />;
+    }, []);
+
     return (
       <>
         {/* ResetStyle 的 visible 改用了 ifDarkMode */}
@@ -255,6 +271,7 @@ const mainF = () => {
 
         <FadeLayer {...fadeLayerPanelProps} />
         {FadeLayerNews}
+        {FadeLayerRecords}
 
         <Inputs />
         <Keys keys={keys} />

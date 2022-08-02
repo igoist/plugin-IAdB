@@ -1,5 +1,6 @@
 export { default as useIAdBHook } from './useIAdBHook';
-export { default as useInputHook } from './useInputHook';
+export { default as useIRecordsHook } from './useIRecordsHook';
+export { default as useInputsHook } from './useInputsHook';
 export { default as useKeyMenuHook } from './useKeyMenuHook';
 export { default as useNewsHook } from './useNewsHook';
 

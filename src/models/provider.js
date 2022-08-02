@@ -1,7 +1,8 @@
 import * as React from 'react';
 
 import useIAdBHook from './useIAdBHook';
-import useInputHook from './useInputHook';
+import useIRecordsHook from './useIRecordsHook';
+import useInputsHook from './useInputsHook';
 import useKeyMenuHook from './useKeyMenuHook';
 import useNewsHook from './useNewsHook';
 
@@ -9,7 +10,13 @@ import useNewsHook from './useNewsHook';
 // Level A B C D E, and then [A, B, C, D, E] with reduceRight
 // const providers = [useKeyMenuHook.Provider, useIAdBHook.Provider]; // !! just for error test !!
 
-const providers = [useIAdBHook.Provider, useInputHook.Provider, useKeyMenuHook.Provider, useNewsHook.Provider];
+const providers = [
+  useIAdBHook.Provider,
+  useIRecordsHook.Provider,
+  useInputsHook.Provider,
+  useKeyMenuHook.Provider,
+  useNewsHook.Provider,
+];
 
 // 数据 Provider 组合器
 const ProvidersComposer = (props) => {

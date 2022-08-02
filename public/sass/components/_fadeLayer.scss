@@ -6,6 +6,7 @@ $PFL: $P + '-fade-layer';
   background-color: transparent;
   transition: all 0.36s ease-in-out;
   z-index: 9999999;
+  pointer-events: none;
 }
 
 .#{$PFL}-inner {
@@ -14,6 +15,7 @@ $PFL: $P + '-fade-layer';
   height: 100vh;
   background-color: transparent;
   overflow: auto;
+  pointer-events: auto;
 
   &.is-inset {
     margin-top: 5vh;

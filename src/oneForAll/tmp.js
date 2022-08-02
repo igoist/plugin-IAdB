@@ -1,4 +1,7 @@
 import { addLink, returnURL, ETSendMessage } from './fns';
+import { dom } from '@Utils';
+
+const { scrollSmothlyTo } = dom;
 
 const outp = (props) => {
   const [a, b] = props;
@@ -9,7 +12,7 @@ const outp = (props) => {
  * props 是固定的一些值
  */
 export const returnCommands = (props) => {
-  const { IAdBState, inputList, useIAdBDispatch, keyMenuDispatch, dispatch } = props;
+  const { IAdBState, inputList, recording, useIAdBDispatch, useIRecordsHookDispatch, keyMenuDispatch, dispatch } = props;
 
   return [
     {
@@ -41,19 +44,32 @@ export const returnCommands = (props) => {
       key: '003',
       desc: '切换 ifDarkMode，并更新 bgc 数据',
       fn: (payload) => {
-        ETSendMessage({
-          type: 'et-bgc-update',
-          payload: {
-            url: returnURL(),
-            action: payload.action ? 1 : 0,
-          },
-        });
-        useIAdBDispatch({
-          type: 'IAdBStateSet',
-          payload: {
-            ifDarkMode: payload.action,
-          },
-        });
+        const url = returnURL();
+        if (payload) {
+          ETSendMessage({
+            type: 'et-bgc-update',
+            payload: {
+              url,
+              action: payload.action ? 1 : 0,
+            },
+          });
+          useIAdBDispatch({
+            type: 'IAdBStateSet',
+            payload: {
+              ifDarkMode: !!payload.action,
+            },
+          });
+        } else if (inputList.length) {
+          console.log('inputList', inputList);
+          ETSendMessage({
+            type: 'et-bgc-update',
+            payload: {
+              url,
+              totalAdd: parseInt(inputList[0]) || 0,
+              countAdd: parseInt(inputList[1]) || 0,
+            },
+          });
+        }
       },
     },
     // 0111 ~ 0199 for sending actions to bg
@@ -142,6 +158,52 @@ export const returnCommands = (props) => {
       },
     },
     {
+      key: '600',
+      fn: () => {
+        useIRecordsHookDispatch({
+          type: 'RecordsToggleMode',
+        });
+      },
+    },
+    {
+      key: '601',
+      fn: () => {
+        useIRecordsHookDispatch({
+          type: 'RecordsConsole',
+        });
+      },
+    },
+    {
+      key: '602',
+      fn: () => {
+        useIRecordsHookDispatch({
+          type: 'RecordsRepeat',
+        });
+      },
+    },
+    {
+      key: '609',
+      fn: () => {
+        const t = parseFloat(inputList[0]);
+        let y = 100;
+        if (!isNaN(t)) {
+          y = t;
+        }
+
+        if (recording) {
+          useIRecordsHookDispatch({
+            type: 'RecordsAdd',
+            payload: {
+              type: 'scroll',
+              params: [y],
+            },
+          });
+        }
+
+        scrollSmothlyTo(y);
+      },
+    },
+    {
       key: '666',
       fn: () => {
         dispatch({
@@ -158,9 +220,48 @@ export const returnCommands = (props) => {
       },
     },
     {
-      key: '999',
+      key: '998',
       fn: () => {
-        addLink();
+        const msr = document.getElementById('fontstylemsr');
+
+        if (msr) {
+          document.body.removeChild(msr);
+        } else {
+          const s = document.createElement('style');
+
+          s.id = 'fontstylemsr';
+
+          s.innerHTML = `
+@font-face {
+  font-family: 'museo-sans-rounded';
+  src: url('https://use.typekit.net/af/491586/00000000000000003b9b1e2d/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3')
+      format('woff2'),
+    url('https://use.typekit.net/af/491586/00000000000000003b9b1e2d/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3')
+      format('woff'),
+    url('https://use.typekit.net/af/491586/00000000000000003b9b1e2d/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3')
+      format('opentype');
+  font-display: auto;
+  font-style: normal;
+  font-weight: 300;
+  font-stretch: normal;
+}
+
+body {
+  font-family: museo-sans-rounded, sans-serif;
+}
+          `;
+
+          s.type = 'text/css';
+
+          document.body.appendChild(s);
+        }
+      },
+    },
+    {
+      key: '999',
+      desc: '试验田，专门用于测试特定代码',
+      fn: () => {
+        // addLink();
       },
     },
   ];

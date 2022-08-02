@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { useInputHook } from '@Models';
+import { useInputsHook } from '@Models';
 
 const Inputs = () => {
-  const { inputMode, inputValue, inputList, dispatch } = useInputHook.useContainer();
+  const { inputMode, inputValue, inputList, dispatch } = useInputsHook.useContainer();
 
   const handleRemove = (i) => {
     dispatch({
