@@ -1,7 +1,8 @@
 import { addLink, returnURL, ETSendMessage } from './fns';
-import { dom } from '@Utils';
+import { dom, fns } from '@Utils';
 
 const { scrollSmothlyTo } = dom;
+const { handleValue } = fns;
 
 const outp = (props) => {
   const [a, b] = props;
@@ -12,7 +13,7 @@ const outp = (props) => {
  * props 是固定的一些值
  */
 export const returnCommands = (props) => {
-  const { IAdBState, inputList, recording, useIAdBDispatch, useIRecordsHookDispatch, keyMenuDispatch, dispatch } = props;
+  const { IAdBState, inputList, inputTypeList, recording, useIAdBDispatch, useIRecordsHookDispatch, keyMenuDispatch, dispatch } = props;
 
   return [
     {
@@ -262,6 +263,11 @@ body {
       desc: '试验田，专门用于测试特定代码',
       fn: () => {
         // addLink();
+        const arr = [];
+        for (let i = 0; i < inputList.length; i++) {
+          arr.push(handleValue(inputList[i], inputTypeList[i]));
+        }
+        console.log(arr);
       },
     },
   ];

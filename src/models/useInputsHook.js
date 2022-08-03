@@ -3,31 +3,6 @@ import { createContainer } from 'unstated-next';
 
 const { useState } = React;
 
-// const returnNextType = (t) => {
-//   let r = '';
-//   switch (t) {
-//     case 'string':
-//       r = 'int';
-//       break;
-//     case 'int':
-//       r = 'float';
-//       break;
-//     case 'float':
-//       r = 'bool';
-//       break;
-//     case 'bool':
-//       r = 'object';
-//       break;
-//     case 'object':
-//       r = 'dom';
-//       break;
-//     case 'dom':
-//       r = 'string';
-//       break;
-//   }
-//   return r;
-// };
-
 const useInputsHook = () => {
   const [inputMode, setInputMode] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -50,6 +25,7 @@ const useInputsHook = () => {
         break;
       case 'InputPopValue':
         setInputList([...inputList.slice(0, -1)]);
+        setInputTypeList([...inputTypeList.slice(0, -1)]);
         break;
       case 'InputPushValue':
         setInputList([...inputList, inputValue]);

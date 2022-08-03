@@ -47,7 +47,7 @@ const mainF = () => {
     const { data: IAdBState, dispatch: useIAdBDispatch } = useIAdBHook.useContainer();
     const { recording, dispatch: useIRecordsHookDispatch } = useIRecordsHook.useContainer();
 
-    const { inputValue, inputList, inputMode, dispatch: useInputDispatch } = useInputsHook.useContainer();
+    const { inputValue, inputList, inputTypeList, inputMode, dispatch: useInputDispatch } = useInputsHook.useContainer();
     const { visible, dispatch: keyMenuDispatch } = useKeyMenuHook.useContainer();
 
     const [state, dispatch] = useImmerReducer(reducer, initialState);
@@ -56,6 +56,7 @@ const mainF = () => {
     const commands = returnCommands({
       IAdBState,
       inputList,
+      inputTypeList,
       recording,
       useIAdBDispatch,
       useIRecordsHookDispatch,

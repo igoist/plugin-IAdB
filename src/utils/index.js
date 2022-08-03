@@ -20,3 +20,28 @@ export const IAdBState = {
   ifReadCode: false,
   ifProgramSwitch: true,
 };
+
+// 未归类 fn start
+export const fns = {
+  handleValue: (v, t) => {
+    try {
+      switch (t) {
+        case 'string':
+          return v;
+        case 'int':
+          return parseInt(v, 10);
+        case 'float':
+          return parseFloat(v);
+        case 'bool':
+          return v === 'false' ? false : !!v;
+        case 'object':
+          return JSON.parse(v);
+        case 'dom':
+          return document.querySelectorAll(v);
+      }
+    } catch (err) {
+      return 'et-custom-input-error';
+    }
+  },
+};
+// 未归类 fn end

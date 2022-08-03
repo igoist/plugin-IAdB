@@ -1,8 +1,29 @@
 import * as React from 'react';
 import { useInputsHook } from '@Models';
+import { fns } from '@Utils';
 
-const TypeSelector = ({ t, onClick }) => {
-  const typeArr = ['string', 'int', 'float', 'bool', 'object', 'dom'];
+const { handleValue } = fns;
+
+const TypeSelector = ({ v, t, onClick }) => {
+  const typeArr = ['string'];
+
+  if (!isNaN(handleValue(v, 'int'))) {
+    typeArr.push('int');
+  }
+
+  if (!isNaN(handleValue(v, 'float'))) {
+    typeArr.push('float');
+  }
+
+  typeArr.push('bool');
+
+  if (typeof handleValue(v, 'object') === 'object') {
+    typeArr.push('object');
+  }
+
+  if (typeof handleValue(v, 'dom') === 'object') {
+    typeArr.push('dom');
+  }
 
   const tmpArr = typeArr.filter((i) => i !== t);
 
@@ -30,27 +51,6 @@ const Inputs = () => {
   // string(s) int(i) float(f) bool(b) dom/domAll/object(o/d/a)?
   const handleType = (t = 'string') => {
     return `${'et'}-global-input-type-${t}`;
-  };
-
-  const handleValue = (v, t) => {
-    try {
-      switch (t) {
-        case 'string':
-          return v;
-        case 'int':
-          return parseInt(v, 10);
-        case 'float':
-          return parseFloat(v);
-        case 'bool':
-          return v === 'true';
-        case 'object':
-          return JSON.parse(v);
-        case 'dom':
-          return document.querySelectorAll(v);
-      }
-    } catch (err) {
-      return 'et-custom-input-error';
-    }
   };
 
   const returnHandleTypeSwitch = (i) => {
@@ -83,7 +83,7 @@ const Inputs = () => {
               // onClick={() => handleTypeSwitch(i)}
             >
               {v}
-              <TypeSelector t={inputTypeList[i]} onClick={returnHandleTypeSwitch(i)} />
+              <TypeSelector v={v} t={inputTypeList[i]} onClick={returnHandleTypeSwitch(i)} />
             </div>
           ))}
           {inputValue && <div className={`${'et'}-global-input-item is-active`}>{inputValue}</div>}
