@@ -25,13 +25,17 @@ const TypeSelector = ({ v, t, onClick }) => {
     typeArr.push('dom');
   }
 
+  if (typeof handleValue(v, 'domAll') === 'object') {
+    typeArr.push('domAll');
+  }
+
   const tmpArr = typeArr.filter((i) => i !== t);
 
   return (
     <div className={`${'et'}-global-input-type-selector`}>
       {tmpArr.map((i) => (
         <div key={`etgits-${i}`} className={`${'et'}-global-input-type-selector-item type-${i}`} onClick={() => onClick(i)}>
-          {i[0].toUpperCase()}
+          {i === 'domAll' ? 'A' : i[0].toUpperCase()}
         </div>
       ))}
     </div>
@@ -39,7 +43,7 @@ const TypeSelector = ({ v, t, onClick }) => {
 };
 
 const Inputs = () => {
-  const { inputMode, inputValue, inputList, inputTypeList, dispatch } = useInputsHook.useContainer();
+  const { inputMode, inputActive, inputValue, inputList, inputTypeList, dispatch } = useInputsHook.useContainer();
 
   // const handleRemove = (i) => {
   //   dispatch({
@@ -72,26 +76,29 @@ const Inputs = () => {
     };
   };
 
+  const onChange = (e) => {
+    dispatch({
+      type: 'InputSetValue',
+      payload: e.target.value,
+    });
+  };
+
   if (inputMode) {
-    if (inputList.length || inputValue) {
-      return (
-        <div className={`${'et'}-global-input-list`}>
-          {inputList.map((v, i) => (
-            <div
-              key={`${'et'}-global-input-item-${i}`}
-              className={`${'et'}-global-input-item ${handleType(inputTypeList[i])}`}
-              // onClick={() => handleTypeSwitch(i)}
-            >
-              {v}
-              <TypeSelector v={v} t={inputTypeList[i]} onClick={returnHandleTypeSwitch(i)} />
-            </div>
-          ))}
-          {inputValue && <div className={`${'et'}-global-input-item is-active`}>{inputValue}</div>}
-        </div>
-      );
-    } else {
-      return null;
-    }
+    return (
+      <div className={`${'et'}-global-input-list`}>
+        {inputList.map((v, i) => (
+          <div
+            key={`${'et'}-global-input-item-${i}`}
+            className={`${'et'}-global-input-item ${handleType(inputTypeList[i])}`}
+            // onClick={() => handleTypeSwitch(i)}
+          >
+            {v}
+            <TypeSelector v={v} t={inputTypeList[i]} onClick={returnHandleTypeSwitch(i)} />
+          </div>
+        ))}
+        {(!inputList.length || inputActive) && <input autoFocus className={`${'et'}-global-input-item is-active`} onChange={onChange} value={inputValue}></input>}
+      </div>
+    );
   } else {
     return null;
   }

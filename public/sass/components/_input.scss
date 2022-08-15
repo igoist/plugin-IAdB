@@ -52,6 +52,7 @@ $PGI: $P + '-global-input';
   left: 50%;
   min-width: 60px;
   background-color: $bgColor;
+  text-align: left;
   transform: translate(-50%, -50%);
   overflow: visible;
   z-index: 9999999;
@@ -84,6 +85,7 @@ $list: (1, $blue), (2, $red), (3, $yellow), (4, $green), (5, $turquoise), (6, $b
   font-family: system-ui;
   @include PGIItemColorful;
 
+  &.#{$PGI}-type-domAll,
   &.#{$PGI}-type-dom,
   &.#{$PGI}-type-object,
   &.#{$PGI}-type-bool,
@@ -110,6 +112,13 @@ $list: (1, $blue), (2, $red), (3, $yellow), (4, $green), (5, $turquoise), (6, $b
   &:not(.is-active) {
     cursor: pointer;
   }
+}
+
+input.#{$PGI}-item {
+  border: none !important;
+  background-color: $bgColor;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 $listType: ('string', 'S'), ('int', 'I'), ('float', 'F'), ('bool', 'B'), ('object', 'O'), ('dom', 'D'), ('domAll', 'A');

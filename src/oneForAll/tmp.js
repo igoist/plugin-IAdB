@@ -1,3 +1,4 @@
+import { ETMessage } from '@Components/ETMessage';
 import { addLink, returnURL, ETSendMessage } from './fns';
 import { dom, fns } from '@Utils';
 
@@ -263,11 +264,41 @@ body {
       desc: '试验田，专门用于测试特定代码',
       fn: () => {
         // addLink();
-        const arr = [];
-        for (let i = 0; i < inputList.length; i++) {
-          arr.push(handleValue(inputList[i], inputTypeList[i]));
-        }
-        console.log(arr);
+        // const arr = [];
+        // for (let i = 0; i < inputList.length; i++) {
+        //   arr.push(handleValue(inputList[i], inputTypeList[i]));
+        // }
+        // console.log(arr);
+
+        const checkInputList = (typeArr) => {
+          if (typeArr.length > inputTypeList.length) {
+            ETMessage['warn']('输入参数数量不匹配');
+            return false;
+          }
+
+          for (let i = 0; i < typeArr.length; i++) {
+            if (typeArr[i] !== inputTypeList[i]) {
+              ETMessage['warn'](`输入参数 ${i} 类型不匹配`);
+              return false;
+            }
+          }
+
+          return true;
+        };
+
+        const changeDOMText = () => {
+          if (inputList.length < 2 || !checkInputList(['dom', 'string'])) {
+            return;
+          }
+
+          const el = handleValue(inputList[0], 'dom');
+
+          if (el) {
+            el.innerText = inputList[1];
+          }
+        };
+
+        changeDOMText();
       },
     },
   ];

@@ -5,6 +5,7 @@ const { useState } = React;
 
 const useInputsHook = () => {
   const [inputMode, setInputMode] = useState(false);
+  const [inputActive, setInputActive] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [inputList, setInputList] = useState([]);
   const [inputTypeList, setInputTypeList] = useState([]);
@@ -12,10 +13,21 @@ const useInputsHook = () => {
   const dispatch = (action) => {
     switch (action.type) {
       case 'InputToggleMode':
+        if (inputMode) {
+          setInputActive(false);
+        } else {
+          setInputActive(true);
+        }
         setInputMode(!inputMode);
         break;
-      case 'InputSetValue':
+      case 'InputSetActive':
+        setInputActive(action.payload);
+        break;
+      case 'InputAddValue':
         setInputValue(inputValue + action.payload);
+        break;
+      case 'InputSetValue':
+        setInputValue(action.payload);
         break;
       case 'InputBackspace':
         setInputValue(inputValue.slice(0, -1));
@@ -26,6 +38,7 @@ const useInputsHook = () => {
       case 'InputPopValue':
         setInputList([...inputList.slice(0, -1)]);
         setInputTypeList([...inputTypeList.slice(0, -1)]);
+        setInputActive(false);
         break;
       case 'InputPushValue':
         setInputList([...inputList, inputValue]);
@@ -42,7 +55,7 @@ const useInputsHook = () => {
     }
   };
 
-  return { inputMode, inputValue, inputList, inputTypeList, dispatch };
+  return { inputMode, inputActive, inputValue, inputList, inputTypeList, dispatch };
 };
 
 export default createContainer(useInputsHook);

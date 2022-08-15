@@ -37,6 +37,8 @@ export const fns = {
         case 'object':
           return JSON.parse(v);
         case 'dom':
+          return document.querySelector(v);
+        case 'domAll':
           return document.querySelectorAll(v);
       }
     } catch (err) {
