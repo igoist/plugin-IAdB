@@ -72,10 +72,16 @@ $list: (1, $blue), (2, $red), (3, $yellow), (4, $green), (5, $turquoise), (6, $b
       &::before {
         background-color: $color;
       }
+
+      &::selection {
+        color: #fff;
+        background-color: $color;
+      }
     }
   }
 }
 
+.#{$PGI}-editor,
 .#{$PGI}-item {
   position: relative;
   height: 16px;
@@ -83,6 +89,13 @@ $list: (1, $blue), (2, $red), (3, $yellow), (4, $green), (5, $turquoise), (6, $b
   font-weight: bold;
   font-size: 14px;
   font-family: system-ui;
+}
+
+.#{$PGI}-editor.is-edited {
+  color: #fff;
+}
+
+.#{$PGI}-item {
   @include PGIItemColorful;
 
   &.#{$PGI}-type-domAll,
@@ -114,11 +127,17 @@ $list: (1, $blue), (2, $red), (3, $yellow), (4, $green), (5, $turquoise), (6, $b
   }
 }
 
+input.#{$PGI}-editor,
 input.#{$PGI}-item {
+  width: 100%;
   border: none !important;
   background-color: $bgColor;
   outline: none !important;
   box-shadow: none !important;
+}
+
+input.#{$PGI}-editor {
+  color: inherit;
 }
 
 $listType: ('string', 'S'), ('int', 'I'), ('float', 'F'), ('bool', 'B'), ('object', 'O'), ('dom', 'D'), ('domAll', 'A');

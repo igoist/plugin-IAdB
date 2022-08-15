@@ -45,10 +45,14 @@ const useInputsHook = () => {
         setInputTypeList([...inputTypeList, 'string']);
         setInputValue('');
         break;
-      case 'InputRemoveValue':
-        setInputList([...inputList.slice(0, action.payload), ...inputList.slice(action.payload + 1)]);
-        setInputTypeList([...inputTypeList.slice(0, action.payload), ...inputTypeList.slice(action.payload + 1)]);
+      case 'InputUpdateValue':
+        setInputList([...inputList.slice(0, action.payload.i), action.payload.v, ...inputList.slice(action.payload.i + 1)]);
+        setInputTypeList([...inputTypeList.slice(0, action.payload.i), 'string', ...inputTypeList.slice(action.payload.i + 1)]);
         break;
+      // case 'InputRemoveValue':
+      //   setInputList([...inputList.slice(0, action.payload), ...inputList.slice(action.payload + 1)]);
+      //   setInputTypeList([...inputTypeList.slice(0, action.payload), ...inputTypeList.slice(action.payload + 1)]);
+      //   break;
       case 'InputTypeSwitch':
         setInputTypeList([...inputTypeList.slice(0, action.payload.i), action.payload.t, ...inputTypeList.slice(action.payload.i + 1)]);
         break;

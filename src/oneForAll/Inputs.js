@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useInputsHook } from '@Models';
 import { fns } from '@Utils';
 
+const { useEffect, useState, useRef } = React;
 const { handleValue } = fns;
 
 const TypeSelector = ({ v, t, onClick }) => {
@@ -42,6 +43,72 @@ const TypeSelector = ({ v, t, onClick }) => {
   );
 };
 
+const Editor = (props) => {
+  const { defaultValue, onComplete } = props;
+
+  const [value, setValue] = useState(defaultValue);
+  const [active, setActive] = useState(false);
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (!active) return;
+
+    const inputEl = inputRef.current;
+
+    if (!inputEl) {
+      return;
+    }
+
+    // inputEl && inputEl.focus();
+
+    // const handleBlur = () => {
+    //   setActive(false);
+    // };
+
+    const handleKeyDown = (e) => {
+      e.stopPropagation();
+
+      if (e.code === 'Escape') {
+        setActive(false);
+        setValue(defaultValue);
+        return;
+      }
+
+      if (e.code === 'Enter') {
+        setActive(false);
+        onComplete(value);
+        return;
+      }
+    };
+
+    // inputEl.addEventListener('blur', handleBlur);
+    document.body.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      // inputEl.removeEventListener('blur', handleBlur);
+      document.body.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [active, value]);
+
+  const onClick = () => {
+    setActive(!active);
+  };
+
+  const onChange = (e) => {
+    setValue(e.target.value);
+  };
+
+  if (active) {
+    return <input ref={inputRef} autoFocus className={`${'et'}-global-input-editor ${value !== defaultValue ? 'is-edited' : ''}`} value={value} onChange={onChange} />;
+  } else {
+    return (
+      <div className={`${'et'}-global-input-editor ${value !== defaultValue ? 'is-edited' : ''}`} onClick={onClick}>
+        {value}
+      </div>
+    );
+  }
+};
+
 const Inputs = () => {
   const { inputMode, inputActive, inputValue, inputList, inputTypeList, dispatch } = useInputsHook.useContainer();
 
@@ -76,6 +143,18 @@ const Inputs = () => {
     };
   };
 
+  const returnHandleUpdate = (i) => {
+    return (v) => {
+      dispatch({
+        type: 'InputUpdateValue',
+        payload: {
+          i,
+          v,
+        },
+      });
+    };
+  };
+
   const onChange = (e) => {
     dispatch({
       type: 'InputSetValue',
@@ -92,11 +171,11 @@ const Inputs = () => {
             className={`${'et'}-global-input-item ${handleType(inputTypeList[i])}`}
             // onClick={() => handleTypeSwitch(i)}
           >
-            {v}
+            <Editor defaultValue={v} onComplete={returnHandleUpdate(i)} />
             <TypeSelector v={v} t={inputTypeList[i]} onClick={returnHandleTypeSwitch(i)} />
           </div>
         ))}
-        {(!inputList.length || inputActive) && <input autoFocus className={`${'et'}-global-input-item is-active`} onChange={onChange} value={inputValue}></input>}
+        {(!inputList.length || inputActive) && <input autoFocus className={`${'et'}-global-input-item is-active`} onChange={onChange} value={inputValue} />}
       </div>
     );
   } else {

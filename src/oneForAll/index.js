@@ -47,7 +47,7 @@ const mainF = () => {
     const { data: IAdBState, dispatch: useIAdBDispatch } = useIAdBHook.useContainer();
     const { recording, dispatch: useIRecordsHookDispatch } = useIRecordsHook.useContainer();
 
-    const { inputValue, inputList, inputTypeList, inputMode, dispatch: useInputDispatch } = useInputsHook.useContainer();
+    const { inputMode, inputActive, inputValue, inputList, inputTypeList, dispatch: useInputDispatch } = useInputsHook.useContainer();
     const { visible, dispatch: keyMenuDispatch } = useKeyMenuHook.useContainer();
 
     const [state, dispatch] = useImmerReducer(reducer, initialState);
@@ -122,36 +122,41 @@ const mainF = () => {
               useInputDispatch({
                 type: 'InputToggleMode',
               });
-            } else if (returnInputKey(e.code) !== undefined) {
+              // } else if (e.metaKey && e.code === returnCode('c')) {
+              // } else if (e.metaKey && e.code === returnCode('v')) {
+              // } else if (e.metaKey && e.code === returnCode('a')) {
+              // } else if (returnInputKey(e.code) !== undefined) {
+              //   useInputDispatch({
+              //     type: 'InputAddValue',
+              //     payload: e.key,
+              //   });
+              // ============
+              // if (e.code === 'Backspace') {
+              //   useInputDispatch({
+              //     type: 'InputBackspace',
+              //   });
+              // }
+            } else if (e.code === 'Escape') {
+              let typeName = 'InputPopValue';
+
+              if (inputValue) {
+                typeName = 'InputResetValue';
+              }
+
               useInputDispatch({
-                type: 'InputSetValue',
-                payload: e.key,
+                type: typeName,
               });
-            } else {
-              if (e.code === 'Backspace') {
-                useInputDispatch({
-                  type: 'InputBackspace',
-                });
-              }
-
-              if (e.code === 'Escape') {
-                let typeName = 'InputPopValue';
-
-                if (inputValue) {
-                  typeName = 'InputResetValue';
-                }
-
-                useInputDispatch({
-                  type: typeName,
-                });
-              }
-
-              if (e.code === 'Enter') {
-                useInputDispatch({
-                  type: 'InputPushValue',
-                });
-              }
+            } else if (e.code === 'Enter') {
+              useInputDispatch({
+                type: 'InputPushValue',
+              });
+            } else if (!inputActive) {
+              useInputDispatch({
+                type: 'InputSetActive',
+                payload: true,
+              });
             }
+
             return;
           }
           // Inputs end

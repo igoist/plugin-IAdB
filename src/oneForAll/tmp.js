@@ -263,6 +263,8 @@ body {
       key: '999',
       desc: '试验田，专门用于测试特定代码',
       fn: () => {
+        console.log(inputList);
+        console.log(inputTypeList);
         // addLink();
         // const arr = [];
         // for (let i = 0; i < inputList.length; i++) {
@@ -270,15 +272,19 @@ body {
         // }
         // console.log(arr);
 
-        const checkInputList = (typeArr) => {
+        const checkInputList = (typeArr, withMessage) => {
           if (typeArr.length > inputTypeList.length) {
-            ETMessage['warn']('输入参数数量不匹配');
+            if (withMessage) {
+              ETMessage['warn']('输入参数数量不匹配');
+            }
             return false;
           }
 
           for (let i = 0; i < typeArr.length; i++) {
             if (typeArr[i] !== inputTypeList[i]) {
-              ETMessage['warn'](`输入参数 ${i} 类型不匹配`);
+              if (withMessage) {
+                ETMessage['warn'](`输入参数 ${i} 类型不匹配`);
+              }
               return false;
             }
           }
@@ -287,14 +293,30 @@ body {
         };
 
         const changeDOMText = () => {
-          if (inputList.length < 2 || !checkInputList(['dom', 'string'])) {
+          if (inputList.length < 2 || (!checkInputList(['dom', 'string'], false) && !checkInputList(['domAll', 'string'], false))) {
             return;
           }
 
-          const el = handleValue(inputList[0], 'dom');
+          const handleEl = (el) => {
+            if (el) {
+              el.innerText = inputList[1];
+            }
+          };
 
-          if (el) {
-            el.innerText = inputList[1];
+          if (inputTypeList[0] === 'dom') {
+            const el = handleValue(inputList[0], 'dom');
+
+            handleEl(el);
+          }
+
+          if (inputTypeList[0] === 'domAll') {
+            const els = handleValue(inputList[0], 'domAll');
+
+            if (els && els.length) {
+              els.forEach((el) => {
+                handleEl(el);
+              });
+            }
           }
         };
 
