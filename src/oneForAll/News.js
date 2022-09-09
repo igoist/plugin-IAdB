@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { useNewsHook } from '@Models';
+import { useNewsHook, generateProvider } from '@Models';
 
 const { useState } = React;
 
@@ -9,6 +9,10 @@ const filterBtnTextMap = {
   1: 'New',
   2: 'Old',
 };
+
+const providers = [useNewsHook.Provider];
+
+const Provider = generateProvider(providers);
 
 const News = () => {
   const { list, dispatch } = useNewsHook.useContainer();
@@ -51,12 +55,7 @@ const News = () => {
       </div>
       <div className="et-news-wrap">
         {renderList.map((item, i) => (
-          <div
-            key={`et-news-item-${i}`}
-            className={`et-news-item et-news-item-${item.isNew ? 'new' : 'old'}`}
-            title={item.excerpt}
-            onClick={() => handleLinkClick(item.link)}
-          >
+          <div key={`et-news-item-${i}`} className={`et-news-item et-news-item-${item.isNew ? 'new' : 'old'}`} title={item.excerpt} onClick={() => handleLinkClick(item.link)}>
             {item.title}
           </div>
         ))}
@@ -65,4 +64,8 @@ const News = () => {
   );
 };
 
-export default News;
+export default () => (
+  <Provider>
+    <News />
+  </Provider>
+);

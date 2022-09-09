@@ -19,7 +19,7 @@ const { useEffect, useMemo } = React;
 const { l } = log;
 const { scrollSmothlyTo } = dom;
 const { getStore } = extension;
-const { returnModifierKeyArr, returnKeyCode, returnCode, returnInputKey } = keyCode;
+const { returnModifierKeyArr, returnKeyCode, returnCode } = keyCode;
 
 import { returnURL, ETSendMessage } from './fns';
 import { returnCommands, returnDispatchMenuTask, initialState, reducer } from './tmp';
