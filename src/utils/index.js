@@ -5,6 +5,7 @@ export * as decode from './lib/decode';
 export * as extension from './lib/extension';
 export * as fuzzyMatch from './lib/fuzzyMatch';
 export * as keyCode from './lib/keyCode';
+export * as random from './lib/random';
 export * as scroll2 from './lib/scroll2';
 export * as time from './lib/time';
 export { default as md5 } from './lib/md5';

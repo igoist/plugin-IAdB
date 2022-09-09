@@ -59,7 +59,7 @@ const Editor = (props) => {
       return;
     }
 
-    // inputEl && inputEl.focus();
+    // inputEl && inputEl.focus(); // autofocus
 
     // const handleBlur = () => {
     //   setActive(false);
@@ -110,14 +110,7 @@ const Editor = (props) => {
 };
 
 const Inputs = () => {
-  const { inputMode, inputActive, inputValue, inputList, inputTypeList, dispatch } = useInputsHook.useContainer();
-
-  // const handleRemove = (i) => {
-  //   dispatch({
-  //     type: 'InputRemoveValue',
-  //     payload: i,
-  //   });
-  // };
+  const { inputMode, inputList, inputTypeList, dispatch } = useInputsHook.useContainer();
 
   // string(s) int(i) float(f) bool(b) dom/domAll/object(o/d/a)?
   const handleType = (t = 'string') => {
@@ -155,27 +148,15 @@ const Inputs = () => {
     };
   };
 
-  const onChange = (e) => {
-    dispatch({
-      type: 'InputSetValue',
-      payload: e.target.value,
-    });
-  };
-
   if (inputMode) {
     return (
       <div className={`${'et'}-global-input-list`}>
         {inputList.map((v, i) => (
-          <div
-            key={`${'et'}-global-input-item-${i}`}
-            className={`${'et'}-global-input-item ${handleType(inputTypeList[i])}`}
-            // onClick={() => handleTypeSwitch(i)}
-          >
+          <div key={`${'et'}-global-input-item-${i}`} className={`${'et'}-global-input-item ${handleType(inputTypeList[i])}`}>
             <Editor defaultValue={v} onComplete={returnHandleUpdate(i)} />
             <TypeSelector v={v} t={inputTypeList[i]} onClick={returnHandleTypeSwitch(i)} />
           </div>
         ))}
-        {(!inputList.length || inputActive) && <input autoFocus className={`${'et'}-global-input-item is-active`} onChange={onChange} value={inputValue} />}
       </div>
     );
   } else {

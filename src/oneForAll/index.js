@@ -47,7 +47,7 @@ const mainF = () => {
     const { data: IAdBState, dispatch: useIAdBDispatch } = useIAdBHook.useContainer();
     const { recording, dispatch: useIRecordsHookDispatch } = useIRecordsHook.useContainer();
 
-    const { inputMode, inputActive, inputValue, inputList, inputTypeList, dispatch: useInputDispatch } = useInputsHook.useContainer();
+    const { inputMode, inputList, inputTypeList, dispatch: useInputDispatch } = useInputsHook.useContainer();
     const { visible, dispatch: keyMenuDispatch } = useKeyMenuHook.useContainer();
 
     const [state, dispatch] = useImmerReducer(reducer, initialState);
@@ -139,21 +139,12 @@ const mainF = () => {
             } else if (e.code === 'Escape') {
               let typeName = 'InputPopValue';
 
-              if (inputValue) {
-                typeName = 'InputResetValue';
-              }
-
               useInputDispatch({
                 type: typeName,
               });
             } else if (e.code === 'Enter') {
               useInputDispatch({
                 type: 'InputPushValue',
-              });
-            } else if (!inputActive) {
-              useInputDispatch({
-                type: 'InputSetActive',
-                payload: true,
               });
             }
 

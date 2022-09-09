@@ -91,8 +91,12 @@ $list: (1, $blue), (2, $red), (3, $yellow), (4, $green), (5, $turquoise), (6, $b
   font-family: system-ui;
 }
 
-.#{$PGI}-editor.is-edited {
-  color: #fff;
+.#{$PGI}-editor {
+  min-width: 168px;
+
+  &.is-edited {
+    color: #fff;
+  }
 }
 
 .#{$PGI}-item {

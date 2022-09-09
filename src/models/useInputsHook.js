@@ -1,49 +1,34 @@
 import * as React from 'react';
 import { createContainer } from 'unstated-next';
+import { random } from '@Utils';
 
 const { useState } = React;
+const { returnRandomString } = random;
 
+/**
+ * 把之前的 inputActive, inputValue 都去掉了
+ * 每次直接通过 enter 键添加一个默认 string 值，然后再点击编辑
+ * 这里这个默认值可以通过调用一个函数，随机获得字符串 -- returnRandomString
+ */
 const useInputsHook = () => {
   const [inputMode, setInputMode] = useState(false);
-  const [inputActive, setInputActive] = useState(false);
-  const [inputValue, setInputValue] = useState('');
-  const [inputList, setInputList] = useState([]);
-  const [inputTypeList, setInputTypeList] = useState([]);
+  const [inputList, setInputList] = useState([returnRandomString()]);
+  const [inputTypeList, setInputTypeList] = useState(['string']);
 
   const dispatch = (action) => {
     switch (action.type) {
       case 'InputToggleMode':
-        if (inputMode) {
-          setInputActive(false);
-        } else {
-          setInputActive(true);
-        }
         setInputMode(!inputMode);
         break;
-      case 'InputSetActive':
-        setInputActive(action.payload);
-        break;
-      case 'InputAddValue':
-        setInputValue(inputValue + action.payload);
-        break;
-      case 'InputSetValue':
-        setInputValue(action.payload);
-        break;
-      case 'InputBackspace':
-        setInputValue(inputValue.slice(0, -1));
-        break;
-      case 'InputResetValue':
-        setInputValue('');
-        break;
       case 'InputPopValue':
-        setInputList([...inputList.slice(0, -1)]);
-        setInputTypeList([...inputTypeList.slice(0, -1)]);
-        setInputActive(false);
+        if (inputList.length > 1) {
+          setInputList([...inputList.slice(0, -1)]);
+          setInputTypeList([...inputTypeList.slice(0, -1)]);
+        }
         break;
       case 'InputPushValue':
-        setInputList([...inputList, inputValue]);
+        setInputList([...inputList, returnRandomString()]);
         setInputTypeList([...inputTypeList, 'string']);
-        setInputValue('');
         break;
       case 'InputUpdateValue':
         setInputList([...inputList.slice(0, action.payload.i), action.payload.v, ...inputList.slice(action.payload.i + 1)]);
@@ -59,7 +44,7 @@ const useInputsHook = () => {
     }
   };
 
-  return { inputMode, inputActive, inputValue, inputList, inputTypeList, dispatch };
+  return { inputMode, inputList, inputTypeList, dispatch };
 };
 
 export default createContainer(useInputsHook);

@@ -135,3 +135,10 @@ actionType = {
   ...
   the target, className/tag, n
 ]
+
+
+## Fns
+
+* 改变指定 class 元素的 textContent -- changeDOMText(className: string, text: string, multiple: bool)
+
+

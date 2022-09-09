@@ -266,11 +266,11 @@ body {
         console.log(inputList);
         console.log(inputTypeList);
         // addLink();
-        // const arr = [];
-        // for (let i = 0; i < inputList.length; i++) {
-        //   arr.push(handleValue(inputList[i], inputTypeList[i]));
-        // }
-        // console.log(arr);
+        const arr = [];
+        for (let i = 0; i < inputList.length; i++) {
+          arr.push(handleValue(inputList[i], inputTypeList[i]));
+        }
+        console.log(arr);
 
         const checkInputList = (typeArr, withMessage) => {
           if (typeArr.length > inputTypeList.length) {
