@@ -19,7 +19,7 @@ const pf = 'et';
  * inner 才是真正需要动画淡入的 wrap
  */
 const FadeLayerInner = (props) => {
-  const { layerClassNameEx, isInset, readyToLeave, handleEnter, handleInnerLeave, children } = props;
+  const { animeType, layerClassNameEx, isInset, readyToLeave, handleEnter, handleInnerLeave, children } = props;
 
   const wrapName = `${pf}-fade-layer-inner`;
 
@@ -62,17 +62,17 @@ const FadeLayerInner = (props) => {
 
   return (
     <>
-      <div className={`${wrapName} ${isInset ? 'is-inset is-hidden' : ''}`}>{children}</div>
+      <div className={`${wrapName} ${animeType ? 'type-' + animeType : ''} ${isInset ? 'is-inset is-hidden' : ''}`}>{children}</div>
     </>
   );
 };
 
 const FadeLayerTop = (props) => {
-  const { layerKeyCode, suffix, main, handleEnter, handleLeave } = props;
+  const { animeType = '', layerKeyCode, suffix, main, handleEnter, handleLeave, noPosition } = props;
   const [visible, setVisible] = useState(false);
   const [readyToLeave, setReadyToLeave] = useState(false);
 
-  const layerClassName = 'et-fade-layer-top';
+  const layerClassName = `${pf}-fade-layer-top`;
   const layerClassNameEx = `${layerClassName}-${suffix}`;
 
   useEffect(() => {
@@ -110,6 +110,7 @@ const FadeLayerTop = (props) => {
 
   if (visible) {
     const innerProps = {
+      animeType,
       layerClassNameEx,
       isInset: true,
       readyToLeave,
@@ -118,7 +119,7 @@ const FadeLayerTop = (props) => {
     };
 
     return (
-      <div className={`${layerClassName} ${layerClassNameEx}`}>
+      <div className={`${layerClassName} ${layerClassNameEx} ${noPosition ? 'no-position' : ''}`}>
         <FadeLayerInner {...innerProps}>{Main}</FadeLayerInner>
       </div>
     );

@@ -7,18 +7,35 @@ $PFL: $P + '-fade-layer';
   transition: all 0.36s ease-in-out;
   z-index: 9999999;
   pointer-events: none;
+
+  &:not(.no-position) {
+    .#{$PFL}-inner {
+      margin: 0 auto;
+      max-width: 648px;
+      pointer-events: auto;
+
+      &.is-inset {
+        margin-top: 5vh;
+        height: 90vh;
+      }
+    }
+  }
+
+  // 这里先尝试下 100% 尺寸下动画效果，如果效率实在不高那之后再考虑比方加固定尺寸等方式优化
+  &.no-position {
+    .#{$PFL}-inner {
+      width: 100vw;
+      pointer-events: none;
+
+      & > div {
+        pointer-events: auto;
+      }
+    }
+  }
 }
 
 .#{$PFL}-inner {
-  margin: 0 auto;
-  max-width: 648px;
-  height: 100vh;
   background-color: transparent;
   overflow: auto;
-  pointer-events: auto;
-
-  &.is-inset {
-    margin-top: 5vh;
-    height: 90vh;
-  }
+  height: 100vh;
 }
