@@ -2,9 +2,10 @@ import React from 'react';
 import { Button, Col, Form, Input, Row, Table, Select } from 'antd';
 import { useAntdTable } from 'ahooks';
 
-const returnGetTableData = (api, dataFetch, handleRes) => {
+const returnGetTableData = (api, handleRes) => {
   return ({ current, pageSize }, formData) => {
     let query = `page=${current}&limit=${pageSize}`;
+
     Object.entries(formData).forEach(([key, value]) => {
       if (value) {
         query += `&${key}=${value}`;
@@ -13,44 +14,61 @@ const returnGetTableData = (api, dataFetch, handleRes) => {
 
     console.log('queryx: ', query);
 
-    if (dataFetch) {
-      return dataFetch();
+    let handle;
+
+    if (handleRes) {
+      handle = handleRes;
+    } else {
+      handle = (res) => ({
+        total: res.total,
+        list: res.hits,
+      });
     }
 
     return fetch(`${api}?${query}`)
       .then((res) => res.json())
-      .then((res) => ({
-        total: res.total,
-        list: res.hits,
-      }));
+      .then(handle);
   };
 };
 
+/**
+ *
+ * 有 getTableData，优先
+ * 有 handleRes，优先
+ */
 const TableGenerator = (config) => {
-  const { columns, api, tableRowKey, addBtn, withSearch, dataFetch, handleRes } = config;
+  const { columns, api, tableRowKey, addBtn, withSearch, getTableData, handleRes } = config;
+
+  let fetchFn;
+
+  if (getTableData) {
+    fetchFn = getTableData;
+  } else {
+    fetchFn = returnGetTableData(api, handleRes);
+  }
 
   return () => {
     const [form] = Form.useForm();
 
-    const { tableProps, search } = useAntdTable(returnGetTableData(api, dataFetch, handleRes), {
+    const { tableProps, search } = useAntdTable(fetchFn, {
       defaultPageSize: 10,
       form,
     });
 
     const { type, changeType, submit, reset } = search;
 
+    const tmpN = Math.floor(24 / columns.length);
     const tmpArr = columns.map((item) => {
-      if (item.supportSearch) {
-        console.log(item.dataIndex, item.key);
+      if (!item.supportSearch) {
+        return null;
+      } else {
         return (
-          <Col key={'col-' + (item.dataIndex || item.key)} span={8}>
+          <Col key={'col-' + (item.dataIndex || item.key)} span={tmpN}>
             <Form.Item label={item.title} name={item.dataIndex}>
               <Input placeholder={item.title} />
             </Form.Item>
           </Col>
         );
-      } else {
-        return null;
       }
     });
 
@@ -62,7 +80,7 @@ const TableGenerator = (config) => {
             <Form.Item style={{ width: '100%' }}>
               {withSearch && (
                 <>
-                  <Button type='primary' style={{ float: 'right', marginLeft: 16 }} onClick={submit}>
+                  <Button type="primary" style={{ float: 'right', marginLeft: 16 }} onClick={submit}>
                     查询
                   </Button>
                   <Button onClick={reset} style={{ float: 'right' }}>
@@ -72,7 +90,7 @@ const TableGenerator = (config) => {
               )}
               {addBtn && (
                 <Button>
-                  <a href={addBtn.url} target='_blank'>
+                  <a href={addBtn.url} target="_blank">
                     {addBtn.name}
                   </a>
                 </Button>

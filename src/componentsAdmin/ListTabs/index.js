@@ -51,7 +51,7 @@ const columns = [
     width: 80,
     supportSearch: true,
     render: (item) => (
-      <a key={`id-${item.id}`} href={item.url} target='_blank' style={{ color: item.incognito ? '#149cec' : '#ec414d' }}>
+      <a key={`id-${item.id}`} href={item.url} target="_blank" style={{ color: item.incognito ? '#149cec' : '#ec414d' }}>
         {item.id}
       </a>
     ),
@@ -62,7 +62,7 @@ const columns = [
     supportSearch: true,
     render: (item, index) => {
       return (
-        <a key={`title-${index}`} href={item.url} target='_blank'>
+        <a key={`title-${index}`} href={item.url} target="_blank">
           {item.title}
         </a>
       );
@@ -82,7 +82,7 @@ const tableRowKey = 'id';
 const tmpC = columns.filter((item) => item.supportSearch);
 const withSearch = tmpC.length > 0;
 
-const dataFetch = () => {
+const getTableData = () => {
   return new Promise((resolve) => {
     getStoreLocal(['IAdBTabs'], (result) => {
       if (result.IAdBTabs) {
@@ -102,6 +102,6 @@ export default TableGenerator({
   // addBtn,
   tableRowKey,
   withSearch,
-  dataFetch,
+  getTableData,
   // handleRes,
 });
