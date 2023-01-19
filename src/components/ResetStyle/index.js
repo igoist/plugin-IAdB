@@ -1,9 +1,33 @@
 import * as React from 'react';
 import { idName, prefix } from '@Utils';
+import { ETSendMessage } from '../../oneForAll/fns';
+
+const { useEffect, useState } = React;
 
 const ResetStyle = (props) => {
   const backgroundColor = '#2a2a2a';
   const { fontColor, ifBgImage, ifNoImage, ifReadCode, ifDarkMode } = props;
+
+  const [extraCSS, setExtraCSS] = useState('');
+
+  useEffect(() => {
+    ETSendMessage(
+      {
+        type: 'et-bg-css-get',
+      },
+      (res) => {
+        setExtraCSS(res.result);
+      }
+    );
+
+    chrome.runtime.onMessage.addListener(function (response, sendResponse) {
+      const r = JSON.parse(response);
+
+      if (r.type === 'et-css-update') {
+        setExtraCSS(r.data);
+      }
+    });
+  }, []);
 
   if (ifDarkMode) {
     return (
@@ -35,11 +59,17 @@ cursor: pointer;
 .et-test-selected {
 filter: invert(100%);
 }
+
+${extraCSS}
       `}
       </style>
     );
   } else {
-    return null;
+    return (
+      <style id={idName} type={'text/css'}>
+        {extraCSS}
+      </style>
+    );
   }
 };
 

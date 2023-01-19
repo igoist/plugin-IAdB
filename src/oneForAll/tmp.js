@@ -75,13 +75,20 @@ export const returnCommands = (props) => {
       },
     },
     // 0111 ~ 0199 for sending actions to bg
-    // {
-    //   key: '111',
-    //   desc: '保存当前 Tabs(仅对非匿名窗口有效)',
-    //   fn: () => {
-    //     ETSendMessage('TabsSave');
-    //   },
-    // },
+    {
+      key: '111',
+      desc: '保存当前 Tabs(仅对非匿名窗口有效)',
+      fn: () => {
+        ETSendMessage(
+          {
+            type: 'TabsSave',
+          },
+          (res) => {
+            console.log(res.msg);
+          }
+        );
+      },
+    },
     {
       key: '100',
       desc: '工作时间统计开始或结束',
@@ -222,6 +229,14 @@ export const returnCommands = (props) => {
       },
     },
     {
+      key: '669',
+      fn: () => {
+        dispatch({
+          type: 'toggleTask',
+        });
+      },
+    },
+    {
       key: '998',
       fn: () => {
         const msr = document.getElementById('fontstylemsr');
@@ -350,6 +365,7 @@ export const initialState = {
   keys: [],
   inspectOn: false,
   positionOn: false,
+  taskOn: false,
   modeInput: false,
 };
 
@@ -366,6 +382,9 @@ export const reducer = (draft, action) => {
       break;
     case 'togglePosition':
       draft.positionOn = !draft.positionOn;
+      break;
+    case 'toggleTask':
+      draft.taskOn = !draft.taskOn;
       break;
   }
 };

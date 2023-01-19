@@ -29,6 +29,12 @@ const getTabs = () => {
   });
 };
 
+const saveCSS = (css) => {
+  setStoreLocal({
+    IAdBCSS: css,
+  });
+};
+
 const main = async () => {
   /**
    * workTime 初始为 0
@@ -39,6 +45,7 @@ const main = async () => {
   let workTimeData = {};
   let news = {};
   let defaultDarkMode = false;
+  let tmpCSSString = '';
 
   chrome.runtime.onInstalled.addListener(function (details) {
     // chrome.contextMenus.create({
@@ -59,7 +66,7 @@ const main = async () => {
     //   }]);
     // });
 
-    const resetGlobals = () => {
+    const resetGlobals = async () => {
       getStore(['fontColor'], (result) => {
         if (result.fontColor === undefined) {
           setStore(IAdBState);
@@ -79,6 +86,11 @@ const main = async () => {
       //     news = JSON.parse(result.news);
       //   }
       // });
+      getStoreLocal(['IAdBCSS'], (result) => {
+        if (result.IAdBCSS !== undefined) {
+          tmpCSSString = result.IAdBCSS;
+        }
+      });
     };
 
     switch (details.reason) {
@@ -103,6 +115,7 @@ const main = async () => {
   window.workTimeData = workTimeData;
   window.news = news;
   window.defaultDarkMode = defaultDarkMode;
+  window.tmpCSSString = tmpCSSString;
 
   const handleBGCAI = ({ url, action = 0, totalAdd, countAdd }) => {
     let item = BGCAI[url];
@@ -191,6 +204,29 @@ const main = async () => {
         case 'et-bg-news':
           getNews(news, sendResponse, payload);
           return true;
+        case 'et-bg-css-save':
+          tmpCSSString = payload;
+          saveCSS(tmpCSSString);
+          sendResponse({ result: 'save tmpCSSString success' });
+
+          // 向所有窗口发消息 et-css-update，主动更新 css
+          (async () => {
+            const tabs = await getTabs();
+
+            for (let i = 0; i < tabs.length; i++) {
+              chrome.tabs.sendMessage(
+                tabs[i].id,
+                JSON.stringify({
+                  type: 'et-css-update',
+                  data: tmpCSSString,
+                })
+              );
+            }
+          })();
+          break;
+        case 'et-bg-css-get':
+          sendResponse({ result: tmpCSSString });
+          break;
         case '....':
           // const tab = ETXSenderGetTab(sender);
           // ETXTabRemove(tab.id);

@@ -23,8 +23,6 @@ const Inspect = (props) => {
   const [resultList, { push: resultListPush, pop: resultListPop, empty: resultListReset }] = useArray([]);
   const elRef = useRef(null);
 
-  console.log('inspect update');
-
   useEffect(() => {
     setVisible(props.turnOn);
 
@@ -153,11 +151,7 @@ const Inspect = (props) => {
       return (
         <div className={`${'et'}-inspect-class-list`}>
           {classList.map((item, i) => (
-            <div
-              key={`icli-${item}`}
-              className={`${'et'}-inspect-class-list-item ${selects[i] ? 'is-selected' : ''}`}
-              onClick={() => handleClick(i)}
-            >
+            <div key={`icli-${item}`} className={`${'et'}-inspect-class-list-item ${selects[i] ? 'is-selected' : ''}`} onClick={() => handleClick(i)}>
               {item}
             </div>
           ))}

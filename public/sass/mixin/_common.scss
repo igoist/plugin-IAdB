@@ -74,3 +74,12 @@ $nn: 7;
     }
   }
 }
+
+$RYBGList: (1, $red), (2, $yellow), (3, $blue), (4, $green);
+@mixin RYBG {
+  @each $i, $color in $RYBGList {
+    &:nth-child(5n + #{$i}) {
+      background-color: $color;
+    }
+  }
+}
